@@ -57,10 +57,12 @@ with tab1:
     fig.update_layout(template="plotly_dark", title=f"{seleccion} - Precio histórico")
     st.plotly_chart(fig, use_container_width=True)
 
-    col1, col2, col3 = st.columns(3)
-    col1.metric("Precio actual", f"${precio.iloc[-1]:.2f}")
-    col2.metric("Máximo 52s", f"${precio.max():.2f}")
-    col3.metric("Mínimo 52s", f"${precio.min():.2f}")
+    precio_val = float(precio.iloc[-1])
+    precio_max = float(precio.max())
+    precio_min = float(precio.min())
+    col1.metric("Precio actual", f"${precio_val:.2f}")
+    col2.metric("Máximo 52s", f"${precio_max:.2f}")
+    col3.metric("Mínimo 52s", f"${precio_min:.2f}")
 
 with tab2:
     fig2 = go.Figure()
