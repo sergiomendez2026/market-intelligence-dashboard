@@ -2,7 +2,7 @@
 
 Aplicación web de análisis financiero con Machine Learning en tiempo real.
 
-**Live Demo:** [Ver aplicación](https://TU-LINK.streamlit.app)
+**Live Demo:** [Ver aplicación](https://market-intelligence-dashboard-fjy5vx69qtam5vpxxqcdno.streamlit.app/)
 
 ## Descripción
 
