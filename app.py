@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
 import plotly.graph_objects as go
 
 from src.indicators import add_technical_indicators
@@ -9,10 +8,13 @@ from src.features import create_ml_dataset, get_feature_columns
 from src.model import train_and_evaluate_model
 from src.signals import compute_market_signal
 
+
 st.set_page_config(page_title="Market Intelligence Dashboard", layout="wide")
 
 st.title("Market Intelligence Dashboard")
-st.markdown("Análisis financiero con indicadores técnicos, Machine Learning y datos actualizados de mercado")
+st.markdown(
+    "Análisis financiero con indicadores técnicos, Machine Learning y datos actualizados de mercado"
+)
 
 st.sidebar.header("Configuración")
 
@@ -30,12 +32,14 @@ seleccion = st.sidebar.selectbox("Selecciona un activo", list(activos.keys()))
 periodo = st.sidebar.selectbox("Periodo", ["1y", "2y", "5y"])
 ticker = activos[seleccion]
 
+
 with st.spinner("Cargando datos..."):
     precio = cargar_datos(ticker, periodo)
 
 if len(precio) < 60:
     st.error("No hay suficientes datos. Selecciona otro periodo.")
     st.stop()
+
 
 df_price = pd.DataFrame({"Close": precio})
 df_indicators = add_technical_indicators(df_price)
@@ -48,52 +52,22 @@ banda_inf = df_indicators["BB_Lower"]
 std20 = df_indicators["Close"].rolling(20).std()
 rsi = df_indicators["RSI"]
 
-tab1, tab2, tab3, tab4 = st.tabs(["Precio", "Indicadores", "Predicción ML", "Señal de Mercado"])
 
-with tab1:
-    fig = go.Figure()
-    fig.add_trace(go.Scatter(x=list(precio.index), y=list(precio.values), name="Precio", line=dict(color="royalblue")))
-    fig.add_trace(go.Scatter(x=list(ma20.index), y=list(ma20.values), name="MA20", line=dict(color="orange", dash="dash")))
-    fig.add_trace(go.Scatter(x=list(ma50.index), y=list(ma50.values), name="MA50", line=dict(color="red", dash="dash")))
-    fig.update_layout(template="plotly_dark", title=f"{seleccion} - Precio historico")
-    st.plotly_chart(fig, use_container_width=True)
+# =========================
+# Dataset y modelo ML global
+# =========================
 
-    col1, col2, col3 = st.columns(3)
-    col1.metric("Precio actual", f"${precio.values[-1]:.2f}")
-    col2.metric("Maximo", f"${precio.values.max():.2f}")
-    col3.metric("Minimo", f"${precio.values.min():.2f}")
-
-with tab2:
-    fig2 = go.Figure()
-    fig2.add_trace(go.Scatter(x=list(precio.index), y=list(banda_sup.values), name="Banda Superior", line=dict(color="red", dash="dash")))
-    fig2.add_trace(go.Scatter(x=list(precio.index), y=list(ma20.values), name="MA20", line=dict(color="orange")))
-    fig2.add_trace(go.Scatter(x=list(precio.index), y=list(banda_inf.values), name="Banda Inferior", line=dict(color="green", dash="dash"), fill="tonexty", fillcolor="rgba(0,255,0,0.05)"))
-    fig2.add_trace(go.Scatter(x=list(precio.index), y=list(precio.values), name="Precio", line=dict(color="royalblue")))
-    fig2.update_layout(template="plotly_dark", title="Bandas de Bollinger")
-    st.plotly_chart(fig2, use_container_width=True)
-
-    fig3 = go.Figure()
-    fig3.add_trace(go.Scatter(x=list(rsi.index), y=list(rsi.values), name="RSI", line=dict(color="cyan")))
-    fig3.add_hline(y=70, line_dash="dash", line_color="red", annotation_text="Sobrecomprado")
-    fig3.add_hline(y=30, line_dash="dash", line_color="green", annotation_text="Sobrevendido")
-    fig3.update_layout(template="plotly_dark", title="RSI 14 dias", yaxis=dict(range=[0, 100]))
-    st.plotly_chart(fig3, use_container_width=True)
-
-with tab3:
-    st.subheader("Modelo predictivo con validación temporal")
-
-    df_ml = create_ml_dataset(
+df_ml = create_ml_dataset(
     precio=precio,
     ma20=ma20,
     ma50=ma50,
     rsi=rsi,
     std20=std20
-    )
+)
 
-    if len(df_ml) < 80:
-        st.warning("No hay suficientes datos para entrenar un modelo robusto.")
-        st.stop()
+model_available = len(df_ml) >= 80
 
+if model_available:
     feature_cols = get_feature_columns()
 
     X = df_ml[feature_cols]
@@ -115,118 +89,230 @@ with tab3:
     mejora_vs_naive = metrics["improvement_vs_naive"]
     directional_accuracy = metrics["directional_accuracy"]
 
-    fig4 = go.Figure()
 
-    fig4.add_trace(go.Scatter(
-        x=list(y_test.index),
-        y=list(y_test.values),
-        name="Precio real",
+tab1, tab2, tab3, tab4 = st.tabs([
+    "Precio",
+    "Indicadores",
+    "Predicción ML",
+    "Señal de Mercado"
+])
+
+
+with tab1:
+    fig = go.Figure()
+
+    fig.add_trace(go.Scatter(
+        x=list(precio.index),
+        y=list(precio.values),
+        name="Precio",
         line=dict(color="royalblue")
     ))
 
-    fig4.add_trace(go.Scatter(
-        x=list(y_test.index),
-        y=list(preds),
-        name="Predicción XGBoost",
+    fig.add_trace(go.Scatter(
+        x=list(ma20.index),
+        y=list(ma20.values),
+        name="MA20",
         line=dict(color="orange", dash="dash")
     ))
 
-    fig4.add_trace(go.Scatter(
-        x=list(y_test.index),
-        y=list(naive_preds),
-        name="Baseline naïve",
-        line=dict(color="gray", dash="dot")
+    fig.add_trace(go.Scatter(
+        x=list(ma50.index),
+        y=list(ma50.values),
+        name="MA50",
+        line=dict(color="red", dash="dash")
     ))
 
-    fig4.update_layout(
+    fig.update_layout(
         template="plotly_dark",
-        title="XGBoost vs Precio Real vs Baseline Naïve",
-        xaxis_title="Fecha",
-        yaxis_title="Precio"
+        title=f"{seleccion} - Precio histórico"
     )
 
-    st.plotly_chart(fig4, use_container_width=True)
+    st.plotly_chart(fig, use_container_width=True)
+
+    col1, col2, col3 = st.columns(3)
+    col1.metric("Precio actual", f"${precio.values[-1]:.2f}")
+    col2.metric("Máximo", f"${precio.values.max():.2f}")
+    col3.metric("Mínimo", f"${precio.values.min():.2f}")
+
+
+with tab2:
+    fig2 = go.Figure()
+
+    fig2.add_trace(go.Scatter(
+        x=list(precio.index),
+        y=list(banda_sup.values),
+        name="Banda Superior",
+        line=dict(color="red", dash="dash")
+    ))
+
+    fig2.add_trace(go.Scatter(
+        x=list(precio.index),
+        y=list(ma20.values),
+        name="MA20",
+        line=dict(color="orange")
+    ))
+
+    fig2.add_trace(go.Scatter(
+        x=list(precio.index),
+        y=list(banda_inf.values),
+        name="Banda Inferior",
+        line=dict(color="green", dash="dash"),
+        fill="tonexty",
+        fillcolor="rgba(0,255,0,0.05)"
+    ))
+
+    fig2.add_trace(go.Scatter(
+        x=list(precio.index),
+        y=list(precio.values),
+        name="Precio",
+        line=dict(color="royalblue")
+    ))
+
+    fig2.update_layout(
+        template="plotly_dark",
+        title="Bandas de Bollinger"
+    )
+
+    st.plotly_chart(fig2, use_container_width=True)
+
+    fig3 = go.Figure()
+
+    fig3.add_trace(go.Scatter(
+        x=list(rsi.index),
+        y=list(rsi.values),
+        name="RSI",
+        line=dict(color="cyan")
+    ))
+
+    fig3.add_hline(
+        y=70,
+        line_dash="dash",
+        line_color="red",
+        annotation_text="Sobrecomprado"
+    )
+
+    fig3.add_hline(
+        y=30,
+        line_dash="dash",
+        line_color="green",
+        annotation_text="Sobrevendido"
+    )
+
+    fig3.update_layout(
+        template="plotly_dark",
+        title="RSI 14 días",
+        yaxis=dict(range=[0, 100])
+    )
+
+    st.plotly_chart(fig3, use_container_width=True)
+
+
+with tab3:
+    st.subheader("Modelo predictivo con validación temporal")
+
+    if not model_available:
+        st.warning("No hay suficientes datos para entrenar un modelo robusto.")
+    else:
+        fig4 = go.Figure()
+
+        fig4.add_trace(go.Scatter(
+            x=list(y_test.index),
+            y=list(y_test.values),
+            name="Precio real",
+            line=dict(color="royalblue")
+        ))
+
+        fig4.add_trace(go.Scatter(
+            x=list(y_test.index),
+            y=list(preds),
+            name="Predicción XGBoost",
+            line=dict(color="orange", dash="dash")
+        ))
+
+        fig4.add_trace(go.Scatter(
+            x=list(y_test.index),
+            y=list(naive_preds),
+            name="Baseline naïve",
+            line=dict(color="gray", dash="dot")
+        ))
+
+        fig4.update_layout(
+            template="plotly_dark",
+            title="XGBoost vs Precio Real vs Baseline Naïve",
+            xaxis_title="Fecha",
+            yaxis_title="Precio"
+        )
+
+        st.plotly_chart(fig4, use_container_width=True)
+
+        col1, col2, col3, col4 = st.columns(4)
+
+        col1.metric("MAE XGBoost", f"{mae_modelo:.2f}")
+        col2.metric("MAE Baseline", f"{mae_naive:.2f}")
+        col3.metric("MAPE", f"{mape_modelo:.2f}%")
+        col4.metric("Dirección correcta", f"{directional_accuracy:.2f}%")
+
+        if mejora_vs_naive > 0:
+            st.success(
+                f"El modelo supera al baseline naïve en {mejora_vs_naive:.2f}%."
+            )
+        else:
+            st.warning(
+                f"El modelo NO supera al baseline naïve. Diferencia: {mejora_vs_naive:.2f}%."
+            )
+
+        st.caption(
+            "Nota: este modelo es experimental y no constituye recomendación financiera. "
+            "Evalúa patrones históricos, indicadores técnicos y comportamiento pasado del activo."
+        )
+
+
 with tab4:
     st.subheader("Señal ejecutiva de mercado")
 
-    df_ml = create_ml_dataset(
-        precio=precio,
-        ma20=ma20,
-        ma50=ma50,
-        rsi=rsi,
-        std20=std20
-    )
-
-    if len(df_ml) < 80:
+    if not model_available:
         st.warning("No hay suficientes datos para calcular una señal robusta.")
-        st.stop()
-
-    feature_cols = get_feature_columns()
-
-    X = df_ml[feature_cols]
-    y = df_ml["target"]
-
-    results = train_and_evaluate_model(X, y)
-
-    X_test = results["X_test"]
-    metrics = results["metrics"]
-
-    last_price = float(precio.iloc[-1])
-    last_rsi = float(rsi.iloc[-1])
-    last_ma20 = float(ma20.iloc[-1])
-    last_ma50 = float(ma50.iloc[-1])
-    last_volatility = float(std20.iloc[-1] / last_price)
-
-    predicted_price = float(metrics["predictions"][-1])
-
-    signal_result = compute_market_signal(
-        last_price=last_price,
-        predicted_price=predicted_price,
-        rsi=last_rsi,
-        ma20=last_ma20,
-        ma50=last_ma50,
-        volatility=last_volatility
-    )
-
-    st.metric("Market Signal Score", f"{signal_result['signal_score']}/100")
-    st.metric("Señal", signal_result["signal"])
-
-    st.write(signal_result["interpretation"])
-
-    col1, col2, col3 = st.columns(3)
-
-    col1.metric("Score del modelo", f"{signal_result['model_score']}%")
-    col2.metric("Score técnico", f"{signal_result['technical_score']}%")
-    col3.metric("Score de volatilidad", f"{signal_result['volatility_score']}%")
-
-    st.markdown("### Variables usadas")
-
-    st.write({
-        "Precio actual": round(last_price, 2),
-        "Precio estimado": round(predicted_price, 2),
-        "RSI": round(last_rsi, 2),
-        "MA20": round(last_ma20, 2),
-        "MA50": round(last_ma50, 2),
-        "Volatilidad relativa": round(last_volatility, 4),
-    })
-
-    st.caption(
-        "La señal combina predicción del modelo, tendencia técnica y penalización por volatilidad. "
-        "No constituye recomendación financiera."
-    )
-    col1, col2, col3, col4 = st.columns(4)
-
-    col1.metric("MAE XGBoost", f"{mae_modelo:.2f}")
-    col2.metric("MAE Baseline", f"{mae_naive:.2f}")
-    col3.metric("MAPE", f"{mape_modelo:.2f}%")
-    col4.metric("Dirección correcta", f"{directional_accuracy:.2f}%")
-
-    if mejora_vs_naive > 0:
-        st.success(f"El modelo supera al baseline naïve en {mejora_vs_naive:.2f}%.")
     else:
-        st.warning(f"El modelo NO supera al baseline naïve. Diferencia: {mejora_vs_naive:.2f}%.")
+        last_price = float(precio.iloc[-1])
+        last_rsi = float(rsi.iloc[-1])
+        last_ma20 = float(ma20.iloc[-1])
+        last_ma50 = float(ma50.iloc[-1])
+        last_volatility = float(std20.iloc[-1] / last_price)
 
-    st.caption(
-        "Nota: este modelo es experimental y no constituye recomendación financiera. "
-        "Evalúa patrones históricos, indicadores técnicos y comportamiento pasado del activo."
-    )
+        predicted_price = float(preds[-1])
+
+        signal_result = compute_market_signal(
+            last_price=last_price,
+            predicted_price=predicted_price,
+            rsi=last_rsi,
+            ma20=last_ma20,
+            ma50=last_ma50,
+            volatility=last_volatility
+        )
+
+        st.metric("Market Signal Score", f"{signal_result['signal_score']}/100")
+        st.metric("Señal", signal_result["signal"])
+
+        st.write(signal_result["interpretation"])
+
+        col1, col2, col3 = st.columns(3)
+
+        col1.metric("Score del modelo", f"{signal_result['model_score']}%")
+        col2.metric("Score técnico", f"{signal_result['technical_score']}%")
+        col3.metric("Score de volatilidad", f"{signal_result['volatility_score']}%")
+
+        st.markdown("### Variables usadas")
+
+        st.json({
+            "Precio actual": round(last_price, 2),
+            "Precio estimado": round(predicted_price, 2),
+            "RSI": round(last_rsi, 2),
+            "MA20": round(last_ma20, 2),
+            "MA50": round(last_ma50, 2),
+            "Volatilidad relativa": round(last_volatility, 4),
+        })
+
+        st.caption(
+            "La señal combina predicción del modelo, tendencia técnica "
+            "y penalización por volatilidad. No constituye recomendación financiera."
+        )
