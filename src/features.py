@@ -3,40 +3,44 @@
 import pandas as pd
 
 
-def create_features(df: pd.DataFrame) -> pd.DataFrame:
-    df = df.copy()
+def create_ml_dataset(
+    precio: pd.Series,
+    ma20: pd.Series,
+    ma50: pd.Series,
+    rsi: pd.Series,
+    std20: pd.Series
+) -> pd.DataFrame:
+    """
+    Construye el dataset de Machine Learning para predicción de precio siguiente.
+    """
 
-    df["return_1d"] = df["Close"].pct_change()
-    df["return_5d"] = df["Close"].pct_change(5)
-    df["volatility_10d"] = df["return_1d"].rolling(10).std()
-    df["volatility_20d"] = df["return_1d"].rolling(20).std()
+    p = precio.values.astype(float)
+    idx = precio.index
 
-    df["close_lag_1"] = df["Close"].shift(1)
-    df["close_lag_2"] = df["Close"].shift(2)
-    df["close_lag_5"] = df["Close"].shift(5)
+    ret1 = pd.Series(p, index=idx).pct_change(1)
+    ret5 = pd.Series(p, index=idx).pct_change(5)
 
-    df["volume_change"] = df["Volume"].pct_change()
+    df_ml = pd.DataFrame({
+        "precio": p,
+        "ma20": ma20.values.astype(float),
+        "ma50": ma50.values.astype(float),
+        "rsi": rsi.values.astype(float),
+        "std20": std20.values.astype(float),
+        "retorno_1d": ret1.values,
+        "retorno_5d": ret5.values,
+        "target": pd.Series(p, index=idx).shift(-1).values
+    }, index=idx)
 
-    df["target_price_next"] = df["Close"].shift(-1)
-    df["target_direction"] = (df["Close"].shift(-1) > df["Close"]).astype(int)
-
-    return df.dropna()
+    return df_ml.dropna()
 
 
 def get_feature_columns() -> list[str]:
     return [
-        "Close",
-        "Volume",
-        "MA20",
-        "MA50",
-        "BB_Width",
-        "RSI",
-        "return_1d",
-        "return_5d",
-        "volatility_10d",
-        "volatility_20d",
-        "close_lag_1",
-        "close_lag_2",
-        "close_lag_5",
-        "volume_change",
+        "precio",
+        "ma20",
+        "ma50",
+        "rsi",
+        "std20",
+        "retorno_1d",
+        "retorno_5d",
     ]
