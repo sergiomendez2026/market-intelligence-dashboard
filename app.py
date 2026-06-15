@@ -10,7 +10,7 @@ from sklearn.model_selection import train_test_split
 st.set_page_config(page_title="Market Intelligence Dashboard", layout="wide")
 
 st.title("Market Intelligence Dashboard")
-st.markdown("Analisis financiero con Machine Learning en tiempo real")
+st.markdown("Análisis financiero con indicadores técnicos, Machine Learning y datos actualizados de mercado")
 
 st.sidebar.header("Configuracion")
 
