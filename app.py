@@ -1,11 +1,9 @@
 import streamlit as st
-import yfinance as yf
 import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
 from xgboost import XGBRegressor
 from sklearn.metrics import mean_absolute_error
-from sklearn.model_selection import train_test_split
 from src.indicators import add_technical_indicators
 from src.data_loader import cargar_datos
 
