@@ -85,6 +85,8 @@ with tab2:
     st.plotly_chart(fig3, use_container_width=True)
 
 with tab3:
+    st.subheader("Modelo predictivo con validación temporal")
+
     p = precio.values.astype(float)
     idx = precio.index
 
@@ -92,32 +94,111 @@ with tab3:
     ma50v = ma50.values.astype(float)
     rsiv = rsi.values.astype(float)
     std20v = std20.values.astype(float)
-    ret1 = pd.Series(p).pct_change(1).values
-    ret5 = pd.Series(p).pct_change(5).values
-    target = np.roll(p, -1)
+
+    ret1 = pd.Series(p, index=idx).pct_change(1)
+    ret5 = pd.Series(p, index=idx).pct_change(5)
 
     df_ml = pd.DataFrame({
-        "precio": p, "ma20": ma20v, "ma50": ma50v,
-        "rsi": rsiv, "std20": std20v,
-        "retorno_1d": ret1, "retorno_5d": ret5,
-        "target": target
+        "precio": p,
+        "ma20": ma20v,
+        "ma50": ma50v,
+        "rsi": rsiv,
+        "std20": std20v,
+        "retorno_1d": ret1.values,
+        "retorno_5d": ret5.values,
+        "target": pd.Series(p, index=idx).shift(-1).values
     }, index=idx)
 
-    df_ml = df_ml.iloc[:-1].dropna()
+    df_ml = df_ml.dropna()
+
+    if len(df_ml) < 80:
+        st.warning("No hay suficientes datos para entrenar un modelo robusto.")
+        st.stop()
 
     X = df_ml.drop("target", axis=1)
     y = df_ml["target"]
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle=False)
 
-    modelo = XGBRegressor(n_estimators=200, learning_rate=0.05, max_depth=4, random_state=42)
+    split_index = int(len(df_ml) * 0.8)
+
+    X_train = X.iloc[:split_index]
+    X_test = X.iloc[split_index:]
+    y_train = y.iloc[:split_index]
+    y_test = y.iloc[split_index:]
+
+    modelo = XGBRegressor(
+        n_estimators=300,
+        learning_rate=0.03,
+        max_depth=4,
+        subsample=0.9,
+        colsample_bytree=0.9,
+        random_state=42
+    )
+
     modelo.fit(X_train, y_train)
+
     preds = modelo.predict(X_test)
-    mae = mean_absolute_error(y_test, preds)
+
+    # Baseline naïve: mañana = hoy
+    naive_preds = X_test["precio"].values
+
+    mae_modelo = mean_absolute_error(y_test, preds)
+    mae_naive = mean_absolute_error(y_test, naive_preds)
+
+    rmse_modelo = np.sqrt(np.mean((y_test.values - preds) ** 2))
+    mape_modelo = np.mean(np.abs((y_test.values - preds) / y_test.values)) * 100
+
+    mejora_vs_naive = ((mae_naive - mae_modelo) / mae_naive) * 100
+
+    direccion_real = np.sign(y_test.values - X_test["precio"].values)
+    direccion_predicha = np.sign(preds - X_test["precio"].values)
+
+    directional_accuracy = np.mean(direccion_real == direccion_predicha) * 100
 
     fig4 = go.Figure()
-    fig4.add_trace(go.Scatter(x=list(y_test.index), y=list(y_test.values), name="Real", line=dict(color="royalblue")))
-    fig4.add_trace(go.Scatter(x=list(y_test.index), y=list(preds), name="Prediccion", line=dict(color="orange", dash="dash")))
-    fig4.update_layout(template="plotly_dark", title="XGBoost: Prediccion vs Precio Real")
+
+    fig4.add_trace(go.Scatter(
+        x=list(y_test.index),
+        y=list(y_test.values),
+        name="Precio real",
+        line=dict(color="royalblue")
+    ))
+
+    fig4.add_trace(go.Scatter(
+        x=list(y_test.index),
+        y=list(preds),
+        name="Predicción XGBoost",
+        line=dict(color="orange", dash="dash")
+    ))
+
+    fig4.add_trace(go.Scatter(
+        x=list(y_test.index),
+        y=list(naive_preds),
+        name="Baseline naïve",
+        line=dict(color="gray", dash="dot")
+    ))
+
+    fig4.update_layout(
+        template="plotly_dark",
+        title="XGBoost vs Precio Real vs Baseline Naïve",
+        xaxis_title="Fecha",
+        yaxis_title="Precio"
+    )
+
     st.plotly_chart(fig4, use_container_width=True)
 
-    st.metric("Error promedio del modelo (MAE)", f"${mae:.2f}")
+    col1, col2, col3, col4 = st.columns(4)
+
+    col1.metric("MAE XGBoost", f"{mae_modelo:.2f}")
+    col2.metric("MAE Baseline", f"{mae_naive:.2f}")
+    col3.metric("MAPE", f"{mape_modelo:.2f}%")
+    col4.metric("Dirección correcta", f"{directional_accuracy:.2f}%")
+
+    if mejora_vs_naive > 0:
+        st.success(f"El modelo supera al baseline naïve en {mejora_vs_naive:.2f}%.")
+    else:
+        st.warning(f"El modelo NO supera al baseline naïve. Diferencia: {mejora_vs_naive:.2f}%.")
+
+    st.caption(
+        "Nota: este modelo es experimental y no constituye recomendación financiera. "
+        "Evalúa patrones históricos, indicadores técnicos y comportamiento pasado del activo."
+    )
