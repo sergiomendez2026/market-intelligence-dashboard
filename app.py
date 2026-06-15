@@ -9,17 +9,22 @@ from sklearn.metrics import mean_absolute_error
 from src.indicators import add_technical_indicators
 from src.data_loader import cargar_datos
 
+
 st.set_page_config(page_title="Market Intelligence Dashboard", layout="wide")
 
 st.title("Market Intelligence Dashboard")
 st.markdown("Análisis financiero con indicadores técnicos, Machine Learning y datos actualizados de mercado")
 
-st.sidebar.header("Configuracion")
+st.sidebar.header("Configuración")
 
 activos = {
-    "Apple": "AAPL", "Tesla": "TSLA",
-    "Bitcoin": "BTC-USD", "Ethereum": "ETH-USD",
-    "S&P 500": "^GSPC", "NASDAQ": "^IXIC", "EUR/USD": "EURUSD=X"
+    "Apple": "AAPL",
+    "Tesla": "TSLA",
+    "Bitcoin": "BTC-USD",
+    "Ethereum": "ETH-USD",
+    "S&P 500": "^GSPC",
+    "NASDAQ": "^IXIC",
+    "EUR/USD": "EURUSD=X"
 }
 
 seleccion = st.sidebar.selectbox("Selecciona un activo", list(activos.keys()))
