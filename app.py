@@ -28,7 +28,7 @@ activos = {
 }
 
 seleccion = st.sidebar.selectbox("Selecciona un activo", list(activos.keys()))
-periodo = st.sidebar.selectbox("Periodo", ["6mo", "1y", "2y"])
+periodo = st.sidebar.selectbox("Periodo", ["1y", "2y", "5y"])
 ticker = activos[seleccion]
 
 with st.spinner("Cargando datos..."):
