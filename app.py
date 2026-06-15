@@ -7,12 +7,12 @@ from xgboost import XGBRegressor
 from sklearn.metrics import mean_absolute_error
 from sklearn.model_selection import train_test_split
 
-st.set_page_config(page_title="Market Intelligence Dashboard", layout="wide", page_icon="📈")
+st.set_page_config(page_title="Market Intelligence Dashboard", layout="wide")
 
 st.title("Market Intelligence Dashboard")
-st.markdown("Análisis financiero con Machine Learning en tiempo real")
+st.markdown("Analisis financiero con Machine Learning en tiempo real")
 
-st.sidebar.header("Configuración")
+st.sidebar.header("Configuracion")
 
 activos = {
     "Apple": "AAPL", "Tesla": "TSLA",
@@ -28,13 +28,19 @@ ticker = activos[seleccion]
 def cargar_datos(ticker, periodo):
     df = yf.download(ticker, period=periodo, auto_adjust=True, progress=False)
     close = df["Close"]
+    # Aplanar cualquier estructura MultiIndex
     if isinstance(close, pd.DataFrame):
         close = close.iloc[:, 0]
-    close = pd.Series(close.values.flatten(), index=df.index, name="Close")
-    return close
+    arr = np.array(close).flatten().astype(float)
+    serie = pd.Series(arr, index=df.index[-len(arr):], name="Close")
+    return serie.dropna()
 
 with st.spinner("Cargando datos..."):
     precio = cargar_datos(ticker, periodo)
+
+if len(precio) < 60:
+    st.error("No hay suficientes datos. Selecciona otro periodo.")
+    st.stop()
 
 ma20 = precio.rolling(20).mean()
 ma50 = precio.rolling(50).mean()
@@ -51,45 +57,53 @@ tab1, tab2, tab3 = st.tabs(["Precio", "Indicadores", "Prediccion ML"])
 
 with tab1:
     fig = go.Figure()
-    fig.add_trace(go.Scatter(x=precio.index, y=precio.values, name="Precio", line=dict(color="royalblue")))
-    fig.add_trace(go.Scatter(x=precio.index, y=ma20.values, name="MA20", line=dict(color="orange", dash="dash")))
-    fig.add_trace(go.Scatter(x=precio.index, y=ma50.values, name="MA50", line=dict(color="red", dash="dash")))
+    fig.add_trace(go.Scatter(x=list(precio.index), y=list(precio.values), name="Precio", line=dict(color="royalblue")))
+    fig.add_trace(go.Scatter(x=list(ma20.index), y=list(ma20.values), name="MA20", line=dict(color="orange", dash="dash")))
+    fig.add_trace(go.Scatter(x=list(ma50.index), y=list(ma50.values), name="MA50", line=dict(color="red", dash="dash")))
     fig.update_layout(template="plotly_dark", title=f"{seleccion} - Precio historico")
     st.plotly_chart(fig, use_container_width=True)
 
     col1, col2, col3 = st.columns(3)
-    col1.metric("Precio actual", f"${float(precio.values[-1]):.2f}")
-    col2.metric("Maximo", f"${float(precio.values.max()):.2f}")
-    col3.metric("Minimo", f"${float(precio.values.min()):.2f}")
+    col1.metric("Precio actual", f"${precio.values[-1]:.2f}")
+    col2.metric("Maximo", f"${precio.values.max():.2f}")
+    col3.metric("Minimo", f"${precio.values.min():.2f}")
 
 with tab2:
     fig2 = go.Figure()
-    fig2.add_trace(go.Scatter(x=precio.index, y=banda_sup.values, name="Banda Superior", line=dict(color="red", dash="dash")))
-    fig2.add_trace(go.Scatter(x=precio.index, y=ma20.values, name="MA20", line=dict(color="orange")))
-    fig2.add_trace(go.Scatter(x=precio.index, y=banda_inf.values, name="Banda Inferior", line=dict(color="green", dash="dash"), fill="tonexty", fillcolor="rgba(0,255,0,0.05)"))
-    fig2.add_trace(go.Scatter(x=precio.index, y=precio.values, name="Precio", line=dict(color="royalblue")))
+    fig2.add_trace(go.Scatter(x=list(precio.index), y=list(banda_sup.values), name="Banda Superior", line=dict(color="red", dash="dash")))
+    fig2.add_trace(go.Scatter(x=list(precio.index), y=list(ma20.values), name="MA20", line=dict(color="orange")))
+    fig2.add_trace(go.Scatter(x=list(precio.index), y=list(banda_inf.values), name="Banda Inferior", line=dict(color="green", dash="dash"), fill="tonexty", fillcolor="rgba(0,255,0,0.05)"))
+    fig2.add_trace(go.Scatter(x=list(precio.index), y=list(precio.values), name="Precio", line=dict(color="royalblue")))
     fig2.update_layout(template="plotly_dark", title="Bandas de Bollinger")
     st.plotly_chart(fig2, use_container_width=True)
 
     fig3 = go.Figure()
-    fig3.add_trace(go.Scatter(x=rsi.index, y=rsi.values, name="RSI", line=dict(color="cyan")))
+    fig3.add_trace(go.Scatter(x=list(rsi.index), y=list(rsi.values), name="RSI", line=dict(color="cyan")))
     fig3.add_hline(y=70, line_dash="dash", line_color="red", annotation_text="Sobrecomprado")
     fig3.add_hline(y=30, line_dash="dash", line_color="green", annotation_text="Sobrevendido")
     fig3.update_layout(template="plotly_dark", title="RSI 14 dias", yaxis=dict(range=[0, 100]))
     st.plotly_chart(fig3, use_container_width=True)
 
 with tab3:
+    p = precio.values.astype(float)
+    idx = precio.index
+
+    ma20v = ma20.values.astype(float)
+    ma50v = ma50.values.astype(float)
+    rsiv = rsi.values.astype(float)
+    std20v = std20.values.astype(float)
+    ret1 = pd.Series(p).pct_change(1).values
+    ret5 = pd.Series(p).pct_change(5).values
+    target = np.roll(p, -1)
+
     df_ml = pd.DataFrame({
-        "precio": precio.values,
-        "ma20": ma20.values,
-        "ma50": ma50.values,
-        "rsi": rsi.values,
-        "std20": std20.values,
-        "retorno_1d": precio.pct_change(1).values,
-        "retorno_5d": precio.pct_change(5).values,
-        "target": precio.shift(-1).values
-    }, index=precio.index)
-    df_ml = df_ml.dropna()
+        "precio": p, "ma20": ma20v, "ma50": ma50v,
+        "rsi": rsiv, "std20": std20v,
+        "retorno_1d": ret1, "retorno_5d": ret5,
+        "target": target
+    }, index=idx)
+
+    df_ml = df_ml.iloc[:-1].dropna()
 
     X = df_ml.drop("target", axis=1)
     y = df_ml["target"]
@@ -101,8 +115,8 @@ with tab3:
     mae = mean_absolute_error(y_test, preds)
 
     fig4 = go.Figure()
-    fig4.add_trace(go.Scatter(x=y_test.index, y=y_test.values, name="Real", line=dict(color="royalblue")))
-    fig4.add_trace(go.Scatter(x=y_test.index, y=preds, name="Prediccion", line=dict(color="orange", dash="dash")))
+    fig4.add_trace(go.Scatter(x=list(y_test.index), y=list(y_test.values), name="Real", line=dict(color="royalblue")))
+    fig4.add_trace(go.Scatter(x=list(y_test.index), y=list(preds), name="Prediccion", line=dict(color="orange", dash="dash")))
     fig4.update_layout(template="plotly_dark", title="XGBoost: Prediccion vs Precio Real")
     st.plotly_chart(fig4, use_container_width=True)
 
