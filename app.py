@@ -7,6 +7,7 @@ from xgboost import XGBRegressor
 from sklearn.metrics import mean_absolute_error
 from sklearn.model_selection import train_test_split
 from src.indicators import add_technical_indicators
+from src.data_loader import cargar_datos
 
 st.set_page_config(page_title="Market Intelligence Dashboard", layout="wide")
 
@@ -26,15 +27,6 @@ periodo = st.sidebar.selectbox("Periodo", ["6mo", "1y", "2y"])
 ticker = activos[seleccion]
 
 @st.cache_data
-def cargar_datos(ticker, periodo):
-    df = yf.download(ticker, period=periodo, auto_adjust=True, progress=False)
-    close = df["Close"]
-    # Aplanar cualquier estructura MultiIndex
-    if isinstance(close, pd.DataFrame):
-        close = close.iloc[:, 0]
-    arr = np.array(close).flatten().astype(float)
-    serie = pd.Series(arr, index=df.index[-len(arr):], name="Close")
-    return serie.dropna()
 
 with st.spinner("Cargando datos..."):
     precio = cargar_datos(ticker, periodo)
