@@ -1,15 +1,20 @@
+import streamlit as st
 import yfinance as yf
 import pandas as pd
 import numpy as np
 
 
-def cargar_datos(ticker, periodo):
+@st.cache_data(ttl=3600)
+def cargar_datos(ticker: str, periodo: str) -> pd.Series:
     df = yf.download(
         ticker,
         period=periodo,
         auto_adjust=True,
         progress=False
     )
+
+    if df.empty:
+        raise ValueError(f"No se encontraron datos para {ticker}")
 
     close = df["Close"]
 
