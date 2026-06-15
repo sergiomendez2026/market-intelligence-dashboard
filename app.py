@@ -51,7 +51,9 @@ banda_inf = ma20 - 2 * std20
 delta = precio.diff()
 ganancia = delta.where(delta > 0, 0).rolling(14).mean()
 perdida = (-delta.where(delta < 0, 0)).rolling(14).mean()
-rsi = 100 - (100 / (1 + ganancia / perdida))
+rs = ganancia / perdida.replace(0, np.nan)
+rsi = 100 - (100 / (1 + rs))
+rsi = rsi.fillna(50)
 
 tab1, tab2, tab3 = st.tabs(["Precio", "Indicadores", "Prediccion ML"])
 
