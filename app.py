@@ -6,6 +6,7 @@ import plotly.graph_objects as go
 from xgboost import XGBRegressor
 from sklearn.metrics import mean_absolute_error
 from sklearn.model_selection import train_test_split
+from src.indicators import add_technical_indicators
 
 st.set_page_config(page_title="Market Intelligence Dashboard", layout="wide")
 
@@ -42,18 +43,16 @@ if len(precio) < 60:
     st.error("No hay suficientes datos. Selecciona otro periodo.")
     st.stop()
 
-ma20 = precio.rolling(20).mean()
-ma50 = precio.rolling(50).mean()
-std20 = precio.rolling(20).std()
-banda_sup = ma20 + 2 * std20
-banda_inf = ma20 - 2 * std20
+df_price = pd.DataFrame({"Close": precio})
+df_indicators = add_technical_indicators(df_price)
 
-delta = precio.diff()
-ganancia = delta.where(delta > 0, 0).rolling(14).mean()
-perdida = (-delta.where(delta < 0, 0)).rolling(14).mean()
-rs = ganancia / perdida.replace(0, np.nan)
-rsi = 100 - (100 / (1 + rs))
-rsi = rsi.fillna(50)
+precio = df_indicators["Close"]
+ma20 = df_indicators["MA20"]
+ma50 = df_indicators["MA50"]
+banda_sup = df_indicators["BB_Upper"]
+banda_inf = df_indicators["BB_Lower"]
+std20 = df_indicators["Close"].rolling(20).std()
+rsi = df_indicators["RSI"]
 
 tab1, tab2, tab3 = st.tabs(["Precio", "Indicadores", "Prediccion ML"])
 
