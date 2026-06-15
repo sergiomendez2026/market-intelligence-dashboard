@@ -8,7 +8,7 @@ from sklearn.metrics import mean_absolute_error
 
 from src.indicators import add_technical_indicators
 from src.data_loader import cargar_datos
-
+from src.features import create_ml_dataset, get_feature_columns
 
 st.set_page_config(page_title="Market Intelligence Dashboard", layout="wide")
 
@@ -83,35 +83,21 @@ with tab2:
 with tab3:
     st.subheader("Modelo predictivo con validación temporal")
 
-    p = precio.values.astype(float)
-    idx = precio.index
-
-    ma20v = ma20.values.astype(float)
-    ma50v = ma50.values.astype(float)
-    rsiv = rsi.values.astype(float)
-    std20v = std20.values.astype(float)
-
-    ret1 = pd.Series(p, index=idx).pct_change(1)
-    ret5 = pd.Series(p, index=idx).pct_change(5)
-
-    df_ml = pd.DataFrame({
-        "precio": p,
-        "ma20": ma20v,
-        "ma50": ma50v,
-        "rsi": rsiv,
-        "std20": std20v,
-        "retorno_1d": ret1.values,
-        "retorno_5d": ret5.values,
-        "target": pd.Series(p, index=idx).shift(-1).values
-    }, index=idx)
-
-    df_ml = df_ml.dropna()
+    df_ml = create_ml_dataset(
+    precio=precio,
+    ma20=ma20,
+    ma50=ma50,
+    rsi=rsi,
+    std20=std20
+    )
 
     if len(df_ml) < 80:
         st.warning("No hay suficientes datos para entrenar un modelo robusto.")
         st.stop()
 
-    X = df_ml.drop("target", axis=1)
+    feature_cols = get_feature_columns()
+
+    X = df_ml[feature_cols]
     y = df_ml["target"]
 
     split_index = int(len(df_ml) * 0.8)
