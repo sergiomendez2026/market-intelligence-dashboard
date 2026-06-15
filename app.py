@@ -26,8 +26,6 @@ seleccion = st.sidebar.selectbox("Selecciona un activo", list(activos.keys()))
 periodo = st.sidebar.selectbox("Periodo", ["6mo", "1y", "2y"])
 ticker = activos[seleccion]
 
-@st.cache_data
-
 with st.spinner("Cargando datos..."):
     precio = cargar_datos(ticker, periodo)
 
