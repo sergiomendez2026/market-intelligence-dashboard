@@ -48,7 +48,7 @@ banda_inf = df_indicators["BB_Lower"]
 std20 = df_indicators["Close"].rolling(20).std()
 rsi = df_indicators["RSI"]
 
-tab1, tab2, tab3 = st.tabs(["Precio", "Indicadores", "Prediccion ML"])
+tab1, tab2, tab3, tab4 = st.tabs(["Precio", "Indicadores", "Predicción ML", "Señal de Mercado"])
 
 with tab1:
     fig = go.Figure()
@@ -146,7 +146,74 @@ with tab3:
     )
 
     st.plotly_chart(fig4, use_container_width=True)
+with tab4:
+    st.subheader("Señal ejecutiva de mercado")
 
+    df_ml = create_ml_dataset(
+        precio=precio,
+        ma20=ma20,
+        ma50=ma50,
+        rsi=rsi,
+        std20=std20
+    )
+
+    if len(df_ml) < 80:
+        st.warning("No hay suficientes datos para calcular una señal robusta.")
+        st.stop()
+
+    feature_cols = get_feature_columns()
+
+    X = df_ml[feature_cols]
+    y = df_ml["target"]
+
+    results = train_and_evaluate_model(X, y)
+
+    X_test = results["X_test"]
+    metrics = results["metrics"]
+
+    last_price = float(precio.iloc[-1])
+    last_rsi = float(rsi.iloc[-1])
+    last_ma20 = float(ma20.iloc[-1])
+    last_ma50 = float(ma50.iloc[-1])
+    last_volatility = float(std20.iloc[-1] / last_price)
+
+    predicted_price = float(metrics["predictions"][-1])
+
+    signal_result = compute_market_signal(
+        last_price=last_price,
+        predicted_price=predicted_price,
+        rsi=last_rsi,
+        ma20=last_ma20,
+        ma50=last_ma50,
+        volatility=last_volatility
+    )
+
+    st.metric("Market Signal Score", f"{signal_result['signal_score']}/100")
+    st.metric("Señal", signal_result["signal"])
+
+    st.write(signal_result["interpretation"])
+
+    col1, col2, col3 = st.columns(3)
+
+    col1.metric("Score del modelo", f"{signal_result['model_score']}%")
+    col2.metric("Score técnico", f"{signal_result['technical_score']}%")
+    col3.metric("Score de volatilidad", f"{signal_result['volatility_score']}%")
+
+    st.markdown("### Variables usadas")
+
+    st.write({
+        "Precio actual": round(last_price, 2),
+        "Precio estimado": round(predicted_price, 2),
+        "RSI": round(last_rsi, 2),
+        "MA20": round(last_ma20, 2),
+        "MA50": round(last_ma50, 2),
+        "Volatilidad relativa": round(last_volatility, 4),
+    })
+
+    st.caption(
+        "La señal combina predicción del modelo, tendencia técnica y penalización por volatilidad. "
+        "No constituye recomendación financiera."
+    )
     col1, col2, col3, col4 = st.columns(4)
 
     col1.metric("MAE XGBoost", f"{mae_modelo:.2f}")
