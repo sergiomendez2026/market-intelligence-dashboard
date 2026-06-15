@@ -3,12 +3,10 @@ import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
 
-from xgboost import XGBRegressor
-from sklearn.metrics import mean_absolute_error
-
 from src.indicators import add_technical_indicators
 from src.data_loader import cargar_datos
 from src.features import create_ml_dataset, get_feature_columns
+from src.model import train_and_evaluate_model
 
 st.set_page_config(page_title="Market Intelligence Dashboard", layout="wide")
 
