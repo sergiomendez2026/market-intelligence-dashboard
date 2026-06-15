@@ -98,41 +98,21 @@ with tab3:
     X = df_ml[feature_cols]
     y = df_ml["target"]
 
-    split_index = int(len(df_ml) * 0.8)
+    results = train_and_evaluate_model(X, y)
 
-    X_train = X.iloc[:split_index]
-    X_test = X.iloc[split_index:]
-    y_train = y.iloc[:split_index]
-    y_test = y.iloc[split_index:]
+    X_test = results["X_test"]
+    y_test = results["y_test"]
+    metrics = results["metrics"]
 
-    modelo = XGBRegressor(
-        n_estimators=300,
-        learning_rate=0.03,
-        max_depth=4,
-        subsample=0.9,
-        colsample_bytree=0.9,
-        random_state=42
-    )
+    preds = metrics["predictions"]
+    naive_preds = metrics["naive_predictions"]
 
-    modelo.fit(X_train, y_train)
-
-    preds = modelo.predict(X_test)
-
-    # Baseline naïve: mañana = hoy
-    naive_preds = X_test["precio"].values
-
-    mae_modelo = mean_absolute_error(y_test, preds)
-    mae_naive = mean_absolute_error(y_test, naive_preds)
-
-    rmse_modelo = np.sqrt(np.mean((y_test.values - preds) ** 2))
-    mape_modelo = np.mean(np.abs((y_test.values - preds) / y_test.values)) * 100
-
-    mejora_vs_naive = ((mae_naive - mae_modelo) / mae_naive) * 100
-
-    direccion_real = np.sign(y_test.values - X_test["precio"].values)
-    direccion_predicha = np.sign(preds - X_test["precio"].values)
-
-    directional_accuracy = np.mean(direccion_real == direccion_predicha) * 100
+    mae_modelo = metrics["mae_model"]
+    mae_naive = metrics["mae_naive"]
+    rmse_modelo = metrics["rmse_model"]
+    mape_modelo = metrics["mape_model"]
+    mejora_vs_naive = metrics["improvement_vs_naive"]
+    directional_accuracy = metrics["directional_accuracy"]
 
     fig4 = go.Figure()
 
