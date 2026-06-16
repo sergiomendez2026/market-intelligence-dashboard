@@ -71,6 +71,9 @@ df_ml = create_ml_dataset(
     std20=std20
 )
 
+df_backtest = run_backtest(df_ml)
+backtest_metrics = calculate_backtest_metrics(df_backtest)
+
 # Protección: crear target direccional si no viene desde features.py
 if "target_direction" not in df_ml.columns:
     df_ml["target_direction"] = (df_ml["target"] > df_ml["precio"]).astype(int)
