@@ -81,6 +81,9 @@ if "target_direction" not in df_ml.columns:
 
 model_available = len(df_ml) >= 80
 
+latest_model_probability = 0.50
+direction_metrics = None
+
 if model_available:
     feature_cols = get_feature_columns()
 
@@ -353,13 +356,14 @@ with tab4:
         last_ma50 = float(ma50.iloc[-1])
         last_volatility = float(std20.iloc[-1] / last_price)
 
-        signal_result = compute_market_signal(
+        signal_result = market_signals.compute_market_signal(
             last_price=last_price,
             rsi=last_rsi,
             ma20=last_ma20,
             ma50=last_ma50,
             volatility=last_volatility,
-            model_probability=latest_model_probability,
+        
+        model_probability=latest_model_probability,
             sentiment_score=50.0
         )
 
