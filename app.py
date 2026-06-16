@@ -250,60 +250,62 @@ with tab3:
 
         st.plotly_chart(fig4, use_container_width=True)
 
+        st.markdown("### Modelo de regresión")
+
         col1, col2, col3, col4 = st.columns(4)
 
         col1.metric("MAE XGBoost", f"{mae_modelo:.2f}")
         col2.metric("MAE Baseline", f"{mae_naive:.2f}")
         col3.metric("MAPE", f"{mape_modelo:.2f}%")
         col4.metric("Dirección correcta", f"{directional_accuracy:.2f}%")
-        
+
+        if mejora_vs_naive > 0:
+            st.success(
+                f"El modelo de regresión supera al baseline naïve en {mejora_vs_naive:.2f}%."
+            )
+        else:
+            st.warning(
+                f"El modelo de regresión NO supera al baseline naïve. Diferencia: {mejora_vs_naive:.2f}%."
+            )
+
         st.markdown("### Modelo direccional")
 
         dcol1, dcol2, dcol3, dcol4 = st.columns(4)
 
         dcol1.metric(
-             "Accuracy direccional",
-        f"{direction_metrics['direction_accuracy']:.2f}%"
+            "Accuracy direccional",
+            f"{direction_metrics['direction_accuracy']:.2f}%"
         )
 
         dcol2.metric(
             "Precision",
-        f"{direction_metrics['direction_precision']:.2f}%"
+            f"{direction_metrics['direction_precision']:.2f}%"
         )
 
         dcol3.metric(
             "Recall",
-        f"{direction_metrics['direction_recall']:.2f}%"
+            f"{direction_metrics['direction_recall']:.2f}%"
         )
 
         dcol4.metric(
             "F1 Score",
-        f"{direction_metrics['direction_f1']:.2f}%"
+            f"{direction_metrics['direction_f1']:.2f}%"
         )
 
         st.metric(
-          "Baseline direccional",
-        f"{direction_metrics['direction_baseline_accuracy']:.2f}%"
+            "Baseline direccional",
+            f"{direction_metrics['direction_baseline_accuracy']:.2f}%"
         )
 
         if direction_metrics["improvement_vs_direction_baseline"] > 0:
-           st.success(
-           f"El modelo direccional supera al baseline en "
-           f"{direction_metrics['improvement_vs_direction_baseline']:.2f} puntos porcentuales."
-           )
-        else:
-           st.warning(
-             f"El modelo direccional NO supera al baseline. Diferencia: "
-             f"{direction_metrics['improvement_vs_direction_baseline']:.2f} puntos porcentuales."
-           )
-
-        if mejora_vs_naive > 0:
             st.success(
-                f"El modelo supera al baseline naïve en {mejora_vs_naive:.2f}%."
+                f"El modelo direccional supera al baseline en "
+                f"{direction_metrics['improvement_vs_direction_baseline']:.2f} puntos porcentuales."
             )
         else:
             st.warning(
-                f"El modelo NO supera al baseline naïve. Diferencia: {mejora_vs_naive:.2f}%."
+                f"El modelo direccional NO supera al baseline. Diferencia: "
+                f"{direction_metrics['improvement_vs_direction_baseline']:.2f} puntos porcentuales."
             )
 
         st.caption(
