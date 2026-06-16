@@ -5,7 +5,7 @@ import plotly.graph_objects as go
 from src.indicators import add_technical_indicators
 from src.data_loader import cargar_datos
 from src.features import create_ml_dataset, get_feature_columns
-from src.model import train_and_evaluate_model, train_and_evaluate_direction_model
+from src import model as market_model
 from src.signals import compute_market_signal
 
 
