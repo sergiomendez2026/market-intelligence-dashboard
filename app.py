@@ -409,40 +409,7 @@ with tab4:
             "MA50": round(last_ma50, 2),
             "Volatilidad relativa": round(last_volatility, 4),
             "Probabilidad alcista ML": round(latest_model_probability, 4),
-            "Sentimiento": "Neutral temporal hasta integrar FinBERT",
-        })
-
-        st.caption(
-            "El Market Signal Score integra probabilidad alcista del modelo direccional, "
-            "score técnico, sentimiento financiero y ajuste por volatilidad. "
-            "El sentimiento está temporalmente fijado en neutral hasta integrar FinBERT. "
-            "No constituye recomendación financiera."
-        )
-            "Score técnico",
-            f"{signal_result['technical_score']}%"
-        )
-        col3, col4 = st.columns(2)
-        
-        col3.metric(
-            "Score sentimiento",
-            f"{signal_result['sentiment_score']}%"
-        )
-
-        col4.metric(
-            "Score volatilidad",
-            f"{signal_result['volatility_score']}%"
-        )
-
-        st.markdown("### Variables usadas")
-
-        st.json({
-            "Precio actual": round(last_price, 2),
-            "RSI": round(last_rsi, 2),
-            "MA20": round(last_ma20, 2),
-            "MA50": round(last_ma50, 2),
-            "Volatilidad relativa": round(last_volatility, 4),
-            "Probabilidad alcista ML": round(latest_model_probability, 4),
-            "Sentimiento": "Neutral temporal hasta integrar FinBERT",
+            "Sentimiento": "Neutral temporal hasta integrar FinBERT"
         })
 
         st.caption(
