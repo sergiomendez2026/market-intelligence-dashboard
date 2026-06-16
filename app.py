@@ -83,8 +83,8 @@ periodo = st.sidebar.selectbox("Periodo", ["1y", "2y", "5y"])
 ticker = activos[seleccion]
 
 
-with st.spinner("Cargando datos..."):
-    precio = cargar_datos(ticker, periodo)
+with st.spinner("Cargando datos de mercado..."):
+    precio = load_market_data_cached(ticker, periodo)
 
 if len(precio) < 60:
     st.error("No hay suficientes datos. Selecciona otro periodo.")
