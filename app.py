@@ -65,6 +65,10 @@ df_ml = create_ml_dataset(
     std20=std20
 )
 
+# Protección: crear target direccional si no viene desde features.py
+if "target_direction" not in df_ml.columns:
+    df_ml["target_direction"] = (df_ml["target"] > df_ml["precio"]).astype(int)
+
 model_available = len(df_ml) >= 80
 
 if model_available:
