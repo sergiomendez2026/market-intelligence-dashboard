@@ -55,6 +55,8 @@ banda_inf = df_indicators["BB_Lower"]
 std20 = df_indicators["Close"].rolling(20).std()
 rsi = df_indicators["RSI"]
 
+financial_kpis = calculate_financial_kpis(precio)
+
 
 # =========================
 # Dataset y modelo ML global
