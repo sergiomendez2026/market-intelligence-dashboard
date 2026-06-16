@@ -366,14 +366,15 @@ with tab4:
             "Market Signal Score",
         
         f"{signal_result['market_signal_score']}/100"
+        st.metric(
+            "Market Signal Score",
+        f"{signal_result['market_signal_score']}/100"
         )
         
         st.metric("Señal", 
         signal_result["signal"])
         
         st.write(signal_result["interpretation"])
-
-        col1, col2, col3 = st.columns(3)
 
         col1, col2 = st.columns(2)
         
