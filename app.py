@@ -7,11 +7,12 @@ from src.indicators import add_technical_indicators
 from src.data_loader import cargar_datos
 from src.features import create_ml_dataset, get_feature_columns
 from src import model as market_model
-from src.signals import compute_market_signal
+from src import signals as market_signals
 from src.financial_metrics import calculate_financial_kpis
 from src.backtesting import run_backtest, calculate_backtest_metrics
 
 market_model = importlib.reload(market_model)
+market_signals = importlib.reload(market_signals)
 
 st.set_page_config(page_title="Market Intelligence Dashboard", layout="wide")
 
