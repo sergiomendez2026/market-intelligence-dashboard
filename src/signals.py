@@ -3,111 +3,196 @@
 import numpy as np
 
 
-def compute_technical_score(rsi: float, price: float, ma20: float, ma50: float) -> float:
+def calculate_model_probability_score(model_probability: float) -> float:
     """
-    Calcula un score técnico entre 0 y 1.
-    Valores altos indican sesgo alcista.
+    Convierte la probabilidad alcista del modelo direccional a escala 0-100.
+    model_probability debe venir como valor entre 0 y 1.
+    """
+    if model_probability is None or np.isnan(model_probability):
+        return 50.0
+
+    return float(np.clip(model_probability * 100, 0, 100))
+
+
+def calculate_technical_score(
+    last_price: float,
+    rsi: float,
+    ma20: float,
+    ma50: float
+) -> float:
+    """
+    Score técnico basado en tendencia y momentum.
+
+    Componentes:
+    - Precio vs MA20
+    - Precio vs MA50
+    - MA20 vs MA50
+    - RSI
     """
 
-    score = 0.5
+    score = 50.0
+
+    # Tendencia de corto plazo
+    if last_price > ma20:
+        score += 12.5
+    else:
+        score -= 12.5
+
+    # Tendencia de mediano plazo
+    if last_price > ma50:
+        score += 12.5
+    else:
+        score -= 12.5
+
+    # Cruce de medias
+    if ma20 > ma50:
+        score += 12.5
+    else:
+        score -= 12.5
 
     # RSI
-    if rsi < 30:
-        score += 0.20
+    if 45 <= rsi <= 65:
+        score += 12.5
+    elif 30 <= rsi < 45:
+        score += 5.0
+    elif 65 < rsi <= 70:
+        score += 5.0
+    elif rsi < 30:
+        score -= 7.5
     elif rsi > 70:
-        score -= 0.20
+        score -= 10.0
 
-    # Tendencia por medias móviles
-    if price > ma20:
-        score += 0.15
-    else:
-        score -= 0.15
-
-    if ma20 > ma50:
-        score += 0.15
-    else:
-        score -= 0.15
-
-    return float(np.clip(score, 0, 1))
+    return float(np.clip(score, 0, 100))
 
 
-def compute_model_score(last_price: float, predicted_price: float) -> float:
+def calculate_volatility_score(volatility: float) -> float:
     """
-    Convierte la predicción del modelo en score entre 0 y 1.
+    Score de volatilidad.
+
+    La volatilidad entra como volatilidad relativa:
+    std20 / precio_actual.
+
+    Menor volatilidad = mayor score.
+    Mayor volatilidad = menor score.
     """
 
-    expected_return = (predicted_price - last_price) / last_price
+    if volatility is None or np.isnan(volatility):
+        return 50.0
 
-    if expected_return > 0.03:
-        return 0.85
-    elif expected_return > 0.01:
-        return 0.70
-    elif expected_return > -0.01:
-        return 0.50
-    elif expected_return > -0.03:
-        return 0.30
-    else:
-        return 0.15
+    # Escala simple:
+    # 0.00 = 100
+    # 0.05 = 0
+    volatility_score = 100 - (volatility / 0.05) * 100
+
+    return float(np.clip(volatility_score, 0, 100))
 
 
-def compute_volatility_score(volatility: float) -> float:
+def calculate_sentiment_score(
+    sentiment_score: float | None = None
+) -> float:
     """
-    Penaliza activos con volatilidad elevada.
+    Placeholder para sentimiento financiero.
+
+    Por ahora usamos 50 = neutral.
+    Luego FinBERT alimentará este valor.
     """
 
-    if volatility <= 0:
-        return 0.5
+    if sentiment_score is None or np.isnan(sentiment_score):
+        return 50.0
 
-    penalty = min(volatility * 10, 0.5)
+    return float(np.clip(sentiment_score, 0, 100))
 
-    return float(np.clip(1 - penalty, 0, 1))
+
+def classify_market_signal(score: float) -> tuple[str, str]:
+    """
+    Clasifica el score integrado en una señal ejecutiva.
+    """
+
+    if score >= 80:
+        return (
+            "Strong Bullish",
+            "El activo muestra una señal alcista fuerte según el modelo integrado."
+        )
+
+    if score >= 60:
+        return (
+            "Bullish moderado",
+            "El activo muestra fortaleza moderada según las señales actuales."
+        )
+
+    if score >= 40:
+        return (
+            "Neutral",
+            "El activo muestra señales mixtas o sin dirección dominante."
+        )
+
+    if score >= 20:
+        return (
+            "Bearish moderado",
+            "El activo muestra debilidad moderada según las señales actuales."
+        )
+
+    return (
+        "Strong Bearish",
+        "El activo muestra una señal bajista fuerte según el modelo integrado."
+    )
 
 
 def compute_market_signal(
     last_price: float,
-    predicted_price: float,
     rsi: float,
     ma20: float,
     ma50: float,
-    volatility: float
+    volatility: float,
+    model_probability: float | None = None,
+    sentiment_score: float | None = None
 ) -> dict:
     """
-    Combina modelo, indicadores técnicos y volatilidad para generar una señal ejecutiva.
+    Calcula el Market Signal Score integrado.
+
+    Fórmula:
+    40% probabilidad del modelo direccional
+    25% score técnico
+    20% sentimiento financiero
+    15% ajuste por volatilidad
     """
 
-    model_score = compute_model_score(last_price, predicted_price)
-    technical_score = compute_technical_score(rsi, last_price, ma20, ma50)
-    volatility_score = compute_volatility_score(volatility)
+    model_probability_score = calculate_model_probability_score(
+        model_probability
+    )
 
-    final_score = (
-        0.45 * model_score +
-        0.40 * technical_score +
+    technical_score = calculate_technical_score(
+        last_price=last_price,
+        rsi=rsi,
+        ma20=ma20,
+        ma50=ma50
+    )
+
+    sentiment_score_value = calculate_sentiment_score(
+        sentiment_score
+    )
+
+    volatility_score = calculate_volatility_score(
+        volatility
+    )
+
+    market_signal_score = (
+        0.40 * model_probability_score +
+        0.25 * technical_score +
+        0.20 * sentiment_score_value +
         0.15 * volatility_score
     )
 
-    signal_score = round(final_score * 100, 2)
+    market_signal_score = round(float(np.clip(market_signal_score, 0, 100)), 2)
 
-    if signal_score >= 70:
-        signal = "Bullish fuerte"
-        interpretation = "El activo muestra una señal alcista fuerte según el modelo, tendencia técnica y volatilidad."
-    elif signal_score >= 55:
-        signal = "Bullish moderado"
-        interpretation = "El activo muestra un sesgo alcista moderado, aunque requiere monitoreo."
-    elif signal_score >= 45:
-        signal = "Neutral"
-        interpretation = "El activo no muestra una señal dominante. El escenario es mixto."
-    elif signal_score >= 30:
-        signal = "Bearish moderado"
-        interpretation = "El activo muestra debilidad moderada según las señales actuales."
-    else:
-        signal = "Bearish fuerte"
-        interpretation = "El activo muestra una señal bajista fuerte según el modelo y los indicadores."
+    signal, interpretation = classify_market_signal(market_signal_score)
 
     return {
-        "signal_score": signal_score,
+        "market_signal_score": market_signal_score,
         "signal": signal,
         "interpretation": interpretation,
-        "model_score": round(model_score * 100, 2),
-        "technical_score": round(technical_score * 100, 2),
-        "volatility_score": round(volatility_score * 100, 2),
+        "model_probability_score": round(model_probability_score, 2),
+        "technical_score": round(technical_score, 2),
+        "sentiment_score": round(sentiment_score_value, 2),
+        "volatility_score": round(volatility_score, 2),
     }
