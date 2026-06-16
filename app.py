@@ -91,8 +91,7 @@ if len(precio) < 60:
     st.stop()
 
 
-df_price = pd.DataFrame({"Close": precio})
-df_indicators = add_technical_indicators(df_price)
+df_indicators = calculate_indicators_cached(precio)
 
 precio = df_indicators["Close"]
 ma20 = df_indicators["MA20"]
