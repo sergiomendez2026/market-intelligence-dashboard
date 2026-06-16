@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
+import importlib
 
 from src.indicators import add_technical_indicators
 from src.data_loader import cargar_datos
@@ -8,6 +9,7 @@ from src.features import create_ml_dataset, get_feature_columns
 from src import model as market_model
 from src.signals import compute_market_signal
 
+market_model = importlib.reload(market_model)
 
 st.set_page_config(page_title="Market Intelligence Dashboard", layout="wide")
 
