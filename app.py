@@ -116,11 +116,12 @@ if model_available:
     directional_accuracy = metrics["directional_accuracy"]
 
 
-tab1, tab2, tab3, tab4 = st.tabs([
+tab1, tab2, tab3, tab4, tab5 = st.tabs([
     "Precio",
     "Indicadores",
     "Predicción ML",
-    "Señal de Mercado"
+    "Señal de Mercado",
+    "Backtesting"
 ])
 
 
@@ -384,4 +385,75 @@ with tab4:
         st.caption(
             "La señal combina predicción del modelo, tendencia técnica "
             "y penalización por volatilidad. No constituye recomendación financiera."
+        )
+
+
+with tab5:
+    st.subheader("Backtesting de estrategia")
+
+    st.caption(
+        "Backtesting vectorizado simple basado en señal técnica. "
+        "La señal se desplaza un período para reducir look-ahead bias. "
+        "No incluye comisiones, slippage ni impuestos."
+    )
+
+    fig_bt = go.Figure()
+
+    fig_bt.add_trace(go.Scatter(
+        x=list(df_backtest.index),
+        y=list(df_backtest["buy_hold_equity"]),
+        name="Buy & Hold",
+        line=dict(color="gray", dash="dot")
+    ))
+
+    fig_bt.add_trace(go.Scatter(
+        x=list(df_backtest.index),
+        y=list(df_backtest["strategy_equity"]),
+        name="Estrategia",
+        line=dict(color="royalblue")
+    ))
+
+    fig_bt.update_layout(
+        template="plotly_dark",
+        title="Estrategia vs Buy & Hold",
+        xaxis_title="Fecha",
+        yaxis_title="Capital simulado"
+    )
+
+    st.plotly_chart(fig_bt, use_container_width=True)
+
+    col1, col2, col3, col4 = st.columns(4)
+
+    col1.metric(
+        "Retorno estrategia",
+        f"{backtest_metrics['strategy_return']:.2f}%"
+    )
+
+    col2.metric(
+        "Retorno Buy & Hold",
+        f"{backtest_metrics['buy_hold_return']:.2f}%"
+    )
+
+    col3.metric(
+        "Exceso retorno",
+        f"{backtest_metrics['excess_return']:.2f}%"
+    )
+
+    col4.metric(
+        "Drawdown estrategia",
+        f"{backtest_metrics['max_drawdown_strategy']:.2f}%"
+    )
+
+    st.metric(
+        "Exposición al mercado",
+        f"{backtest_metrics['exposure']:.2f}%"
+    )
+
+    if backtest_metrics["excess_return"] > 0:
+        st.success(
+            "La estrategia supera a Buy & Hold en el período analizado."
+        )
+    else:
+        st.warning(
+            "La estrategia NO supera a Buy & Hold en el período analizado."
         )
