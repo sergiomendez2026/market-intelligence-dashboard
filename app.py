@@ -5,7 +5,7 @@ import plotly.graph_objects as go
 from src.indicators import add_technical_indicators
 from src.data_loader import cargar_datos
 from src.features import create_ml_dataset, get_feature_columns
-from src.model import train_and_evaluate_model
+from src.model import train_and_evaluate_model, train_and_evaluate_direction_model
 from src.signals import compute_market_signal
 
 
@@ -74,6 +74,11 @@ if model_available:
     y = df_ml["target"]
 
     results = train_and_evaluate_model(X, y)
+    
+    y_direction = df_ml["target_direction"]
+
+    direction_results = train_and_evaluate_direction_model(X, y_direction)
+    direction_metrics = direction_results["direction_metrics"]
 
     X_test = results["X_test"]
     y_test = results["y_test"]
@@ -251,6 +256,46 @@ with tab3:
         col2.metric("MAE Baseline", f"{mae_naive:.2f}")
         col3.metric("MAPE", f"{mape_modelo:.2f}%")
         col4.metric("Dirección correcta", f"{directional_accuracy:.2f}%")
+        
+        st.markdown("### Modelo direccional")
+
+        dcol1, dcol2, dcol3, dcol4 = st.columns(4)
+
+        dcol1.metric(
+             "Accuracy direccional",
+        f"{direction_metrics['direction_accuracy']:.2f}%"
+        )
+
+        dcol2.metric(
+            "Precision",
+        f"{direction_metrics['direction_precision']:.2f}%"
+        )
+
+        dcol3.metric(
+            "Recall",
+        f"{direction_metrics['direction_recall']:.2f}%"
+        )
+
+        dcol4.metric(
+            "F1 Score",
+        f"{direction_metrics['direction_f1']:.2f}%"
+        )
+
+        st.metric(
+          "Baseline direccional",
+        f"{direction_metrics['direction_baseline_accuracy']:.2f}%"
+        )
+
+if direction_metrics["improvement_vs_direction_baseline"] > 0:
+    st.success(
+        f"El modelo direccional supera al baseline en "
+        f"{direction_metrics['improvement_vs_direction_baseline']:.2f} puntos porcentuales."
+    )
+else:
+    st.warning(
+        f"El modelo direccional NO supera al baseline. Diferencia: "
+        f"{direction_metrics['improvement_vs_direction_baseline']:.2f} puntos porcentuales."
+    )
 
         if mejora_vs_naive > 0:
             st.success(
