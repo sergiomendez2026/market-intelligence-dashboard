@@ -351,42 +351,71 @@ with tab4:
         last_ma50 = float(ma50.iloc[-1])
         last_volatility = float(std20.iloc[-1] / last_price)
 
-        predicted_price = float(preds[-1])
-
         signal_result = compute_market_signal(
             last_price=last_price,
-            predicted_price=predicted_price,
             rsi=last_rsi,
             ma20=last_ma20,
             ma50=last_ma50,
-            volatility=last_volatility
+            volatility=last_volatility,
+            
+        model_probability=latest_model_probability,
+            sentiment_score=50.0
         )
 
-        st.metric("Market Signal Score", f"{signal_result['signal_score']}/100")
-        st.metric("Señal", signal_result["signal"])
-
+        st.metric(
+            "Market Signal Score",
+        
+        f"{signal_result['market_signal_score']}/100"
+        )
+        
+        st.metric("Señal", 
+        signal_result["signal"])
+        
         st.write(signal_result["interpretation"])
 
         col1, col2, col3 = st.columns(3)
 
-        col1.metric("Score del modelo", f"{signal_result['model_score']}%")
-        col2.metric("Score técnico", f"{signal_result['technical_score']}%")
-        col3.metric("Score de volatilidad", f"{signal_result['volatility_score']}%")
+        col1, col2 = st.columns(2)
+        
+        col1.metric(
+            "Probabilidad alcista ML",
+            
+        f"{signal_result['model_probability_score']}%"
+        )
+        
+        col2.metric(
+            "Score técnico",
+            f"{signal_result['technical_score']}%"
+        )
+        col3, col4 = st.columns(2)
+        
+        col3.metric(
+            "Score sentimiento",
+            f"{signal_result['sentiment_score']}%"
+        )
+
+        col4.metric(
+            "Score volatilidad",
+            f"{signal_result['volatility_score']}%"
+        )
 
         st.markdown("### Variables usadas")
 
         st.json({
             "Precio actual": round(last_price, 2),
-            "Precio estimado": round(predicted_price, 2),
             "RSI": round(last_rsi, 2),
             "MA20": round(last_ma20, 2),
             "MA50": round(last_ma50, 2),
             "Volatilidad relativa": round(last_volatility, 4),
+            "Probabilidad alcista ML": round(latest_model_probability, 4),
+            "Sentimiento": "Neutral temporal hasta integrar FinBERT",
         })
 
         st.caption(
-            "La señal combina predicción del modelo, tendencia técnica "
-            "y penalización por volatilidad. No constituye recomendación financiera."
+            "El Market Signal Score integra probabilidad alcista del modelo direccional, "
+            "score técnico, sentimiento financiero y ajuste por volatilidad. "
+            "El sentimiento está temporalmente fijado en neutral hasta integrar FinBERT. "
+            "No constituye recomendación financiera."
         )
 
 
