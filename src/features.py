@@ -51,7 +51,7 @@ def create_ml_dataset(
 
     # Target de regresión
     df_ml["target"] = p.shift(-1)
-    
+
     # Target de clasificación direccional
     df_ml["target_direction"] = (p.shift(-1) > p).astype(int)
 
