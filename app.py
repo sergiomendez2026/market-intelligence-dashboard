@@ -103,8 +103,6 @@ if model_available:
     else:
         direction_metrics = None
         latest_model_probability = 0.50
-    else:
-        direction_metrics = None
 
     X_test = results["X_test"]
     y_test = results["y_test"]
