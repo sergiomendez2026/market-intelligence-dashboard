@@ -9,6 +9,13 @@ from src import model as market_model
 from src import signals as market_signals
 from src.financial_metrics import calculate_financial_kpis
 from src.backtesting import run_backtest, calculate_backtest_metrics
+from src.ui import (
+    render_header,
+    render_disclaimer,
+    render_sidebar_assets,
+    render_model_warning,
+    render_methodology_note
+)
 
 @st.cache_data(ttl=3600)
 def load_market_data_cached(ticker: str, periodo: str):
@@ -61,26 +68,10 @@ def train_direction_model_cached(X: pd.DataFrame, y_direction: pd.Series):
 
 st.set_page_config(page_title="Market Intelligence Dashboard", layout="wide")
 
-st.title("Market Intelligence Dashboard")
-st.markdown(
-    "Análisis financiero con indicadores técnicos, Machine Learning y datos actualizados de mercado"
-)
+render_header()
+render_disclaimer()
 
-st.sidebar.header("Configuración")
-
-activos = {
-    "Apple": "AAPL",
-    "Tesla": "TSLA",
-    "Bitcoin": "BTC-USD",
-    "Ethereum": "ETH-USD",
-    "S&P 500": "^GSPC",
-    "NASDAQ": "^IXIC",
-    "EUR/USD": "EURUSD=X"
-}
-
-seleccion = st.sidebar.selectbox("Selecciona un activo", list(activos.keys()))
-periodo = st.sidebar.selectbox("Periodo", ["1y", "2y", "5y"])
-ticker = activos[seleccion]
+seleccion, ticker, periodo = render_sidebar_assets()
 
 
 with st.spinner("Cargando datos de mercado..."):
@@ -304,9 +295,10 @@ with tab2:
 
 with tab3:
     st.subheader("Modelo predictivo con validación temporal")
+    render_methodology_note()
 
     if not model_available:
-        st.warning("No hay suficientes datos para entrenar un modelo robusto.")
+        render_model_warning()
     else:
         fig4 = go.Figure()
 
