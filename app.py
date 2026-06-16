@@ -73,11 +73,11 @@ if model_available:
     X = df_ml[feature_cols]
     y = df_ml["target"]
 
-    results = model.train_and_evaluate_model(X, y)
+    results = market_model.train_and_evaluate_model(X, y)
     
     y_direction = df_ml["target_direction"]
 
-    direction_results = model.train_and_evaluate_direction_model(X, y_direction)
+    direction_results = market_model.train_and_evaluate_direction_model(X, y_direction)
     direction_metrics = direction_results["direction_metrics"]
 
     X_test = results["X_test"]
