@@ -187,10 +187,7 @@ def train_and_evaluate_direction_model(
     train_size: float = 0.8
 ) -> dict:
     """
-    Pipeline de clasificación direccional:
-    1. Divide temporalmente.
-    2. Entrena XGBoost Classifier.
-    3. Evalúa accuracy, precision, recall y F1.
+    Pipeline de clasificación direccional.
     """
     X_train, X_test, y_train, y_test = temporal_train_test_split(
         X,
