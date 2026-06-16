@@ -101,14 +101,14 @@ banda_inf = df_indicators["BB_Lower"]
 std20 = df_indicators["Close"].rolling(20).std()
 rsi = df_indicators["RSI"]
 
-financial_kpis = calculate_financial_kpis(precio)
+financial_kpis = calculate_financial_kpis_cached(precio)
 
 
 # =========================
 # Dataset y modelo ML global
 # =========================
 
-df_ml = create_ml_dataset(
+df_ml = create_ml_dataset_cached(
     precio=precio,
     ma20=ma20,
     ma50=ma50,
@@ -116,8 +116,7 @@ df_ml = create_ml_dataset(
     std20=std20
 )
 
-df_backtest = run_backtest(df_ml)
-backtest_metrics = calculate_backtest_metrics(df_backtest)
+df_backtest, backtest_metrics = run_backtest_cached(df_ml)
 
 # Protección: crear target direccional si no viene desde features.py
 if "target_direction" not in df_ml.columns:
@@ -134,7 +133,7 @@ if model_available:
     X = df_ml[feature_cols]
     y = df_ml["target"]
 
-    results = market_model.train_and_evaluate_model(X, y)
+    results = train_regression_model_cached(X, y)
     
     y_direction = df_ml["target_direction"]
 
@@ -144,7 +143,7 @@ if model_available:
     )
 
     if direction_model_available:
-        direction_results = market_model.train_and_evaluate_direction_model(X, y_direction)
+        direction_results = train_direction_model_cached(X, y_direction)
         direction_metrics = direction_results["direction_metrics"]
         direction_probabilities = direction_metrics["direction_probabilities"]
         latest_model_probability = float(direction_probabilities[-1])
