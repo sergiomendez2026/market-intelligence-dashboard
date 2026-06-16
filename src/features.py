@@ -49,11 +49,13 @@ def create_ml_dataset(
     df_ml["momentum_10d"] = p - p.shift(10)
     df_ml["momentum_20d"] = p - p.shift(20)
 
-    # Target de regresión
+    # Target de regresión: precio del siguiente día
     df_ml["target"] = p.shift(-1)
 
-    # Target de clasificación direccional
-    df_ml["target_direction"] = (p.shift(-1) > p).astype(int)
+    # Target de clasificación direccional:
+    # 1 = el precio sube en los próximos 5 días
+    # 0 = el precio baja o no supera el precio actual
+    df_ml["target_direction"] = (p.shift(-5) > p).astype(int)
 
     return df_ml.replace([np.inf, -np.inf], np.nan).dropna()
 
