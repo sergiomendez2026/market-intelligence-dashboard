@@ -81,8 +81,16 @@ if model_available:
     
     y_direction = df_ml["target_direction"]
 
-    direction_results = market_model.train_and_evaluate_direction_model(X, y_direction)
-    direction_metrics = direction_results["direction_metrics"]
+    direction_model_available = hasattr(
+    market_model,
+    "train_and_evaluate_direction_model"
+    )
+
+    if direction_model_available:
+        direction_results = market_model.train_and_evaluate_direction_model(X, y_direction)
+        direction_metrics = direction_results["direction_metrics"]
+    else:
+        direction_metrics = None
 
     X_test = results["X_test"]
     y_test = results["y_test"]
