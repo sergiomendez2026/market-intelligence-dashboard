@@ -286,16 +286,16 @@ with tab3:
         f"{direction_metrics['direction_baseline_accuracy']:.2f}%"
         )
 
-if direction_metrics["improvement_vs_direction_baseline"] > 0:
-    st.success(
-        f"El modelo direccional supera al baseline en "
-        f"{direction_metrics['improvement_vs_direction_baseline']:.2f} puntos porcentuales."
-    )
-else:
-    st.warning(
-        f"El modelo direccional NO supera al baseline. Diferencia: "
-        f"{direction_metrics['improvement_vs_direction_baseline']:.2f} puntos porcentuales."
-    )
+        if direction_metrics["improvement_vs_direction_baseline"] > 0:
+           st.success(
+           f"El modelo direccional supera al baseline en "
+           f"{direction_metrics['improvement_vs_direction_baseline']:.2f} puntos porcentuales."
+           )
+        else:
+           st.warning(
+             f"El modelo direccional NO supera al baseline. Diferencia: "
+             f"{direction_metrics['improvement_vs_direction_baseline']:.2f} puntos porcentuales."
+           )
 
         if mejora_vs_naive > 0:
             st.success(
