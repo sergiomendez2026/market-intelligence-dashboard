@@ -3,12 +3,18 @@
 import numpy as np
 
 
-def calculate_model_probability_score(model_probability: float) -> float:
+def calculate_model_probability_score(model_probability=None) -> float:
     """
     Convierte la probabilidad alcista del modelo direccional a escala 0-100.
-    model_probability debe venir como valor entre 0 y 1.
     """
-    if model_probability is None or np.isnan(model_probability):
+
+    if model_probability is None:
+        return 50.0
+
+    try:
+        if np.isnan(model_probability):
+            return 50.0
+    except TypeError:
         return 50.0
 
     return float(np.clip(model_probability * 100, 0, 100))
@@ -22,35 +28,25 @@ def calculate_technical_score(
 ) -> float:
     """
     Score técnico basado en tendencia y momentum.
-
-    Componentes:
-    - Precio vs MA20
-    - Precio vs MA50
-    - MA20 vs MA50
-    - RSI
     """
 
     score = 50.0
 
-    # Tendencia de corto plazo
     if last_price > ma20:
         score += 12.5
     else:
         score -= 12.5
 
-    # Tendencia de mediano plazo
     if last_price > ma50:
         score += 12.5
     else:
         score -= 12.5
 
-    # Cruce de medias
     if ma20 > ma50:
         score += 12.5
     else:
         score -= 12.5
 
-    # RSI
     if 45 <= rsi <= 65:
         score += 12.5
     elif 30 <= rsi < 45:
@@ -68,36 +64,36 @@ def calculate_technical_score(
 def calculate_volatility_score(volatility: float) -> float:
     """
     Score de volatilidad.
-
-    La volatilidad entra como volatilidad relativa:
-    std20 / precio_actual.
-
     Menor volatilidad = mayor score.
-    Mayor volatilidad = menor score.
     """
 
-    if volatility is None or np.isnan(volatility):
+    if volatility is None:
         return 50.0
 
-    # Escala simple:
-    # 0.00 = 100
-    # 0.05 = 0
+    try:
+        if np.isnan(volatility):
+            return 50.0
+    except TypeError:
+        return 50.0
+
     volatility_score = 100 - (volatility / 0.05) * 100
 
     return float(np.clip(volatility_score, 0, 100))
 
 
-def calculate_sentiment_score(
-    sentiment_score: float | None = None
-) -> float:
+def calculate_sentiment_score(sentiment_score=None) -> float:
     """
-    Placeholder para sentimiento financiero.
-
-    Por ahora usamos 50 = neutral.
-    Luego FinBERT alimentará este valor.
+    Score de sentimiento.
+    Por ahora usamos 50 como neutral si no hay FinBERT.
     """
 
-    if sentiment_score is None or np.isnan(sentiment_score):
+    if sentiment_score is None:
+        return 50.0
+
+    try:
+        if np.isnan(sentiment_score):
+            return 50.0
+    except TypeError:
         return 50.0
 
     return float(np.clip(sentiment_score, 0, 100))
@@ -105,7 +101,7 @@ def calculate_sentiment_score(
 
 def classify_market_signal(score: float) -> tuple[str, str]:
     """
-    Clasifica el score integrado en una señal ejecutiva.
+    Clasifica el Market Signal Score.
     """
 
     if score >= 80:
@@ -144,17 +140,21 @@ def compute_market_signal(
     ma20: float,
     ma50: float,
     volatility: float,
-    model_probability: float | None = None,
-    sentiment_score: float | None = None
+    model_probability=None,
+    sentiment_score=None,
+    predicted_price=None
 ) -> dict:
     """
-    Calcula el Market Signal Score integrado.
+    Market Signal Score integrado.
 
     Fórmula:
-    40% probabilidad del modelo direccional
+    40% probabilidad alcista del modelo direccional
     25% score técnico
     20% sentimiento financiero
     15% ajuste por volatilidad
+
+    predicted_price queda como argumento opcional para compatibilidad,
+    pero ya no se usa en la fórmula principal.
     """
 
     model_probability_score = calculate_model_probability_score(
