@@ -98,6 +98,8 @@ if model_available:
     if direction_model_available:
         direction_results = market_model.train_and_evaluate_direction_model(X, y_direction)
         direction_metrics = direction_results["direction_metrics"]
+        direction_probabilities = direction_metrics["direction_probabilities"]
+        latest_model_probability = float(direction_probabilities[-1])
     else:
         direction_metrics = None
 
