@@ -8,6 +8,7 @@ from src.data_loader import cargar_datos
 from src.features import create_ml_dataset, get_feature_columns
 from src import model as market_model
 from src.signals import compute_market_signal
+from src.financial_metrics import calculate_financial_kpis
 
 market_model = importlib.reload(market_model)
 
@@ -149,9 +150,27 @@ with tab1:
     st.plotly_chart(fig, use_container_width=True)
 
     col1, col2, col3 = st.columns(3)
+
     col1.metric("Precio actual", f"${precio.values[-1]:.2f}")
     col2.metric("Máximo", f"${precio.values.max():.2f}")
     col3.metric("Mínimo", f"${precio.values.min():.2f}")
+
+    col4, col5, col6 = st.columns(3)
+
+    col4.metric(
+    "Retorno período",
+    f"{financial_kpis['cumulative_return']:.2f}%"
+    )
+
+    col5.metric(
+    "Volatilidad anualizada",
+    f"{financial_kpis['annualized_volatility']:.2f}%"
+    )
+
+    col6.metric(
+    "Drawdown máximo",
+    f"{financial_kpis['max_drawdown']:.2f}%"
+    )
 
 
 with tab2:
