@@ -10,6 +10,55 @@ from src import signals as market_signals
 from src.financial_metrics import calculate_financial_kpis
 from src.backtesting import run_backtest, calculate_backtest_metrics
 
+@st.cache_data(ttl=3600)
+def load_market_data_cached(ticker: str, periodo: str):
+    return cargar_datos(ticker, periodo)
+
+
+@st.cache_data(ttl=3600)
+def calculate_indicators_cached(precio: pd.Series):
+    df_price = pd.DataFrame({"Close": precio})
+    return add_technical_indicators(df_price)
+
+
+@st.cache_data(ttl=3600)
+def create_ml_dataset_cached(
+    precio: pd.Series,
+    ma20: pd.Series,
+    ma50: pd.Series,
+    rsi: pd.Series,
+    std20: pd.Series
+):
+    return create_ml_dataset(
+        precio=precio,
+        ma20=ma20,
+        ma50=ma50,
+        rsi=rsi,
+        std20=std20
+    )
+
+
+@st.cache_data(ttl=3600)
+def calculate_financial_kpis_cached(precio: pd.Series):
+    return calculate_financial_kpis(precio)
+
+
+@st.cache_data(ttl=3600)
+def run_backtest_cached(df_ml: pd.DataFrame):
+    df_backtest = run_backtest(df_ml)
+    backtest_metrics = calculate_backtest_metrics(df_backtest)
+    return df_backtest, backtest_metrics
+
+
+@st.cache_data(ttl=3600)
+def train_regression_model_cached(X: pd.DataFrame, y: pd.Series):
+    return market_model.train_and_evaluate_model(X, y)
+
+
+@st.cache_data(ttl=3600)
+def train_direction_model_cached(X: pd.DataFrame, y_direction: pd.Series):
+    return market_model.train_and_evaluate_direction_model(X, y_direction)
+
 st.set_page_config(page_title="Market Intelligence Dashboard", layout="wide")
 
 st.title("Market Intelligence Dashboard")
