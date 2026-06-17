@@ -1,4 +1,4 @@
-Market Intelligence Dashboard
+## Market Intelligence Dashboard
 
 Plataforma analítica para evaluación de activos financieros mediante indicadores técnicos, modelos de machine learning, señales integradas, comparación de modelos, validación temporal y backtesting con costos transaccionales.
 
