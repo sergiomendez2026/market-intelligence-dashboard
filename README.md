@@ -1,6 +1,6 @@
 # Market Intelligence Dashboard
 
-![Python Tests]![Python](https://img.shields.io/badge/Python-3.11%2B-blue)
+![Python](https://img.shields.io/badge/Python-3.11%2B-blue)
 ![Streamlit](https://img.shields.io/badge/Streamlit-App-red)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green)
 ![Release](https://img.shields.io/github/v/release/sergiomendez2026/market-intelligence-dashboard)
