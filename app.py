@@ -844,20 +844,26 @@ with tab7:
             use_container_width=True
         )
 
-        best_model_row = model_comparison_df.sort_values(
-            by="F1 Score",
+        candidate_models = model_comparison_df[
+            model_comparison_df["Modelo"] != "Baseline Dummy"
+        ].copy()
+
+        best_model_row = candidate_models.sort_values(
+            by="Robustness Score",
             ascending=False
         ).iloc[0]
-
-        st.markdown("### Mejor modelo según F1 Score")
+        
+        st.markdown("### Mejor modelo productivo según Robustness Score")
 
         col1, col2, col3, col4 = st.columns(4)
-
+        
         col1.metric("Modelo", best_model_row["Modelo"])
         col2.metric("Accuracy", f"{best_model_row['Accuracy']:.2f}%")
         col3.metric("F1 Score", f"{best_model_row['F1 Score']:.2f}%")
-        col4.metric(
-            "Exceso vs baseline",
+        col4.metric("Robustness Score", f"{best_model_row['Robustness Score']:.2f}")
+
+        st.metric(
+            "Exceso Accuracy vs baseline",
             f"{best_model_row['Exceso Accuracy vs Baseline']:.2f} pp"
         )
 
