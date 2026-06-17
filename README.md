@@ -188,30 +188,47 @@ El sistema evita seleccionar modelos únicamente por accuracy, ya que en clasifi
 
 ## 8. Market Signal Score
 
-La señal ejecutiva integra cuatro componentes:
+El `Market Signal Score` es una señal ejecutiva integrada que resume cuatro fuentes de información:
 
-market_signal_score = (
-    0.40 * model_probability +
-    0.25 * technical_score +
-    0.20 * sentiment_score +
-    0.15 * volatility_adjustment
-)
+1. Probabilidad alcista estimada por el modelo direccional.
+2. Condición técnica del activo.
+3. Sentimiento financiero.
+4. Penalización por volatilidad.
 
-Componentes:
+El objetivo no es predecir el mercado con certeza, sino construir una métrica compuesta, interpretable y auditable para comparar activos bajo criterios homogéneos.
 
-Factor| Peso| Descripción
-Probabilidad alcista ML| 40%| Probabilidad direccional estimada por el modelo
-Score técnico| 25%| Tendencia, medias móviles y RSI
-Score sentimiento| 20%| Sentimiento financiero
-Score volatilidad| 15%| Penalización o ajuste por riesgo
+```text
+market_signal_score =
+    0.40 * model_probability_score
+  + 0.25 * technical_score
+  + 0.20 * sentiment_score
+  + 0.15 * volatility_score
+```
 
-Clasificación de señal:
+### Componentes del score
 
-- Strong Bullish
-- Bullish moderado
-- Neutral
-- Bearish moderado
-- Strong Bearish
+| Factor | Peso | Descripción |
+|---|---:|---|
+| `model_probability_score` | 40% | Probabilidad alcista estimada por el modelo direccional. |
+| `technical_score` | 25% | Evaluación basada en medias móviles, RSI, tendencia y momentum. |
+| `sentiment_score` | 20% | Señal de sentimiento financiero. Actualmente usa fallback liviano; FinBERT puede integrarse como capa avanzada. |
+| `volatility_score` | 15% | Ajuste por riesgo. Penaliza activos con mayor volatilidad relativa. |
+
+### Interpretación
+
+| Rango del score | Señal | Interpretación |
+|---:|---|---|
+| 80 - 100 | Strong Bullish | Señal alcista fuerte. |
+| 60 - 79.99 | Bullish moderado | Señal positiva moderada. |
+| 40 - 59.99 | Neutral | Señales mixtas o sin dirección dominante. |
+| 20 - 39.99 | Bearish moderado | Señal negativa moderada. |
+| 0 - 19.99 | Strong Bearish | Señal bajista fuerte. |
+
+### Consideraciones metodológicas
+
+El score debe interpretarse como una métrica analítica, no como una recomendación financiera. Sus pesos son definidos de forma heurística y pueden calibrarse en futuras versiones mediante validación histórica, optimización bayesiana o búsqueda de hiperparámetros.
+
+El componente de sentimiento se mantiene neutral cuando no existe suficiente información textual confiable. Esto evita introducir ruido artificial en la señal final.
 
 ---
 
