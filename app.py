@@ -523,9 +523,9 @@ with tab5:
     st.subheader("Backtesting de estrategia")
 
     st.caption(
-        "Backtesting vectorizado simple basado en señal técnica. "
+        "Backtesting vectorizado basado en señal técnica. "
         "La señal se desplaza un período para reducir look-ahead bias. "
-        "No incluye comisiones, slippage ni impuestos."
+        "Incluye comisión, slippage y costos de transacción configurables."
     )
 
     fig_bt = go.Figure()
@@ -575,37 +575,38 @@ with tab5:
         f"{backtest_metrics['max_drawdown_strategy']:.2f}%"
     )
 
+    col5, col6, col7, col8 = st.columns(4)
+
+    col5.metric(
+        "Drawdown Buy & Hold",
+        f"{backtest_metrics['max_drawdown_buy_hold']:.2f}%"
+    )
+
+    col6.metric(
+        "Operaciones",
+        f"{backtest_metrics['trades']}"
+    )
+
+    col7.metric(
+        "Turnover promedio",
+        f"{backtest_metrics['turnover']:.2f}%"
+    )
+
+    col8.metric(
+        "Sharpe estrategia",
+        f"{backtest_metrics['sharpe_ratio']:.2f}"
+    )
+
     st.metric(
         "Exposición al mercado",
         f"{backtest_metrics['exposure']:.2f}%"
     )
-col5, col6, col7, col8 = st.columns(4)
 
-col5.metric(
-    "Drawdown Buy & Hold",
-    f"{backtest_metrics['max_drawdown_buy_hold']:.2f}%"
-)
-
-col6.metric(
-    "Operaciones",
-    f"{backtest_metrics['trades']}"
-)
-
-col7.metric(
-    "Turnover promedio",
-    f"{backtest_metrics['turnover']:.2f}%"
-)
-
-col8.metric(
-    "Sharpe estrategia",
-    f"{backtest_metrics['sharpe_ratio']:.2f}"
-)
-
-st.caption(
-    f"Supuestos del backtest: comisión {commission * 100:.2f}% por operación, "
-    f"slippage {slippage * 100:.2f}% por operación. "
-    "La señal se desplaza un período para reducir look-ahead bias."
-)
+    st.caption(
+        f"Supuestos del backtest: comisión {commission * 100:.2f}% por operación, "
+        f"slippage {slippage * 100:.2f}% por operación. "
+        "La señal se desplaza un período para reducir look-ahead bias."
+    )
 
     if backtest_metrics["excess_return"] > 0:
         st.success(
