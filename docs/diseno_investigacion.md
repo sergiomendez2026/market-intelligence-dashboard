@@ -293,6 +293,41 @@ Modelo técnico sin sentimiento
 vs
 Modelo técnico + FinBERT
 
+## Integración de FinBERT
+
+El proyecto incorpora una capa de sentimiento financiero basada en FinBERT.
+
+El flujo implementado es:
+
+1. Carga de noticias financieras desde archivo CSV.
+2. Selección de columna de fecha y columna de texto.
+3. Clasificación de cada noticia mediante FinBERT.
+4. Conversión de etiquetas en score numérico:
+   - positive = valor positivo.
+   - negative = valor negativo.
+   - neutral = 0.
+5. Agregación diaria del sentimiento.
+6. Alineación del sentimiento con el índice de precios.
+7. Aplicación de rezago temporal para reducir look-ahead bias.
+8. Construcción de variables de sentimiento para el modelo.
+
+Variables generadas:
+
+| Variable | Descripción |
+|---|---|
+| `finbert_score_mean` | Promedio diario del score FinBERT. |
+| `finbert_score_sum` | Suma diaria del score FinBERT. |
+| `finbert_news_count` | Número de noticias por día. |
+| `finbert_positive_share` | Proporción diaria de noticias positivas. |
+| `finbert_negative_share` | Proporción diaria de noticias negativas. |
+| `finbert_neutral_share` | Proporción diaria de noticias neutrales. |
+| `finbert_confidence_mean` | Confianza promedio diaria del modelo. |
+
+
+Modelo técnico sin sentimiento
+vs
+Modelo técnico + FinBERT
+
 ---
 
 ## 13. Alcance del estudio
