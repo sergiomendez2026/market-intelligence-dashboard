@@ -547,3 +547,151 @@ with tab5:
         st.warning(
             "La estrategia NO supera a Buy & Hold en el período analizado."
         )
+
+with tab6:
+    st.subheader("Validación walk-forward")
+
+    st.caption(
+        "La validación walk-forward entrena el modelo usando solo datos pasados "
+        "y evalúa en bloques futuros. Este método es más riguroso que una única "
+        "división 80/20 porque simula mejor el uso real en series temporales."
+    )
+
+    if not model_available:
+        st.warning("No hay suficientes datos para ejecutar validación walk-forward.")
+    else:
+        st.markdown("### Regresión de precio")
+
+        if not wf_regression["available"]:
+            st.warning(wf_regression["message"])
+        else:
+            wf_reg_metrics = wf_regression["metrics"]
+            wf_reg_results = wf_regression["results"]
+
+            fig_wf_reg = go.Figure()
+
+            fig_wf_reg.add_trace(go.Scatter(
+                x=list(wf_reg_results.index),
+                y=list(wf_reg_results["actual"]),
+                name="Precio real",
+                line=dict(color="royalblue")
+            ))
+
+            fig_wf_reg.add_trace(go.Scatter(
+                x=list(wf_reg_results.index),
+                y=list(wf_reg_results["prediction"]),
+                name="Predicción walk-forward",
+                line=dict(color="orange", dash="dash")
+            ))
+
+            fig_wf_reg.add_trace(go.Scatter(
+                x=list(wf_reg_results.index),
+                y=list(wf_reg_results["naive_prediction"]),
+                name="Baseline naïve",
+                line=dict(color="gray", dash="dot")
+            ))
+
+            fig_wf_reg.update_layout(
+                template="plotly_dark",
+                title="Walk-forward: Predicción vs Real vs Baseline",
+                xaxis_title="Fecha",
+                yaxis_title="Precio"
+            )
+
+            st.plotly_chart(fig_wf_reg, use_container_width=True)
+
+            col1, col2, col3, col4 = st.columns(4)
+
+            col1.metric(
+                "MAE walk-forward",
+                f"{wf_reg_metrics['mae_model']:.2f}"
+            )
+
+            col2.metric(
+                "MAE baseline",
+                f"{wf_reg_metrics['mae_naive']:.2f}"
+            )
+
+            col3.metric(
+                "MAPE",
+                f"{wf_reg_metrics['mape_model']:.2f}%"
+            )
+
+            col4.metric(
+                "Dirección correcta",
+                f"{wf_reg_metrics['directional_accuracy']:.2f}%"
+            )
+
+            st.metric(
+                "Observaciones evaluadas",
+                f"{wf_reg_metrics['n_predictions']}"
+            )
+
+            if wf_reg_metrics["improvement_vs_naive"] > 0:
+                st.success(
+                    f"El modelo walk-forward supera al baseline naïve en "
+                    f"{wf_reg_metrics['improvement_vs_naive']:.2f}%."
+                )
+            else:
+                st.warning(
+                    f"El modelo walk-forward NO supera al baseline naïve. "
+                    f"Diferencia: {wf_reg_metrics['improvement_vs_naive']:.2f}%."
+                )
+
+        st.markdown("---")
+        st.markdown("### Clasificación direccional")
+
+        if not wf_direction["available"]:
+            st.warning(wf_direction["message"])
+        else:
+            wf_dir_metrics = wf_direction["metrics"]
+            wf_dir_results = wf_direction["results"]
+
+            col1, col2, col3, col4 = st.columns(4)
+
+            col1.metric(
+                "Accuracy",
+                f"{wf_dir_metrics['direction_accuracy']:.2f}%"
+            )
+
+            col2.metric(
+                "Precision",
+                f"{wf_dir_metrics['direction_precision']:.2f}%"
+            )
+
+            col3.metric(
+                "Recall",
+                f"{wf_dir_metrics['direction_recall']:.2f}%"
+            )
+
+            col4.metric(
+                "F1 Score",
+                f"{wf_dir_metrics['direction_f1']:.2f}%"
+            )
+
+            st.metric(
+                "Baseline direccional",
+                f"{wf_dir_metrics['direction_baseline_accuracy']:.2f}%"
+            )
+
+            st.metric(
+                "Observaciones evaluadas",
+                f"{wf_dir_metrics['n_predictions']}"
+            )
+
+            if wf_dir_metrics["improvement_vs_direction_baseline"] > 0:
+                st.success(
+                    f"El modelo direccional walk-forward supera al baseline en "
+                    f"{wf_dir_metrics['improvement_vs_direction_baseline']:.2f} puntos porcentuales."
+                )
+            else:
+                st.warning(
+                    f"El modelo direccional walk-forward NO supera al baseline. "
+                    f"Diferencia: {wf_dir_metrics['improvement_vs_direction_baseline']:.2f} puntos porcentuales."
+                )
+
+            st.dataframe(
+                wf_dir_results.tail(20),
+                use_container_width=True
+            )
+            
