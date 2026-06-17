@@ -27,6 +27,7 @@ from src.portfolio import (
     calculate_portfolio_metrics,
     equal_weight_vector
 )
+from src.baselines import compare_academic_baselines
 
 @st.cache_data(ttl=3600)
 def load_market_data_cached(ticker: str, periodo: str):
@@ -290,7 +291,7 @@ else:
     wf_regression = None
     wf_direction = None
 
-tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs([
+tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9 = st.tabs([
     "Precio",
     "Indicadores",
     "Predicción ML",
@@ -298,7 +299,8 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs([
     "Backtesting",
     "Validación",
     "Modelos",
-    "Portafolio"
+    "Portafolio",
+    "Baselines Académicos",
 ])
 
 
@@ -976,6 +978,7 @@ with tab7:
             "de forma estable es difícil. Por eso se reportan modelos alternativos, "
             "baseline y métricas de clasificación."
         )
+
 with tab8:
     st.subheader("Analítica de portafolio")
 
@@ -1096,3 +1099,43 @@ with tab8:
                 "y aplicar optimización de portafolio."
             )
             
+with tab9:
+    st.subheader("Baselines académicos")
+
+    st.caption(
+        "Esta sección compara modelos baseline obligatorios para investigación académica: "
+        "Naive t+1 = precio actual, regresión lineal y ARIMA. "
+        "Estos modelos permiten evaluar si los enfoques más complejos realmente agregan valor."
+    )
+
+    try:
+        price_series = data["Close"].dropna()
+
+        baseline_results = compare_academic_baselines(
+            prices=price_series,
+        )
+
+        st.dataframe(baseline_results, use_container_width=True)
+
+        st.markdown("### Interpretación")
+
+        st.info(
+            "El modelo Naive es el punto de comparación mínimo. "
+            "Si un modelo complejo no supera al Naive bajo validación temporal, "
+            "no se debe interpretar como superior aunque use machine learning avanzado."
+        )
+
+        st.markdown(
+            """
+            **Lectura académica recomendada:**
+
+            - Si ARIMA supera al modelo ML, el enfoque econométrico simple puede ser suficiente.
+            - Si XGBoost supera a Naive y ARIMA, existe evidencia inicial de valor predictivo no lineal.
+            - Si el modelo técnico + FinBERT supera al modelo técnico sin sentimiento, entonces el sentimiento financiero podría aportar información incremental.
+            - La mejora debe validarse con walk-forward y prueba estadística, no solo con una tabla puntual.
+            """
+        )
+
+    except Exception as error:
+        st.error(f"No se pudieron calcular los baselines académicos: {error}")
+
