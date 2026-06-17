@@ -353,7 +353,16 @@ Este proyecto demuestra competencias en:
 
 ---
 
-## 16. Ejecución local
+## 16. Testing
+
+El proyecto incluye pruebas unitarias básicas para validar componentes críticos del sistema:
+
+- Cálculo del Market Signal Score.
+- Métricas financieras.
+- Rango válido de señales.
+- Estructura esperada de salidas.
+
+## 17. Ejecución local
 
 git clone https://github.com/sergiomendez2026/market-intelligence-dashboard.git
 cd market-intelligence-dashboard
@@ -362,7 +371,7 @@ streamlit run app.py
 
 ---
 
-## 17. Disclaimer
+## 18. Disclaimer
 
 Este proyecto tiene fines educativos, analíticos y demostrativos.
 No constituye asesoría financiera, recomendación de inversión ni promesa de rentabilidad.
