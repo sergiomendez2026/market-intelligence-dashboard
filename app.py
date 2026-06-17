@@ -22,6 +22,11 @@ from src.validation import (
     walk_forward_direction_validation
 )
 from src.model_comparison import compare_direction_models
+from src.portfolio import (
+    build_price_matrix,
+    calculate_portfolio_metrics,
+    equal_weight_vector
+)
 
 @st.cache_data(ttl=3600)
 def load_market_data_cached(ticker: str, periodo: str):
