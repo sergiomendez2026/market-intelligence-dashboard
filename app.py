@@ -129,7 +129,14 @@ std20 = df_indicators["Close"].rolling(20).std()
 rsi = df_indicators["RSI"]
 
 financial_kpis = calculate_financial_kpis_cached(precio)
+sample_news = [
+    f"{seleccion} financial market outlook",
+    f"{seleccion} earnings growth risk outlook",
+    f"{seleccion} analyst sentiment market performance"
+]
 
+sentiment_result = calculate_fallback_sentiment_score(sample_news)
+sentiment_score = sentiment_result["sentiment_score"]
 
 # =========================
 # Dataset y modelo ML global
@@ -473,9 +480,8 @@ with tab4:
             ma20=last_ma20,
             ma50=last_ma50,
             volatility=last_volatility,
-        
-        model_probability=latest_model_probability,
-            sentiment_score=50.0
+            model_probability=latest_model_probability,
+            sentiment_score=sentiment_score
         )
 
         st.metric(
