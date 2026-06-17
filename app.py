@@ -843,6 +843,70 @@ with tab7:
             model_comparison_df,
             use_container_width=True
         )
+        st.markdown("### Comparación visual de desempeño")
+
+        fig_models = go.Figure()
+
+        fig_models.add_trace(go.Bar(
+            x=model_comparison_df["Modelo"],
+            y=model_comparison_df["Accuracy"],
+            name="Accuracy"
+        ))
+        
+        fig_models.add_trace(go.Bar(
+            x=model_comparison_df["Modelo"],
+            y=model_comparison_df["F1 Score"],
+            name="F1 Score"
+        ))
+        
+        fig_models.add_trace(go.Bar(
+            x=model_comparison_df["Modelo"],
+            y=model_comparison_df["Robustness Score"],
+            name="Robustness Score"
+        ))
+        
+        fig_models.update_layout(
+            template="plotly_dark",
+            title="Comparación de modelos direccionales",
+            xaxis_title="Modelo",
+            yaxis_title="Score (%)",
+            barmode="group",
+            yaxis=dict(range=[0, 100]),
+            legend_title="Métrica"
+        )
+        
+        st.plotly_chart(fig_models, use_container_width=True)
+
+        st.markdown("### Exceso de accuracy contra baseline")
+        
+        model_only_df = model_comparison_df[
+            model_comparison_df["Modelo"] != "Baseline Dummy"
+        ].copy()
+        
+        fig_excess = go.Figure()
+        
+        fig_excess.add_trace(go.Bar(
+            x=model_only_df["Modelo"],
+            y=model_only_df["Exceso Accuracy vs Baseline"],
+            name="Exceso vs baseline"
+        ))
+        
+        fig_excess.add_hline(
+            y=0,
+            line_dash="dash",
+            annotation_text="Baseline",
+            annotation_position="top left"
+        )
+        
+        fig_excess.update_layout(
+            template="plotly_dark",
+            title="Valor incremental de cada modelo frente al baseline",
+            xaxis_title="Modelo",
+            yaxis_title="Exceso de accuracy (puntos porcentuales)",
+            legend_title="Métrica"
+        )
+        
+        st.plotly_chart(fig_excess, use_container_width=True)
 
         candidate_models = model_comparison_df[
             model_comparison_df["Modelo"] != "Baseline Dummy"
