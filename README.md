@@ -1,4 +1,4 @@
-## Market Intelligence Dashboard
+# Market Intelligence Dashboard
 
 Plataforma analítica para evaluación de activos financieros mediante indicadores técnicos, modelos de machine learning, señales integradas, comparación de modelos, validación temporal y backtesting con costos transaccionales.
 
@@ -7,7 +7,7 @@ No constituye asesoría financiera, recomendación de inversión ni promesa de r
 
 ---
 
-# 1. Objetivo del proyecto
+## 1. Objetivo del proyecto
 
 El objetivo de este proyecto es construir un sistema modular de inteligencia de mercado capaz de:
 
