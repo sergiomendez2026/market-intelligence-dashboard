@@ -89,6 +89,19 @@ def train_direction_model_cached(X: pd.DataFrame, y_direction: pd.Series):
 
 st.set_page_config(page_title="Market Intelligence Dashboard", layout="wide")
 
+@st.cache_data(ttl=3600)
+def build_price_matrix_cached(
+    selected_assets: list[str],
+    asset_tickers: dict[str, str],
+    periodo: str
+):
+    return build_price_matrix(
+        selected_assets=selected_assets,
+        asset_tickers=asset_tickers,
+        periodo=periodo,
+        data_loader_func=load_market_data_cached
+    )
+
 render_header()
 render_disclaimer()
 
