@@ -1110,7 +1110,7 @@ with tab9:
     )
 
     try:
-        price_series = data["Close"].dropna()
+        price_series = precio.dropna()
 
         baseline_results = compare_academic_baselines(
             prices=price_series,
