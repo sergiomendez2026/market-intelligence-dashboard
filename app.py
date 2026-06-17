@@ -529,13 +529,16 @@ with tab4:
             "MA50": round(last_ma50, 2),
             "Volatilidad relativa": round(last_volatility, 4),
             "Probabilidad alcista ML": round(latest_model_probability, 4),
-            "Sentimiento": "Neutral temporal hasta integrar FinBERT"
+            "Sentimiento": sentiment_result["sentiment_label"],
+            "Método sentimiento": sentiment_result["method"],
+            "Positive hits": sentiment_result["positive_hits"],
+            "Negative hits": sentiment_result["negative_hits"]
         })
 
         st.caption(
             "El Market Signal Score integra probabilidad alcista del modelo direccional, "
             "score técnico, sentimiento financiero y ajuste por volatilidad. "
-            "El sentimiento está temporalmente fijado en neutral hasta integrar FinBERT. "
+            "El sentimiento usa un fallback liviano basado en términos financieros; FinBERT puede integrarse como capa avanzada. "
             "No constituye recomendación financiera."
         )
 
