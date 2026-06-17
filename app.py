@@ -9,6 +9,7 @@ from src import model as market_model
 from src import signals as market_signals
 from src.financial_metrics import calculate_financial_kpis
 from src.backtesting import run_backtest, calculate_backtest_metrics
+from src.sentiment import calculate_fallback_sentiment_score
 from src.ui import (
     render_header,
     render_disclaimer,
