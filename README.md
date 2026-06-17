@@ -1,5 +1,11 @@
 # Market Intelligence Dashboard
 
+![Python Tests](https://github.com/sergiomendez2026/market-intelligence-dashboard/actions/workflows/python-tests.yml/badge.svg)
+![Python](https://img.shields.io/badge/Python-3.11-blue)
+![Streamlit](https://img.shields.io/badge/Streamlit-App-red)
+![License](https://img.shields.io/badge/License-MIT-green)
+![Status](https://img.shields.io/badge/Status-Academic%2FProfessional%20MVP-orange)
+
 Plataforma analítica para evaluación de activos financieros mediante indicadores técnicos, modelos de machine learning, señales integradas, comparación de modelos, validación temporal y backtesting con costos transaccionales.
 
 Proyecto académico/profesional con fines educativos y analíticos.
