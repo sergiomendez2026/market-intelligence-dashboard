@@ -67,7 +67,9 @@ def run_backtest_cached(
         commission=commission,
         slippage=slippage
     )
+    
     backtest_metrics = calculate_backtest_metrics(df_backtest)
+    
     return df_backtest, backtest_metrics
 
 @st.cache_data(ttl=3600)
