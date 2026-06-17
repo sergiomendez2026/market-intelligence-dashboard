@@ -1,39 +1,60 @@
 # Market Intelligence Dashboard
 
-Aplicación web de análisis financiero con Machine Learning en tiempo real.
+Plataforma analítica para evaluación de activos financieros mediante indicadores técnicos, machine learning, señales integradas, sentimiento financiero y backtesting.
 
-**Live Demo:** [Ver aplicación](https://market-intelligence-dashboard-fjy5vx69qtam5vpxxqcdno.streamlit.app/)
+> Proyecto académico/profesional con fines educativos y analíticos.  
+> No constituye asesoría financiera, recomendación de inversión ni promesa de rentabilidad.
 
-## Descripción
+---
 
-Dashboard interactivo que analiza activos financieros en tiempo real usando datos históricos reales. Incluye indicadores técnicos profesionales y un modelo de Machine Learning para predicción de precios.
+## 1. Objetivo del proyecto
 
-## Activos analizados
+El objetivo de este proyecto es construir un sistema modular de inteligencia de mercado capaz de:
 
-- Acciones: Apple (AAPL), Tesla (TSLA)
-- Criptomonedas: Bitcoin (BTC), Ethereum (ETH)
-- Índices: S&P 500, NASDAQ
-- Forex: EUR/USD
+- Descargar datos históricos de activos financieros.
+- Calcular indicadores técnicos.
+- Entrenar modelos de machine learning sobre series temporales.
+- Evaluar modelos contra baselines simples.
+- Generar una señal ejecutiva de mercado.
+- Ejecutar backtesting con costos transaccionales.
+- Aplicar validación walk-forward para reducir sobreajuste.
+- Presentar resultados en una interfaz ejecutiva con Streamlit.
 
-## Funcionalidades
+---
 
-- Precio histórico con Medias Móviles (MA20, MA50)
-- Bandas de Bollinger para análisis de volatilidad
-- RSI (Relative Strength Index) para señales de compra/venta
-- Modelo XGBoost con MAE de ~$10 sobre datos reales
-- Selector dinámico de activo y período de tiempo
+## 2. Activos soportados
 
-## Tecnologías
+Actualmente la aplicación permite analizar:
 
-- Python, Pandas, NumPy
-- Plotly (visualización interactiva)
-- XGBoost + Scikit-learn (Machine Learning)
-- Streamlit (aplicación web)
-- yFinance (datos financieros en tiempo real)
-- GitHub + Streamlit Cloud (despliegue)
+- Apple — `AAPL`
+- Tesla — `TSLA`
+- Bitcoin — `BTC-USD`
+- Ethereum — `ETH-USD`
+- S&P 500 — `^GSPC`
+- NASDAQ — `^IXIC`
+- EUR/USD — `EURUSD=X`
 
-## Cómo ejecutar localmente
+Los datos son obtenidos desde fuentes financieras públicas compatibles con `yfinance`.
 
-```bash
-pip install -r requirements.txt
-streamlit run app.py
+---
+
+## 3. Arquitectura del sistema
+
+```text
+market-intelligence-dashboard/
+│
+├── app.py
+├── requirements.txt
+├── README.md
+│
+└── src/
+    ├── data_loader.py
+    ├── indicators.py
+    ├── features.py
+    ├── model.py
+    ├── signals.py
+    ├── sentiment.py
+    ├── financial_metrics.py
+    ├── backtesting.py
+    ├── validation.py
+    └── ui.py
