@@ -6,7 +6,7 @@ El formato sigue una estructura simple basada en versiones semánticas.
 
 ---
 
-## [0.1.0] - 2026-06-17
+## [v0.1.0] - 2026-06-17
 
 ### Agregado
 
