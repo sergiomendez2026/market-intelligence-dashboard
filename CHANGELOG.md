@@ -68,8 +68,6 @@ El formato sigue una estructura simple basada en versiones semánticas.
 - Archivo `.gitignore`.
 - Archivo `requirements-dev.txt`.
 
-## [Unreleased]
-
 - Validación walk-forward académica para comparar modelos baseline, econométricos y machine learning.
 - Comparación temporal entre Naive, Regresión Lineal, ARIMA y modelo técnico.
 - Métrica principal académica basada en F1 Score direccional.
