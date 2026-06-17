@@ -387,13 +387,27 @@ streamlit run app.py
 
 ---
 
-## 19. Disclaimer
+## 19. Versioning
+
+This repository follows a simple semantic versioning structure:
+
+| Version | Status | Description |
+|---|---|---|
+| v0.1.0 | Release Candidate | First functional academic/professional version |
+
+Current version:
+
+v0.1.0
+
+---
+
+## 20. Disclaimer
 
 Este proyecto tiene fines educativos, analíticos y demostrativos.
 No constituye asesoría financiera, recomendación de inversión ni promesa de rentabilidad.
 
 
-## 20. Roadmap
+## 21. Roadmap
 
 Planned improvements:
 
