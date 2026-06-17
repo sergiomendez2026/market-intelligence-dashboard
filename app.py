@@ -21,6 +21,7 @@ from src.validation import (
     walk_forward_regression_validation,
     walk_forward_direction_validation
 )
+from src.model_comparison import compare_direction_models
 
 @st.cache_data(ttl=3600)
 def load_market_data_cached(ticker: str, periodo: str):
