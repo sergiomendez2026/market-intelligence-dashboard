@@ -106,6 +106,16 @@ render_header()
 render_disclaimer()
 
 seleccion, ticker, periodo = render_sidebar_assets()
+asset_tickers = {
+    "Apple": "AAPL",
+    "Tesla": "TSLA",
+    "Bitcoin": "BTC-USD",
+    "Ethereum": "ETH-USD",
+    "S&P 500": "^GSPC",
+    "NASDAQ": "^IXIC",
+    "EUR/USD": "EURUSD=X"
+}
+
 st.sidebar.markdown("---")
 st.sidebar.subheader("Supuestos de backtesting")
 
@@ -280,14 +290,15 @@ else:
     wf_regression = None
     wf_direction = None
 
-tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
+tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs([
     "Precio",
     "Indicadores",
     "Predicción ML",
     "Señal de Mercado",
     "Backtesting",
     "Validación",
-    "Modelos"
+    "Modelos",
+    "Portafolio"
 ])
 
 
@@ -965,3 +976,123 @@ with tab7:
             "de forma estable es difícil. Por eso se reportan modelos alternativos, "
             "baseline y métricas de clasificación."
         )
+with tab8:
+    st.subheader("Analítica de portafolio")
+
+    st.caption(
+        "Esta sección permite evaluar un portafolio equiponderado de múltiples activos. "
+        "El objetivo es analizar retorno, volatilidad, drawdown, Sharpe Ratio y correlación. "
+        "No constituye recomendación de inversión."
+    )
+
+    selected_portfolio_assets = st.multiselect(
+        "Selecciona activos para el portafolio",
+        list(asset_tickers.keys()),
+        default=["Apple", "Tesla", "Bitcoin", "S&P 500"]
+    )
+
+    if len(selected_portfolio_assets) < 2:
+        st.warning("Selecciona al menos dos activos para construir un portafolio.")
+    else:
+        prices_portfolio = build_price_matrix_cached(
+            selected_assets=selected_portfolio_assets,
+            asset_tickers=asset_tickers,
+            periodo=periodo
+        )
+
+        weights = equal_weight_vector(len(selected_portfolio_assets))
+
+        portfolio_result = calculate_portfolio_metrics(
+            prices_df=prices_portfolio,
+            weights=weights
+        )
+
+        if not portfolio_result["available"]:
+            st.warning(portfolio_result["message"])
+        else:
+            col1, col2, col3, col4 = st.columns(4)
+
+            col1.metric(
+                "Retorno acumulado",
+                f"{portfolio_result['cumulative_return']:.2f}%"
+            )
+
+            col2.metric(
+                "Retorno anualizado",
+                f"{portfolio_result['annualized_return']:.2f}%"
+            )
+
+            col3.metric(
+                "Volatilidad anualizada",
+                f"{portfolio_result['annualized_volatility']:.2f}%"
+            )
+
+            col4.metric(
+                "Sharpe Ratio",
+                f"{portfolio_result['sharpe_ratio']:.2f}"
+            )
+
+            st.metric(
+                "Drawdown máximo",
+                f"{portfolio_result['max_drawdown']:.2f}%"
+            )
+
+            st.markdown("### Curva de capital del portafolio")
+
+            fig_portfolio = go.Figure()
+
+            fig_portfolio.add_trace(go.Scatter(
+                x=list(portfolio_result["equity_curve"].index),
+                y=list(portfolio_result["equity_curve"].values),
+                name="Portafolio equiponderado",
+                line=dict(color="royalblue")
+            ))
+
+            fig_portfolio.update_layout(
+                template="plotly_dark",
+                title="Evolución del capital simulado",
+                xaxis_title="Fecha",
+                yaxis_title="Capital simulado"
+            )
+
+            st.plotly_chart(fig_portfolio, use_container_width=True)
+
+            st.markdown("### Matriz de correlación")
+
+            corr = portfolio_result["correlation_matrix"]
+
+            fig_corr = go.Figure(data=go.Heatmap(
+                z=corr.values,
+                x=corr.columns,
+                y=corr.index,
+                zmin=-1,
+                zmax=1,
+                colorbar=dict(title="Correlación")
+            ))
+
+            fig_corr.update_layout(
+                template="plotly_dark",
+                title="Correlación entre activos"
+            )
+
+            st.plotly_chart(fig_corr, use_container_width=True)
+
+            st.markdown("### Pesos del portafolio")
+
+            weights_df = pd.DataFrame({
+                "Activo": selected_portfolio_assets,
+                "Peso": weights
+            })
+
+            weights_df["Peso"] = weights_df["Peso"].apply(
+                lambda x: f"{x * 100:.2f}%"
+            )
+
+            st.dataframe(weights_df, use_container_width=True)
+
+            st.caption(
+                "El portafolio actual usa pesos iguales. "
+                "En una siguiente versión se podrán configurar pesos personalizados "
+                "y aplicar optimización de portafolio."
+            )
+            
