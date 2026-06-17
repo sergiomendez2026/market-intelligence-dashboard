@@ -25,6 +25,33 @@ El proyecto prioriza rigor metodológico sobre promesas de rentabilidad. En merc
 
 ---
 
+## Ecosistema del proyecto
+
+Este proyecto está estructurado como un ecosistema profesional de tres capas:
+
+| Capa | Enlace | Propósito |
+|---|---|---|
+| Repositorio GitHub | [Código fuente](https://github.com/sergiomendez2026/market-intelligence-dashboard) | Contiene la arquitectura modular, código Python, modelos, validación, backtesting y documentación técnica. |
+| Página web del proyecto | [Project Website](https://sergiomendez2026.github.io/market-intelligence-dashboard/#stack) | Presenta el proyecto de forma ejecutiva: objetivo, stack, funcionalidades, capturas y propuesta de valor. |
+| Dashboard interactivo | [Live Dashboard](https://market-intelligence-dashboard-fjy5vx69qtam5vpxxqcdno.streamlit.app/) | Permite probar la solución en tiempo real con activos financieros, indicadores, modelos, señales y backtesting. |
+
+La lógica del ecosistema es:
+
+```
+GitHub Repository
+↓
+Evidencia técnica: código, arquitectura, metodología y documentación.
+
+Project Website
+↓
+Presentación ejecutiva: problema, solución, stack, capturas y valor profesional.
+
+Interactive Dashboard
+↓
+Demo funcional: análisis financiero, modelos, señales integradas y backtesting.
+
+---
+
 2. Enlaces del proyecto
 
 - Repositorio GitHub:
