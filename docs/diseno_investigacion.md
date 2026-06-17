@@ -230,6 +230,24 @@ El esquema general será:
 
 Este enfoque evita entrenar con información futura y reduce el riesgo de look-ahead bias.
 
+## Validación walk-forward comparativa implementada
+
+El proyecto incorpora una validación walk-forward académica para comparar modelos bajo una lógica temporal más rigurosa.
+
+Modelos evaluados inicialmente:
+
+| Modelo | Descripción |
+|---|---|
+| Naive t+1 = precio actual | Baseline mínimo de forecasting financiero. |
+| Regresión lineal | Baseline interpretable. |
+| ARIMA(1,1,1) | Baseline econométrico clásico. |
+| Modelo técnico sin sentimiento | Modelo supervisado basado en indicadores técnicos. |
+| Modelo técnico + sentimiento | Modelo preparado para incorporar FinBERT. |
+
+La métrica principal de comparación será el F1 Score direccional bajo validación walk-forward.
+
+Este enfoque evita depender de una única división entrenamiento/prueba y permite evaluar estabilidad temporal del desempeño predictivo.
+
 ---
 
 ## 12. Pruebas estadísticas
