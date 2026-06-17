@@ -85,6 +85,24 @@ render_header()
 render_disclaimer()
 
 seleccion, ticker, periodo = render_sidebar_assets()
+st.sidebar.markdown("---")
+st.sidebar.subheader("Supuestos de backtesting")
+
+commission = st.sidebar.number_input(
+    "Comisión por operación (%)",
+    min_value=0.0,
+    max_value=2.0,
+    value=0.10,
+    step=0.05
+) / 100
+
+slippage = st.sidebar.number_input(
+    "Slippage por operación (%)",
+    min_value=0.0,
+    max_value=2.0,
+    value=0.10,
+    step=0.05
+) / 100
 
 run_walk_forward = st.sidebar.checkbox(
     "Ejecutar validación walk-forward",
