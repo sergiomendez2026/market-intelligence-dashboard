@@ -84,6 +84,52 @@ Los datos son obtenidos desde fuentes financieras públicas compatibles con "yfi
 
 ## 4. Arquitectura del sistema
 
+## 4. Arquitectura del sistema
+
+```text
+market-intelligence-dashboard/
+│
+├── app.py
+├── requirements.txt
+├── README.md
+│
+├── src/
+│   ├── data_loader.py
+│   ├── indicators.py
+│   ├── features.py
+│   ├── model.py
+│   ├── model_comparison.py
+│   ├── signals.py
+│   ├── sentiment.py
+│   ├── financial_metrics.py
+│   ├── backtesting.py
+│   ├── validation.py
+│   └── ui.py
+│
+├── assets/
+├── notebooks/
+├── reports/
+└── tests/
+```
+
+La arquitectura separa responsabilidades para mejorar mantenibilidad, escalabilidad y claridad técnica.
+
+| Módulo | Responsabilidad |
+|---|---|
+| `app.py` | Orquestación principal de la aplicación Streamlit. |
+| `data_loader.py` | Carga de datos históricos desde fuentes financieras. |
+| `indicators.py` | Cálculo de indicadores técnicos como medias móviles, RSI y Bollinger Bands. |
+| `features.py` | Construcción del dataset de machine learning. |
+| `model.py` | Entrenamiento y evaluación de modelos predictivos. |
+| `model_comparison.py` | Comparación de modelos direccionales contra baseline. |
+| `signals.py` | Cálculo del Market Signal Score integrado. |
+| `sentiment.py` | Análisis de sentimiento financiero con fallback liviano. |
+| `financial_metrics.py` | Cálculo de KPIs financieros: retorno, volatilidad y drawdown. |
+| `backtesting.py` | Simulación de estrategia con comisiones y slippage. |
+| `validation.py` | Validación walk-forward para series temporales. |
+| `ui.py` | Componentes visuales, sidebar, disclaimers y UX ejecutiva. |
+
+
 market-intelligence-dashboard/
 │
 ├── app.py
