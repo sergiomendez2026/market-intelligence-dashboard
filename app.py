@@ -603,66 +603,56 @@ with tab5:
         "Retorno estrategia",
         f"{backtest_metrics['strategy_return']:.2f}%"
     )
-
+    
     col2.metric(
         "Retorno Buy & Hold",
         f"{backtest_metrics['buy_hold_return']:.2f}%"
     )
-
+    
     col3.metric(
         "Exceso retorno",
         f"{backtest_metrics['excess_return']:.2f}%"
     )
-
+    
     col4.metric(
         "Drawdown estrategia",
         f"{backtest_metrics['max_drawdown_strategy']:.2f}%"
     )
-
+    
     col5, col6, col7, col8 = st.columns(4)
-
+    
     col5.metric(
         "Drawdown Buy & Hold",
         f"{backtest_metrics['max_drawdown_buy_hold']:.2f}%"
     )
-
+    
     col6.metric(
-        "Operaciones",
-        f"{backtest_metrics['trades']}"
+        "Exposición al mercado",
+        f"{backtest_metrics['exposure']:.2f}%"
     )
-
+    
     col7.metric(
-        "Turnover promedio",
-        f"{backtest_metrics['turnover']:.2f}%"
+        "Número de operaciones",
+        f"{backtest_metrics['number_of_trades']}"
     )
-
+    
     col8.metric(
         "Sharpe estrategia",
         f"{backtest_metrics['sharpe_ratio']:.2f}"
     )
-
-    st.metric(
-        "Exposición al mercado",
-        f"{backtest_metrics['exposure']:.2f}%"
-    )
-    col5, col6 = st.columns(2)
     
-    col5.metric(
-        "Número de operaciones",
-        f"{backtest_metrics.get('number_of_trades', backtest_metrics.get('trades', 0))}"
+    col9, col10 = st.columns(2)
+    
+    col9.metric(
+        "Turnover promedio",
+        f"{backtest_metrics['turnover']:.2f}%"
     )
     
-    col6.metric(
+    col10.metric(
         "Costo transaccional estimado",
-        f"{backtest_metrics.get('total_transaction_cost', 0.0):.2f}%"
+        f"{backtest_metrics['total_transaction_cost']:.2f}%"
     )
-
-    st.caption(
-        f"Supuestos del backtest: comisión {commission * 100:.2f}% por operación, "
-        f"slippage {slippage * 100:.2f}% por operación. "
-        "La señal se desplaza un período para reducir look-ahead bias."
-    )
-
+    
     if backtest_metrics["excess_return"] > 0:
         st.success(
             "La estrategia supera a Buy & Hold en el período analizado."
@@ -671,6 +661,13 @@ with tab5:
         st.warning(
             "La estrategia NO supera a Buy & Hold en el período analizado."
         )
+
+    st.caption(
+        f"Supuestos del backtest: comisión {commission * 100:.2f}% por operación, "
+        f"slippage {slippage * 100:.2f}% por operación. "
+        "La señal se desplaza un período para reducir look-ahead bias. "
+        "El backtest no garantiza rentabilidad futura."
+    )
 
 with tab6:
     st.subheader("Validación walk-forward")
