@@ -16,6 +16,10 @@ from src.ui import (
     render_model_warning,
     render_methodology_note
 )
+from src.validation import (
+    walk_forward_regression_validation,
+    walk_forward_direction_validation
+)
 
 @st.cache_data(ttl=3600)
 def load_market_data_cached(ticker: str, periodo: str):
