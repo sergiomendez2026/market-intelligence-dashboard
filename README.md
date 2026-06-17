@@ -407,3 +407,10 @@ Planned improvements:
 - Professional frontend with React or Next.js.
 - Multi-user authentication.
 - Multilingual version: Spanish and English.
+
+## Development setup
+
+Install production dependencies:
+
+```bash
+pip install -r requirements.txt
