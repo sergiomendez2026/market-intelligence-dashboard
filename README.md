@@ -25,7 +25,7 @@ El proyecto prioriza rigor metodológico sobre promesas de rentabilidad. En merc
 
 ---
 
-# Ecosistema del proyecto
+## Ecosistema del proyecto
 
 Este proyecto está estructurado como un ecosistema profesional de tres capas:
 
@@ -53,7 +53,7 @@ Demo funcional: análisis financiero, modelos, señales integradas y backtesting
 
 ---
 
-# 2. Enlaces del proyecto
+## 2. Enlaces del proyecto
 
 - Repositorio GitHub:
   https://github.com/sergiomendez2026/market-intelligence-dashboard
@@ -66,7 +66,7 @@ Demo funcional: análisis financiero, modelos, señales integradas y backtesting
 
 ---
 
-# 3. Activos analizados
+## 3. Activos analizados
 
 Actualmente la aplicación permite analizar:
 
@@ -82,7 +82,7 @@ Los datos son obtenidos desde fuentes financieras públicas compatibles con "yfi
 
 ---
 
-# 4. Arquitectura del sistema
+## 4. Arquitectura del sistema
 
 market-intelligence-dashboard/
 │
@@ -128,7 +128,7 @@ Y donde tienes tablas, deben quedar así:
 
 ---
 
-# 5. Indicadores financieros y técnicos
+## 5. Indicadores financieros y técnicos
 
 El sistema calcula:
 
@@ -148,7 +148,7 @@ El sistema calcula:
 
 ---
 
-# 6. Machine Learning
+## 6. Machine Learning
 
 El sistema usa modelos supervisados para evaluar señales direccionales sobre activos financieros.
 
@@ -170,7 +170,7 @@ El horizonte puede ajustarse para evaluar movimientos del siguiente período o v
 
 ---
 
-# 7. Comparación de modelos
+## 7. Comparación de modelos
 
 La aplicación compara modelos usando:
 
@@ -185,7 +185,7 @@ El sistema evita seleccionar modelos únicamente por accuracy, ya que en clasifi
 
 ---
 
-# 8. Market Signal Score
+## 8. Market Signal Score
 
 La señal ejecutiva integra cuatro componentes:
 
@@ -214,7 +214,7 @@ Clasificación de señal:
 
 ---
 
-# 9. Backtesting
+## 9. Backtesting
 
 El sistema incluye backtesting vectorizado con:
 
@@ -236,7 +236,7 @@ La señal se desplaza un período para reducir look-ahead bias.
 
 ---
 
-# 10. Validación walk-forward
+## 10. Validación walk-forward
 
 La validación walk-forward entrena modelos usando únicamente datos pasados y evalúa en ventanas futuras.
 
@@ -257,7 +257,7 @@ La aplicación reporta:
 
 ---
 
-# 11. Sentimiento financiero
+## 11. Sentimiento financiero
 
 El sistema incluye una capa de sentimiento financiero con fallback liviano basado en palabras clave.
 
@@ -271,7 +271,7 @@ Estado actual:
 
 ---
 
-# 12. Stack tecnológico
+## 12. Stack tecnológico
 
 - Python
 - Streamlit
@@ -287,7 +287,7 @@ Estado actual:
 
 ---
 
-# 13. Limitaciones metodológicas
+## 13. Limitaciones metodológicas
 
 Este proyecto no promete rentabilidad. Sus principales limitaciones actuales son:
 
@@ -301,7 +301,7 @@ Este proyecto no promete rentabilidad. Sus principales limitaciones actuales son
 
 ---
 
-# 14. Potencial de mejora
+## 14. Potencial de mejora
 
 Próximas extensiones:
 
@@ -319,7 +319,7 @@ Próximas extensiones:
 
 ---
 
-# 15. Valor académico y profesional
+## 15. Valor académico y profesional
 
 Este proyecto demuestra competencias en:
 
@@ -335,7 +335,7 @@ Este proyecto demuestra competencias en:
 
 ---
 
-# 16. Ejecución local
+## 16. Ejecución local
 
 git clone https://github.com/sergiomendez2026/market-intelligence-dashboard.git
 cd market-intelligence-dashboard
@@ -344,7 +344,7 @@ streamlit run app.py
 
 ---
 
-# 17. Disclaimer
+## 17. Disclaimer
 
 Este proyecto tiene fines educativos, analíticos y demostrativos.
 No constituye asesoría financiera, recomendación de inversión ni promesa de rentabilidad.
