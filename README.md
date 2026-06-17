@@ -3,7 +3,7 @@
 Plataforma analítica para evaluación de activos financieros mediante indicadores técnicos, modelos de machine learning, señales integradas, comparación de modelos, validación temporal y backtesting con costos transaccionales.
 
 Proyecto académico/profesional con fines educativos y analíticos.
-No constituye asesoría financiera, recomendación de inversión ni promesa de rentabilidad.»
+No constituye asesoría financiera, recomendación de inversión ni promesa de rentabilidad.
 
 ---
 
