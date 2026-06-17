@@ -72,6 +72,13 @@ El formato sigue una estructura simple basada en versiones semánticas.
 - Comparación temporal entre Naive, Regresión Lineal, ARIMA y modelo técnico.
 - Métrica principal académica basada en F1 Score direccional.
 
+- Integración inicial de FinBERT para sentimiento financiero real.
+- Carga de noticias desde archivo CSV.
+- Clasificación de noticias en sentimiento positivo, negativo y neutral.
+- Construcción de variables diarias de sentimiento.
+- Alineación temporal con precios usando rezago para reducir look-ahead bias.
+- Comparación walk-forward entre modelo técnico y modelo técnico + FinBERT.
+
 ### Limitaciones
 
 - El proyecto no constituye asesoría financiera.
