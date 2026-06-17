@@ -408,9 +408,13 @@ v0.1.0
 
 ## 20. Disclaimer
 
-Este proyecto tiene fines educativos, analíticos y demostrativos.
-No constituye asesoría financiera, recomendación de inversión ni promesa de rentabilidad.
+---
 
+Este proyecto tiene fines educativos, analíticos y demostrativos.
+
+No constituye asesoría financiera, recomendación de inversión, señal de trading, asesoría legal ni promesa de rentabilidad.
+
+Los resultados generados por la aplicación deben interpretarse como salidas experimentales de un sistema de análisis cuantitativo y no como instrucciones para comprar, vender o mantener activos financieros.
 
 ## 21. Roadmap
 
