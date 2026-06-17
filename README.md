@@ -37,7 +37,8 @@ Este proyecto está estructurado como un ecosistema profesional de tres capas:
 
 La lógica del ecosistema es:
 
-```
+---
+
 GitHub Repository
 ↓
 Evidencia técnica: código, arquitectura, metodología y documentación.
