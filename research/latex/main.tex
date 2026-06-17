@@ -1,1 +1,247 @@
+\documentclass[12pt,a4paper]{article}
 
+% -------------------------------------------------
+% Codificación e idioma
+% -------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,english]{babel}
+
+% -------------------------------------------------
+% Márgenes y formato
+% -------------------------------------------------
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{setspace}
+\onehalfspacing
+
+% -------------------------------------------------
+% Matemática, tablas y gráficos
+% -------------------------------------------------
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{longtable}
+\usepackage{array}
+
+% -------------------------------------------------
+% Hipervínculos
+% -------------------------------------------------
+\usepackage[hidelinks]{hyperref}
+
+% -------------------------------------------------
+% Bibliografía APA
+% -------------------------------------------------
+\usepackage[style=apa,backend=biber]{biblatex}
+\addbibresource{references.bib}
+
+% -------------------------------------------------
+% Información del documento
+% -------------------------------------------------
+\title{
+Evaluación del impacto del sentimiento financiero basado en FinBERT sobre la predicción direccional de retornos de corto plazo
+}
+
+\author{
+Sergio Leonardo Méndez Mera
+}
+
+\date{2026}
+
+\begin{document}
+
+\selectlanguage{spanish}
+
+\maketitle
+
+\begin{abstract}
+Este estudio evalúa si la incorporación de sentimiento financiero extraído mediante FinBERT mejora significativamente la predicción direccional de retornos de corto plazo frente a modelos basados únicamente en indicadores técnicos. Para ello, se construye un sistema experimental que integra datos históricos de mercado, indicadores técnicos, modelos supervisados, validación walk-forward y comparación estadística entre baselines y modelos enriquecidos con sentimiento. La investigación compara modelos naive, regresión lineal, ARIMA/SARIMA, modelos técnicos sin sentimiento y modelos técnicos con FinBERT. El objetivo no es demostrar que los precios financieros son fácilmente predecibles, sino evaluar de manera rigurosa si el sentimiento financiero aporta valor incremental bajo un diseño experimental reproducible.
+\end{abstract}
+
+\textbf{Palabras clave:} FinBERT, machine learning financiero, predicción direccional, sentimiento financiero, walk-forward validation, series temporales, backtesting.
+
+\newpage
+
+\tableofcontents
+
+\newpage
+
+\section{Introducción}
+
+La predicción de precios y retornos financieros constituye uno de los problemas más complejos dentro de la ciencia de datos aplicada a mercados. La presencia de ruido, no estacionariedad, cambios de régimen y rápida incorporación de información en los precios dificulta que modelos predictivos superen consistentemente a estrategias simples o baselines tradicionales.
+
+En este contexto, los modelos de machine learning han sido utilizados para identificar relaciones no lineales en datos financieros. Sin embargo, su evaluación requiere rigurosidad metodológica, especialmente en el uso de validación temporal, comparación contra baselines y control de sesgos como look-ahead bias y data leakage.
+
+Una fuente alternativa de información es el sentimiento financiero extraído de noticias y textos de mercado. Modelos de lenguaje especializados como FinBERT permiten clasificar textos financieros en categorías positivas, negativas o neutrales. No obstante, la pregunta relevante no es únicamente si el modelo clasifica correctamente textos financieros, sino si dicho sentimiento mejora la predicción de retornos o dirección de mercado.
+
+\section{Planteamiento del problema}
+
+Muchos proyectos aplicados de predicción financiera presentan resultados basados en divisiones simples de entrenamiento y prueba, ausencia de baselines rigurosos o falta de pruebas estadísticas. Esto puede llevar a conclusiones excesivamente optimistas sobre la capacidad predictiva de modelos complejos.
+
+El problema central de esta investigación es determinar si la incorporación de sentimiento financiero basado en FinBERT aporta valor predictivo incremental frente a modelos construidos exclusivamente con indicadores técnicos.
+
+\section{Pregunta de investigación}
+
+La pregunta central de investigación es:
+
+\begin{quote}
+¿La incorporación de sentimiento financiero extraído mediante FinBERT mejora significativamente la predicción direccional de retornos de corto plazo frente a modelos basados únicamente en indicadores técnicos?
+\end{quote}
+
+\section{Hipótesis}
+
+\subsection{Hipótesis nula}
+
+[
+H_0: \text{FinBERT no mejora significativamente el desempeño predictivo frente a modelos técnicos.}
+]
+
+\subsection{Hipótesis alternativa}
+
+[
+H_1: \text{FinBERT mejora significativamente el desempeño predictivo frente a modelos técnicos.}
+]
+
+\section{Objetivo general}
+
+Evaluar si la incorporación de sentimiento financiero basado en FinBERT mejora significativamente la predicción direccional de retornos de corto plazo en activos financieros bajo un esquema de validación walk-forward.
+
+\section{Objetivos específicos}
+
+\begin{enumerate}
+\item Construir un dataset financiero reproducible con precios históricos, retornos e indicadores técnicos.
+\item Incorporar sentimiento financiero mediante FinBERT.
+\item Implementar modelos baseline obligatorios.
+\item Comparar modelos técnicos sin sentimiento frente a modelos técnicos con sentimiento.
+\item Evaluar el desempeño mediante métricas de clasificación y forecasting.
+\item Aplicar validación walk-forward para reducir look-ahead bias.
+\item Aplicar pruebas estadísticas para comparar modelos.
+\item Analizar limitaciones metodológicas y riesgos de interpretación.
+\end{enumerate}
+
+\section{Revisión de literatura}
+
+Esta sección revisará literatura relacionada con:
+
+\begin{itemize}
+\item Hipótesis de eficiencia de mercado.
+\item Predicción financiera con machine learning.
+\item Modelos econométricos para series temporales.
+\item Análisis de sentimiento financiero.
+\item FinBERT y modelos de lenguaje aplicados a finanzas.
+\item Validación temporal y backtesting.
+\end{itemize}
+
+\section{Metodología}
+
+\subsection{Datos}
+
+El estudio utiliza datos históricos de mercado obtenidos desde fuentes públicas compatibles con \texttt{yfinance}. Los activos iniciales considerados incluyen Apple, Tesla, S&P 500, NASDAQ, Bitcoin, Ethereum y EUR/USD.
+
+\subsection{Variable objetivo}
+
+La variable objetivo principal es la dirección futura del retorno:
+
+[
+y_t =
+\begin{cases}
+1, & \text{si } r_{t+1} > 0 \
+0, & \text{si } r_{t+1} \leq 0
+\end{cases}
+]
+
+donde r_{t+1} representa el retorno del siguiente período.
+
+\subsection{Variables explicativas técnicas}
+
+Las variables técnicas incluyen retornos rezagados, medias móviles, RSI, volatilidad móvil, momentum y distancia relativa frente a medias móviles.
+
+\subsection{Variables de sentimiento}
+
+Las variables de sentimiento se derivan de FinBERT e incluyen sentimiento positivo, negativo, neutral y un score agregado de sentimiento financiero.
+
+\section{Modelos}
+
+\subsection{Modelo Naive}
+
+El modelo naive predice que el precio futuro será igual al precio actual:
+
+[
+\hat{P}_{t+1} = P_t
+]
+
+\subsection{Regresión lineal}
+
+La regresión lineal se usa como baseline interpretable para evaluar relaciones lineales entre indicadores técnicos y retorno futuro.
+
+\subsection{ARIMA/SARIMA}
+
+ARIMA/SARIMA se utiliza como baseline econométrico clásico para series temporales.
+
+\subsection{Modelo técnico sin sentimiento}
+
+Este modelo utiliza únicamente indicadores técnicos como variables explicativas.
+
+\subsection{Modelo técnico con FinBERT}
+
+Este modelo incorpora tanto variables técnicas como variables de sentimiento financiero generadas con FinBERT.
+
+\section{Diseño experimental}
+
+El diseño experimental compara los siguientes modelos:
+
+\begin{enumerate}
+\item Naive.
+\item Regresión lineal.
+\item ARIMA/SARIMA.
+\item Modelo técnico sin sentimiento.
+\item Modelo técnico con FinBERT.
+\end{enumerate}
+
+La comparación principal se realiza entre el modelo técnico sin sentimiento y el modelo técnico con FinBERT.
+
+\section{Validación}
+
+La validación principal será walk-forward validation. En cada iteración, el modelo se entrena con datos pasados y se evalúa sobre una ventana futura.
+
+\section{Métricas de evaluación}
+
+\subsection{Métrica principal}
+
+La métrica principal será el F1 Score direccional bajo validación walk-forward.
+
+\subsection{Métricas secundarias}
+
+Se reportarán Accuracy, Precision, Recall, MAE, RMSE, MAPE, Sharpe Ratio, Maximum Drawdown y retorno acumulado de estrategia simulada.
+
+\section{Pruebas estadísticas}
+
+Para forecasting se considerará el test Diebold-Mariano. Para clasificación direccional se considerará McNemar test o bootstrap sobre diferencias de F1 Score y Accuracy.
+
+\section{Resultados}
+
+Esta sección reportará los resultados empíricos de los modelos, incluyendo tablas comparativas, métricas agregadas e intervalos de confianza.
+
+\section{Discusión}
+
+La discusión analizará si el sentimiento financiero aporta valor incremental, si las diferencias son estadísticamente significativas y si los resultados son consistentes con la literatura previa.
+
+\section{Limitaciones}
+
+Entre las principales limitaciones se consideran datos públicos no point-in-time, posible look-ahead bias en noticias, limitaciones de cobertura de noticias históricas, costos transaccionales aproximados y ausencia de ejecución real de mercado.
+
+\section{Conclusiones}
+
+Esta sección resumirá los hallazgos principales y discutirá si la evidencia respalda o no la hipótesis alternativa.
+
+\section{Trabajo futuro}
+
+Líneas futuras incluyen optimización de hiperparámetros, integración de modelos deep learning, ampliación de activos, backtesting más realista, análisis de portafolio y despliegue como producto analítico profesional.
+
+\newpage
+
+\printbibliography
+
+\end{document}
