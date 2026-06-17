@@ -625,6 +625,17 @@ with tab5:
         "Exposición al mercado",
         f"{backtest_metrics['exposure']:.2f}%"
     )
+    col5, col6 = st.columns(2)
+    
+    col5.metric(
+        "Número de operaciones",
+        f"{backtest_metrics['number_of_trades']}"
+    )
+    
+    col6.metric(
+        "Costo transaccional estimado",
+        f"{backtest_metrics['total_transaction_cost']:.2f}%"
+    )
 
     st.caption(
         f"Supuestos del backtest: comisión {commission * 100:.2f}% por operación, "
