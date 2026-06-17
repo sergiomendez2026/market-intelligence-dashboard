@@ -1,0 +1,281 @@
+Roadmap
+
+Estado actual
+
+Versión actual: "v0.1.0"
+
+Estado: MVP académico/profesional funcional.
+
+La versión actual ofrece una plataforma operativa para evaluar activos financieros mediante indicadores técnicos, modelos de machine learning, señales integradas, comparación de modelos, validación walk-forward y backtesting con costos transaccionales.
+
+---
+
+Fase 1 — Base funcional
+
+Estado: completado.
+
+Implementado:
+
+- Dashboard en Streamlit.
+- Carga de datos financieros públicos.
+- Indicadores técnicos.
+- KPIs financieros.
+- Dataset de machine learning.
+- Modelo de regresión.
+- Modelo de clasificación direccional.
+- Market Signal Score.
+- Backtesting vectorizado.
+- Validación walk-forward.
+- Comparación de modelos.
+- Visualización comparativa de desempeño.
+- Repositorio GitHub.
+- Página web con GitHub Pages.
+- Despliegue en Streamlit Cloud.
+- README técnico.
+- Changelog.
+- Licencia MIT.
+- ".gitignore".
+- "requirements.txt".
+- "requirements-dev.txt".
+- GitHub Actions.
+- Tests unitarios iniciales.
+- Release "v0.1.0".
+
+---
+
+Fase 2 — Profesionalización del repositorio
+
+Estado: en progreso.
+
+Objetivos:
+
+- Mejorar documentación técnica.
+- Agregar carpeta "docs/".
+- Documentar metodología.
+- Documentar arquitectura.
+- Documentar roadmap.
+- Mejorar mantenibilidad del repositorio.
+- Mejorar estructura de testing.
+- Mejorar trazabilidad entre GitHub, página web y dashboard.
+
+Entregables:
+
+- "docs/metodologia.md"
+- "docs/arquitectura.md"
+- "docs/roadmap.md"
+- README ampliado.
+- Sección formal de testing.
+- Estructura de proyecto más limpia.
+- Documentación de limitaciones metodológicas.
+- Documentación de potencial académico y profesional.
+
+---
+
+Fase 3 — Mejora de modelos
+
+Estado: planificado.
+
+Objetivos:
+
+- Agregar más modelos.
+- Optimizar hiperparámetros.
+- Comparar estabilidad por activo.
+- Mejorar validación temporal.
+- Mejorar robustez de clasificación direccional.
+- Evaluar desempeño por régimen de mercado.
+
+Modelos candidatos:
+
+- LightGBM.
+- CatBoost.
+- Extra Trees.
+- Support Vector Machine.
+- LSTM.
+- Temporal Fusion Transformer.
+
+Técnicas candidatas:
+
+- Optimización bayesiana.
+- Validación cruzada para series temporales.
+- Análisis de importancia de variables.
+- SHAP explainability.
+- Evaluación por régimen de mercado.
+- Selección automática de modelos.
+
+---
+
+Fase 4 — Inteligencia de sentimiento
+
+Estado: planificado.
+
+Objetivos:
+
+- Reemplazar fallback liviano por una capa NLP financiera más robusta.
+- Integrar FinBERT.
+- Agregar sentimiento desde titulares financieros.
+- Agregar tendencia de sentimiento por activo.
+- Integrar sentimiento al Market Signal Score.
+- Comparar impacto del sentimiento sobre modelos técnicos.
+
+Fuentes potenciales:
+
+- APIs de noticias financieras.
+- Reportes SEC.
+- Transcripciones de earnings calls.
+- Titulares financieros.
+- RSS públicos.
+- Comunicados corporativos.
+
+---
+
+Fase 5 — Analítica de portafolio
+
+Estado: planificado.
+
+Objetivos:
+
+- Pasar de análisis individual de activos a inteligencia de portafolio.
+- Agregar construcción de portafolios.
+- Agregar pesos por activo.
+- Agregar métricas de riesgo de portafolio.
+- Agregar análisis de diversificación.
+- Agregar matriz de correlación.
+- Agregar frontera eficiente.
+- Agregar contribución al drawdown por activo.
+
+Métricas potenciales:
+
+- Retorno del portafolio.
+- Volatilidad del portafolio.
+- Sharpe Ratio.
+- Sortino Ratio.
+- Drawdown máximo.
+- Value at Risk.
+- Conditional Value at Risk.
+- Beta.
+- Matriz de correlación.
+- Tracking error.
+
+---
+
+Fase 6 — Productización
+
+Estado: planificado.
+
+Objetivos:
+
+- Convertir el proyecto en una plataforma online más completa.
+- Agregar autenticación de usuarios.
+- Agregar portafolios guardados.
+- Agregar alertas.
+- Agregar reportes programados.
+- Agregar generación de PDF.
+- Agregar API.
+- Agregar interfaz multilingüe.
+- Mejorar diseño UX/UI.
+- Agregar panel administrativo.
+
+Stack candidato:
+
+- FastAPI para backend.
+- PostgreSQL para persistencia.
+- Streamlit o React/Next.js para frontend.
+- Docker para despliegue.
+- GitHub Actions para CI/CD.
+- Render, Railway, AWS, GCP o Azure para cloud.
+- Redis para cache.
+- Celery o jobs programados para tareas automáticas.
+
+---
+
+Fase 7 — Producción académica
+
+Estado: planificado.
+
+Posibles productos académicos:
+
+- Reporte técnico.
+- Tesina.
+- Tesis.
+- Artículo aplicado.
+- Caso de estudio en finanzas cuantitativas.
+- Estudio de validación de modelos.
+- Experimento de optimización de portafolio.
+- Extensión NLP financiero con FinBERT.
+
+Preguntas de investigación candidatas:
+
+- ¿Los modelos supervisados mejoran la predicción direccional frente a baselines simples en activos financieros líquidos?
+- ¿Qué tan estables son los clasificadores direccionales bajo validación walk-forward?
+- ¿El sentimiento financiero mejora la construcción de señales técnicas?
+- ¿Qué sensibilidad tiene el desempeño de una estrategia frente a comisiones y slippage?
+- ¿Un Market Signal Score multifactorial mejora retornos ajustados por riesgo?
+- ¿Qué modelos presentan mejor robustez entre activos de distinta naturaleza: acciones, índices, criptoactivos y divisas?
+
+---
+
+Fase 8 — Potencial comercial
+
+Estado: exploratorio.
+
+Rutas de monetización posibles:
+
+- Dashboard de analítica de portafolio para inversionistas retail.
+- Producto educativo para estudiantes de finanzas y ciencia de datos.
+- Servicio freelance de desarrollo de dashboards financieros.
+- MVP SaaS de inteligencia de mercado.
+- Prototipo institucional para reportes financieros.
+- Herramienta de reportes automáticos para asesores.
+- Activo de portafolio para postulaciones laborales.
+- Consultoría de dashboards cuantitativos.
+- Plantilla premium para análisis financiero con Streamlit.
+
+Condiciones mínimas antes de comercializar:
+
+- Validación más robusta.
+- Mayor cobertura de tests.
+- Backtesting más realista.
+- Revisión legal/compliance.
+- Disclaimer financiero claro.
+- Evitar framing de recomendación de inversión.
+- Limitaciones metodológicas transparentes.
+- Documentación de riesgos.
+- Trazabilidad de fuentes de datos.
+
+---
+
+Versiones objetivo
+
+Versión| Objetivo
+"v0.1.0"| MVP académico/profesional funcional.
+"v0.2.0"| Documentación, tests y estructura mejorada.
+"v0.3.0"| Comparación de modelos e hiperparámetros más robustos.
+"v0.4.0"| Integración de FinBERT.
+"v0.5.0"| Analítica de portafolio.
+"v0.6.0"| Reportes automáticos y alertas.
+"v0.7.0"| API y backend profesional.
+"v1.0.0"| Producto analítico público estable.
+
+---
+
+Prioridad inmediata
+
+Próximos pasos recomendados:
+
+1. Crear carpeta "docs/".
+2. Agregar "metodologia.md".
+3. Agregar "arquitectura.md".
+4. Agregar "roadmap.md".
+5. Enlazar estos archivos desde el "README.md".
+6. Validar que GitHub Actions siga ejecutando correctamente.
+7. Crear una nueva versión menor cuando la documentación quede consolidada.
+
+Commit sugerido:
+
+Add professional Spanish documentation
+
+---
+
+Disclaimer
+
+Este proyecto tiene fines educativos, analíticos y demostrativos. No constituye asesoría financiera, recomendación de inversión ni promesa de rentabilidad.
