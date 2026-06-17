@@ -55,11 +55,18 @@ def calculate_financial_kpis_cached(precio: pd.Series):
 
 
 @st.cache_data(ttl=3600)
-def run_backtest_cached(df_ml: pd.DataFrame):
-    df_backtest = run_backtest(df_ml)
+def run_backtest_cached(
+    df_ml: pd.DataFrame,
+    commission: float,
+    slippage: float
+):
+    df_backtest = run_backtest(
+        df_ml,
+        commission=commission,
+        slippage=slippage
+    )
     backtest_metrics = calculate_backtest_metrics(df_backtest)
     return df_backtest, backtest_metrics
-
 
 @st.cache_data(ttl=3600)
 def train_regression_model_cached(X: pd.DataFrame, y: pd.Series):
@@ -81,6 +88,24 @@ run_walk_forward = st.sidebar.checkbox(
     "Ejecutar validación walk-forward",
     value=False
 )
+st.sidebar.markdown("---")
+st.sidebar.markdown("### Costos de backtesting")
+
+commission = st.sidebar.number_input(
+    "Comisión por operación (%)",
+    min_value=0.0,
+    max_value=2.0,
+    value=0.10,
+    step=0.01
+) / 100
+
+slippage = st.sidebar.number_input(
+    "Slippage estimado (%)",
+    min_value=0.0,
+    max_value=2.0,
+    value=0.05,
+    step=0.01
+) / 100
 
 
 with st.spinner("Cargando datos de mercado..."):
@@ -116,7 +141,11 @@ df_ml = create_ml_dataset_cached(
     std20=std20
 )
 
-df_backtest, backtest_metrics = run_backtest_cached(df_ml)
+df_backtest, backtest_metrics = run_backtest_cached(
+    df_ml,
+    commission,
+    slippage
+)
 
 # Protección: crear target direccional si no viene desde features.py
 if "target_direction" not in df_ml.columns:
@@ -550,6 +579,33 @@ with tab5:
         "Exposición al mercado",
         f"{backtest_metrics['exposure']:.2f}%"
     )
+col5, col6, col7, col8 = st.columns(4)
+
+col5.metric(
+    "Drawdown Buy & Hold",
+    f"{backtest_metrics['max_drawdown_buy_hold']:.2f}%"
+)
+
+col6.metric(
+    "Operaciones",
+    f"{backtest_metrics['trades']}"
+)
+
+col7.metric(
+    "Turnover promedio",
+    f"{backtest_metrics['turnover']:.2f}%"
+)
+
+col8.metric(
+    "Sharpe estrategia",
+    f"{backtest_metrics['sharpe_ratio']:.2f}"
+)
+
+st.caption(
+    f"Supuestos del backtest: comisión {commission * 100:.2f}% por operación, "
+    f"slippage {slippage * 100:.2f}% por operación. "
+    "La señal se desplaza un período para reducir look-ahead bias."
+)
 
     if backtest_metrics["excess_return"] > 0:
         st.success(
