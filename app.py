@@ -209,6 +209,8 @@ if model_available:
     
     y_direction = df_ml["target_direction"]
 
+    model_comparison_df = compare_direction_models(X, y_direction)
+
     direction_model_available = hasattr(
     market_model,
     "train_and_evaluate_direction_model"
@@ -260,13 +262,14 @@ else:
     wf_regression = None
     wf_direction = None
 
-tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
+tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
     "Precio",
     "Indicadores",
     "Predicción ML",
     "Señal de Mercado",
     "Backtesting",
-    "Validación"
+    "Validación",
+    "Modelos"
 ])
 
 
@@ -824,3 +827,53 @@ with tab6:
                 use_container_width=True
             )
             
+with tab7:
+    st.subheader("Comparación de modelos direccionales")
+
+    st.caption(
+        "Esta sección compara modelos supervisados para predicción direccional. "
+        "El objetivo no es prometer rentabilidad, sino evaluar si algún modelo supera "
+        "un baseline simple bajo validación temporal."
+    )
+
+    if not model_available:
+        st.warning("No hay suficientes datos para comparar modelos.")
+    else:
+        st.dataframe(
+            model_comparison_df,
+            use_container_width=True
+        )
+
+        best_model_row = model_comparison_df.sort_values(
+            by="F1 Score",
+            ascending=False
+        ).iloc[0]
+
+        st.markdown("### Mejor modelo según F1 Score")
+
+        col1, col2, col3, col4 = st.columns(4)
+
+        col1.metric("Modelo", best_model_row["Modelo"])
+        col2.metric("Accuracy", f"{best_model_row['Accuracy']:.2f}%")
+        col3.metric("F1 Score", f"{best_model_row['F1 Score']:.2f}%")
+        col4.metric(
+            "Exceso vs baseline",
+            f"{best_model_row['Exceso Accuracy vs Baseline']:.2f} pp"
+        )
+
+        if best_model_row["Exceso Accuracy vs Baseline"] > 0:
+            st.success(
+                "Existe al menos un modelo que supera al baseline direccional "
+                "en el período evaluado."
+            )
+        else:
+            st.warning(
+                "Ningún modelo supera claramente al baseline direccional. "
+                "Esto es una señal metodológica sana: el sistema evita sobreprometer."
+            )
+
+        st.caption(
+            "Nota metodológica: en mercados financieros, superar un baseline simple "
+            "de forma estable es difícil. Por eso se reportan modelos alternativos, "
+            "baseline y métricas de clasificación."
+        )
