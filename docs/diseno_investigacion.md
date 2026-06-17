@@ -160,6 +160,20 @@ Modelo técnico sin sentimiento
 vs
 Modelo técnico + FinBERT
 
+## Modelos baseline implementados
+
+El proyecto incorpora los siguientes baselines académicos:
+
+| Modelo | Propósito |
+|---|---|
+| Naive t+1 = precio actual | Baseline mínimo de forecasting financiero. |
+| Regresión lineal | Baseline interpretable con variables técnicas. |
+| ARIMA/SARIMA | Baseline econométrico clásico de series temporales. |
+| Modelo técnico sin sentimiento | Modelo supervisado con indicadores técnicos. |
+| Modelo técnico + FinBERT | Modelo experimental con información técnica y sentimiento financiero. |
+
+La comparación principal de la investigación será entre el modelo técnico sin sentimiento y el modelo técnico + FinBERT.
+
 ---
 
 ## 9. Métrica principal
