@@ -128,5 +128,7 @@ def calculate_backtest_metrics(df_backtest: pd.DataFrame) -> dict:
         "exposure": round(exposure, 2),
         "number_of_trades": number_of_trades,
         "total_transaction_cost": round(total_transaction_cost, 2),
+        "turnover": round(turnover, 2),
+        "sharpe_ratio": round(sharpe_ratio, 2),
     }
     
