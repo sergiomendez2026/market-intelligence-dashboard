@@ -77,6 +77,11 @@ render_disclaimer()
 
 seleccion, ticker, periodo = render_sidebar_assets()
 
+run_walk_forward = st.sidebar.checkbox(
+    "Ejecutar validación walk-forward",
+    value=False
+)
+
 
 with st.spinner("Cargando datos de mercado..."):
     precio = load_market_data_cached(ticker, periodo)
@@ -161,24 +166,27 @@ if model_available:
     directional_accuracy = metrics["directional_accuracy"]
     if run_walk_forward:
         wf_regression = walk_forward_regression_validation(
-        X=X,
-        y=y,
-        min_train_size=120,
-        test_size=20,
-        step_size=20
-    )
+            X=X,
+            y=y,
+            min_train_size=120,
+            test_size=20,
+            step_size=20
+        )
 
-    wf_direction = walk_forward_direction_validation(
-        X=X,
-        y_direction=y_direction,
-        min_train_size=120,
-        test_size=20,
-        step_size=20
-    )
+        wf_direction = walk_forward_direction_validation(
+            X=X,
+            y_direction=y_direction,
+            min_train_size=120,
+            test_size=20,
+            step_size=20
+        )
+    else:
+        wf_regression = None
+        wf_direction = None
+
 else:
     wf_regression = None
     wf_direction = None
-
 
 tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
     "Precio",
@@ -563,6 +571,13 @@ with tab6:
 
     if not model_available:
         st.warning("No hay suficientes datos para ejecutar validación walk-forward.")
+
+    elif not run_walk_forward:
+        st.info(
+            "La validación walk-forward está desactivada para mejorar el tiempo de carga. "
+            "Actívala desde el panel lateral cuando quieras ejecutarla."
+        )
+
     else:
         st.markdown("### Regresión de precio")
 
