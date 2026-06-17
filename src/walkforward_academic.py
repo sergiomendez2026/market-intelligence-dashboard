@@ -616,3 +616,127 @@ def collect_walkforward_predictions_for_statistics(
         windows_used += 1
 
     return pd.DataFrame(records)
+
+def collect_walkforward_predictions_technical_vs_sentiment(
+    prices: pd.Series,
+    sentiment_features: pd.DataFrame,
+    features: pd.DataFrame | None = None,
+    initial_train_size: int = 252,
+    test_window: int = 20,
+    step_size: int = 20,
+    max_windows: int = 8,
+) -> pd.DataFrame:
+    """
+    Genera predicciones walk-forward para comparar:
+
+    - Modelo técnico sin sentimiento
+    - Modelo técnico + sentimiento FinBERT
+
+    Esta función sirve para pruebas estadísticas de la hipótesis principal.
+    """
+
+    technical_dataset = build_supervised_financial_dataset(
+        prices=prices,
+        features=features,
+        sentiment_features=None,
+    )
+
+    sentiment_dataset = build_supervised_financial_dataset(
+        prices=prices,
+        features=features,
+        sentiment_features=sentiment_features,
+    )
+
+    common_index = technical_dataset.index.intersection(sentiment_dataset.index)
+
+    technical_dataset = technical_dataset.loc[common_index]
+    sentiment_dataset = sentiment_dataset.loc[common_index]
+
+    technical_feature_columns = [
+        col
+        for col in technical_dataset.columns
+        if col not in ["future_return", "future_direction", "close"]
+    ]
+
+    sentiment_feature_columns = [
+        col
+        for col in sentiment_dataset.columns
+        if col not in ["future_return", "future_direction", "close"]
+    ]
+
+    records = []
+    n = len(common_index)
+    windows_used = 0
+
+    for train_end in range(initial_train_size, n - test_window, step_size):
+        if windows_used >= max_windows:
+            break
+
+        technical_train = technical_dataset.iloc[:train_end]
+        technical_test = technical_dataset.iloc[train_end : train_end + test_window]
+
+        sentiment_train = sentiment_dataset.iloc[:train_end]
+        sentiment_test = sentiment_dataset.iloc[train_end : train_end + test_window]
+
+        X_train_technical = technical_train[technical_feature_columns]
+        y_train = technical_train["future_direction"]
+
+        X_test_technical = technical_test[technical_feature_columns]
+
+        X_train_sentiment = sentiment_train[sentiment_feature_columns]
+        X_test_sentiment = sentiment_test[sentiment_feature_columns]
+
+        y_test_return = technical_test["future_return"].values
+        y_test_direction = technical_test["future_direction"].values
+
+        technical_model = RandomForestClassifier(
+            n_estimators=200,
+            max_depth=5,
+            random_state=42,
+            class_weight="balanced",
+        )
+
+        sentiment_model = RandomForestClassifier(
+            n_estimators=200,
+            max_depth=5,
+            random_state=42,
+            class_weight="balanced",
+        )
+
+        technical_model.fit(X_train_technical, y_train)
+        sentiment_model.fit(X_train_sentiment, y_train)
+
+        technical_pred_direction = technical_model.predict(X_test_technical)
+        sentiment_pred_direction = sentiment_model.predict(X_test_sentiment)
+
+        if hasattr(technical_model, "predict_proba"):
+            technical_pred_return = (
+                technical_model.predict_proba(X_test_technical)[:, 1] - 0.5
+            )
+        else:
+            technical_pred_return = technical_pred_direction - 0.5
+
+        if hasattr(sentiment_model, "predict_proba"):
+            sentiment_pred_return = (
+                sentiment_model.predict_proba(X_test_sentiment)[:, 1] - 0.5
+            )
+        else:
+            sentiment_pred_return = sentiment_pred_direction - 0.5
+
+        for i in range(len(technical_test)):
+            records.append(
+                {
+                    "date": technical_test.index[i],
+                    "actual_return": float(y_test_return[i]),
+                    "actual_direction": int(y_test_direction[i]),
+                    "technical_pred_return": float(technical_pred_return[i]),
+                    "technical_pred_direction": int(technical_pred_direction[i]),
+                    "sentiment_pred_return": float(sentiment_pred_return[i]),
+                    "sentiment_pred_direction": int(sentiment_pred_direction[i]),
+                    "window": windows_used + 1,
+                }
+            )
+
+        windows_used += 1
+
+    return pd.DataFrame(records)
