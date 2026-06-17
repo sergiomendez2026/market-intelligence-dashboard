@@ -391,3 +391,19 @@ streamlit run app.py
 
 Este proyecto tiene fines educativos, analíticos y demostrativos.
 No constituye asesoría financiera, recomendación de inversión ni promesa de rentabilidad.
+
+
+## 20. Roadmap
+
+Planned improvements:
+
+- Full FinBERT integration for financial sentiment analysis.
+- Portfolio-level backtesting.
+- Hyperparameter optimization.
+- Model calibration and probability reliability analysis.
+- Risk-adjusted portfolio optimization.
+- Automatic PDF report generation.
+- API backend with FastAPI.
+- Professional frontend with React or Next.js.
+- Multi-user authentication.
+- Multilingual version: Spanish and English.
