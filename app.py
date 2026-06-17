@@ -549,7 +549,7 @@ with tab5:
     st.caption(
         "Backtesting vectorizado basado en señal técnica. "
         "La señal se desplaza un período para reducir look-ahead bias. "
-        "Incluye comisión, slippage y costos de transacción configurables."
+        "Incluye comisión y slippage estimados. No incluye impuestos ni impacto de liquidez."
     )
 
     fig_bt = go.Figure()
