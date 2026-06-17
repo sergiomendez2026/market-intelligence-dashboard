@@ -432,6 +432,22 @@ Planned improvements:
 - Multi-user authentication.
 - Multilingual version: Spanish and English.
 
+## Enfoque académico de investigación
+
+Además de funcionar como dashboard profesional, este proyecto se desarrolla como una investigación aplicada en machine learning financiero.
+
+La pregunta central es:
+
+> ¿La incorporación de sentimiento financiero extraído mediante FinBERT mejora significativamente la predicción direccional de retornos de corto plazo frente a modelos basados únicamente en indicadores técnicos?
+
+El diseño académico completo se encuentra en:
+
+- [Diseño de investigación](docs/diseno_investigacion.md)
+
+La versión LaTeX del documento académico se encuentra en:
+
+- [Plantilla LaTeX](research/latex/main.tex)
+
 ## Documentación técnica extendida
 
 La documentación técnica ampliada del proyecto se encuentra en la carpeta `docs/`:
