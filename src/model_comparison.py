@@ -102,12 +102,23 @@ def compare_direction_models(
 
     comparison_df = pd.DataFrame(results)
 
+    baseline_accuracy = comparison_df.loc[
+        comparison_df["Modelo"] == "Baseline Dummy",
+        "Accuracy"
+    ].iloc[0]
+
     comparison_df["Exceso Accuracy vs Baseline"] = (
-        comparison_df["Accuracy"] - comparison_df.loc[
-            comparison_df["Modelo"] == "Baseline Dummy",
-            "Accuracy"
-        ].iloc[0]
+        comparison_df["Accuracy"] - baseline_accuracy
     ).round(2)
 
+    comparison_df["Robustness Score"] = (
+        0.35 * comparison_df["Accuracy"] +
+        0.25 * comparison_df["F1 Score"] +
+        0.20 * comparison_df["Precision"] +
+        0.20 * comparison_df["Recall"]
+    ).round(2)
+    
+    comparison_df["Es baseline"] = comparison_df["Modelo"].eq("Baseline Dummy")
+    
     return comparison_df
   
