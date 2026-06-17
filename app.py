@@ -1199,6 +1199,44 @@ with tab9:
                         "Un modelo complejo debe superar al Naive y a los baselines clásicos "
                         "para considerarse metodológicamente superior."
                     )
+                    st.markdown("---")
+                    st.subheader("Pruebas estadísticas")
+
+                    st.caption(
+                        "Esta sección evalúa si la diferencia entre el baseline Naive "
+                        "y el modelo técnico es estadísticamente significativa. "
+                        "Se aplican Diebold-Mariano, McNemar y bootstrap."
+                    )
+
+                    stats_predictions = collect_walkforward_predictions_for_statistics(
+                        prices=price_series,
+                        initial_train_size=252,
+                        test_window=20,
+                        step_size=20,
+                        max_windows=8,
+                    )
+
+                    if stats_predictions.empty:
+                        st.warning(
+                            "No se generaron suficientes predicciones para pruebas estadísticas."
+                        )
+                    else:
+                        statistical_results = compare_model_predictions_statistically(
+                            stats_predictions
+                        )
+
+                        st.dataframe(
+                            statistical_results,
+                            use_container_width=True
+                        )
+
+                        st.markdown("### Interpretación estadística")
+
+                        st.info(
+                            "Un p-value menor a 0.05 indica evidencia estadística contra la hipótesis nula. "
+                            "Sin embargo, significancia estadística no implica rentabilidad real. "
+                            "La interpretación debe complementarse con backtesting, drawdown y costos transaccionales."
+                        )
 
                 except Exception as error:
                     st.error(
