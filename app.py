@@ -33,7 +33,7 @@ from src.walkforward_academic import (
     collect_walkforward_predictions_for_statistics
 )
 from src.statistical_tests import compare_model_predictions_statistically
-
+from src.finbert_sentiment import build_finbert_sentiment_features_from_news
 
 
 @st.cache_data(ttl=3600)
