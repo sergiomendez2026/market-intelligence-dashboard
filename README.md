@@ -362,7 +362,17 @@ El proyecto incluye pruebas unitarias básicas para validar componentes crítico
 - Rango válido de señales.
 - Estructura esperada de salidas.
 
-## 17. Ejecución local
+---
+
+## 17. CI/CD y testing automático
+
+El proyecto incluye un workflow de GitHub Actions para ejecutar pruebas automáticas sobre el código Python cada vez que se realiza un cambio en el repositorio.
+
+Archivo de workflow:
+
+.github/workflows/python-tests.yml
+
+## 18. Ejecución local
 
 git clone https://github.com/sergiomendez2026/market-intelligence-dashboard.git
 cd market-intelligence-dashboard
@@ -371,7 +381,7 @@ streamlit run app.py
 
 ---
 
-## 18. Disclaimer
+## 19. Disclaimer
 
 Este proyecto tiene fines educativos, analíticos y demostrativos.
 No constituye asesoría financiera, recomendación de inversión ni promesa de rentabilidad.
