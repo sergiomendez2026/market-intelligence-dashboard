@@ -629,12 +629,12 @@ with tab5:
     
     col5.metric(
         "Número de operaciones",
-        f"{backtest_metrics['number_of_trades']}"
+        f"{backtest_metrics.get('number_of_trades', backtest_metrics.get('trades', 0))}"
     )
     
     col6.metric(
         "Costo transaccional estimado",
-        f"{backtest_metrics['total_transaction_cost']:.2f}%"
+        f"{backtest_metrics.get('total_transaction_cost', 0.0):.2f}%"
     )
 
     st.caption(
