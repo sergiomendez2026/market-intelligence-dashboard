@@ -38,7 +38,8 @@ def create_ml_dataset_cached(
     ma20: pd.Series,
     ma50: pd.Series,
     rsi: pd.Series,
-    std20: pd.Series
+    std20: pd.Series,
+    feature_version: str = "features_v2"
 ):
     return create_ml_dataset(
         precio=precio,
