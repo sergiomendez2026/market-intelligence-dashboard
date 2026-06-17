@@ -1,43 +1,82 @@
 # src/sentiment.py
 
-from transformers import pipeline
+import re
+import numpy as np
 
 
-def load_sentiment_analyzer():
-    return pipeline(
-        "sentiment-analysis",
-        model="ProsusAI/finbert",
-        tokenizer="ProsusAI/finbert"
+POSITIVE_WORDS = [
+    "beat", "growth", "profit", "profits", "bullish", "upgrade",
+    "strong", "record", "surge", "rally", "gain", "gains",
+    "outperform", "positive", "optimistic", "buy"
+]
+
+NEGATIVE_WORDS = [
+    "miss", "loss", "losses", "bearish", "downgrade",
+    "weak", "drop", "decline", "fall", "risk", "lawsuit",
+    "recession", "negative", "sell", "cut", "cuts"
+]
+
+
+def clean_text(text: str) -> str:
+    if text is None:
+        return ""
+
+    text = text.lower()
+    text = re.sub(r"[^a-zA-Z\s]", " ", text)
+    text = re.sub(r"\s+", " ", text).strip()
+
+    return text
+
+
+def calculate_fallback_sentiment_score(texts: list[str] | None = None) -> dict:
+    """
+    Sentimiento financiero liviano basado en diccionario.
+    Devuelve score 0-100.
+    50 = neutral.
+    """
+
+    if not texts:
+        return {
+            "sentiment_score": 50.0,
+            "sentiment_label": "Neutral",
+            "positive_hits": 0,
+            "negative_hits": 0,
+            "method": "Fallback neutral"
+        }
+
+    joined_text = " ".join([clean_text(text) for text in texts])
+
+    positive_hits = sum(
+        len(re.findall(rf"\b{word}\b", joined_text))
+        for word in POSITIVE_WORDS
     )
 
+    negative_hits = sum(
+        len(re.findall(rf"\b{word}\b", joined_text))
+        for word in NEGATIVE_WORDS
+    )
 
-def analyze_headlines(headlines: list[str]) -> dict:
-    analyzer = load_sentiment_analyzer()
-    results = analyzer(headlines)
+    total_hits = positive_hits + negative_hits
 
-    score_map = {
-        "positive": 1,
-        "neutral": 0,
-        "negative": -1,
-    }
+    if total_hits == 0:
+        score = 50.0
+    else:
+        raw_score = (positive_hits - negative_hits) / total_hits
+        score = 50 + raw_score * 50
 
-    sentiment_scores = []
-    confidence_scores = []
+    score = float(np.clip(score, 0, 100))
 
-    for result in results:
-        label = result["label"].lower()
-        score = result["score"]
-
-        sentiment_scores.append(score_map.get(label, 0))
-        confidence_scores.append(score)
-
-    avg_sentiment = sum(sentiment_scores) / len(sentiment_scores) if sentiment_scores else 0
-    avg_confidence = sum(confidence_scores) / len(confidence_scores) if confidence_scores else 0
+    if score >= 60:
+        label = "Positivo"
+    elif score <= 40:
+        label = "Negativo"
+    else:
+        label = "Neutral"
 
     return {
-        "avg_sentiment": avg_sentiment,
-        "avg_confidence": avg_confidence,
-        "positive_count": sentiment_scores.count(1),
-        "neutral_count": sentiment_scores.count(0),
-        "negative_count": sentiment_scores.count(-1),
+        "sentiment_score": round(score, 2),
+        "sentiment_label": label,
+        "positive_hits": positive_hits,
+        "negative_hits": negative_hits,
+        "method": "Keyword fallback"
     }
