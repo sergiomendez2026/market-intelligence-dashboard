@@ -28,6 +28,7 @@ from src.portfolio import (
     equal_weight_vector
 )
 from src.baselines import compare_academic_baselines
+from src.walkforward_academic import compare_walkforward_academic_models
 
 @st.cache_data(ttl=3600)
 def load_market_data_cached(ticker: str, periodo: str):
@@ -1135,7 +1136,71 @@ with tab9:
             - La mejora debe validarse con walk-forward y prueba estadística, no solo con una tabla puntual.
             """
         )
+        
+        st.markdown("---")
+            st.subheader("Validación walk-forward comparativa")
+            st.caption(
+                "Esta sección evalúa los modelos mediante múltiples ventanas temporales. "
+                "Esto es más riguroso que un único split 80/20 porque simula un escenario "
+                "donde el modelo entrena con datos pasados y predice datos futuros."
+            )
+        
+            run_academic_walkforward = st.checkbox(
+                "Ejecutar walk-forward académico",
+                value=False,
+                help="Puede tardar más porque ARIMA se reentrena por ventanas."
+            )
+        
+            if run_academic_walkforward:
+                with st.spinner("Ejecutando validación walk-forward académica..."):
+                    try:
+                        wf_results = 
+                        compare_walkforward_academic_models(
+                            prices=price_series,
+                            initial_train_size=252,
+                            test_window=20,
+                            step_size=20,
+                            max_windows=8,
+                            include_arima=True,
+                        )
+                        
+                        st.dataframe(wf_results, use_container_width=True)
+                        
+                        if "F1 Score" in wf_results.columns:
+                            wf_plot_data = wf_results.dropna(subset=["F1 Score"])
 
+                    fig_wf_f1 = go.Figure()
+
+                    fig_wf_f1.add_trace(
+                        go.Bar(
+                            x=wf_plot_data["Modelo"],
+                            y=wf_plot_data["F1 Score"],
+                            name="F1 Score"
+                        )
+                    )
+
+                    fig_wf_f1.update_layout(
+                        template="plotly_dark",
+                        title="Comparación walk-forward por F1 Score",
+                        xaxis_title="Modelo",
+                        yaxis_title="F1 Score (%)"
+                    )
+
+                    st.plotly_chart(fig_wf_f1, use_container_width=True)
+                    
+                    st.info(
+                        "La métrica principal académica es F1 Score bajo walk-forward. "
+                        "Un modelo complejo debe superar al Naive y a los baselines clásicos "
+                        "para considerarse metodológicamente superior."
+                    )
+                    
+                    except Exception as error:
+                        st.error(f"No se pudo ejecutar la validación walk-forward académica: {error}")
+           else:
+               st.warning(
+                   "Activa la validación walk-forward académica para ejecutar una comparación más rigurosa. "
+                   "Se deja desactivada por defecto para no ralentizar la aplicación."
+               )
     except Exception as error:
         st.error(f"No se pudieron calcular los baselines académicos: {error}")
 
