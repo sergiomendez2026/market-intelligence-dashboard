@@ -159,6 +159,19 @@ direction_metrics = None
 if model_available:
     feature_cols = get_feature_columns()
 
+    missing_features = [col for col in feature_cols if col not in df_ml.columns]
+
+    if missing_features:
+        st.error(
+            "Error de columnas en el dataset ML. "
+            "Estas variables están en get_feature_columns(), "
+            "pero no existen en df_ml:"
+        )
+        st.write(missing_features)
+        st.write("Columnas disponibles en df_ml:")
+        st.write(list(df_ml.columns))
+        st.stop()
+        
     X = df_ml[feature_cols]
     y = df_ml["target"]
 
