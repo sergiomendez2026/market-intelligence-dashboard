@@ -532,4 +532,87 @@ def compare_walkforward_academic_models(
     remaining_columns = [col for col in results_df.columns if col not in available_columns]
 
     return results_df[available_columns + remaining_columns]
-  
+
+def collect_walkforward_predictions_for_statistics(
+    prices: pd.Series,
+    features: pd.DataFrame | None = None,
+    initial_train_size: int = 252,
+    test_window: int = 20,
+    step_size: int = 20,
+    max_windows: int = 8,
+) -> pd.DataFrame:
+    """
+    Genera predicciones walk-forward para pruebas estadísticas.
+
+    Compara:
+    - Naive
+    - Modelo técnico sin sentimiento
+
+    Más adelante se podrá extender a:
+    - Modelo técnico + FinBERT
+    """
+
+    dataset = build_supervised_financial_dataset(
+        prices=prices,
+        features=features,
+        sentiment_features=None,
+    )
+
+    feature_columns = [
+        col
+        for col in dataset.columns
+        if col not in ["future_return", "future_direction", "close"]
+    ]
+
+    records = []
+    n = len(dataset)
+    windows_used = 0
+
+    for train_end in range(initial_train_size, n - test_window, step_size):
+        if windows_used >= max_windows:
+            break
+
+        train = dataset.iloc[:train_end]
+        test = dataset.iloc[train_end : train_end + test_window]
+
+        X_train = train[feature_columns]
+        y_train = train["future_direction"]
+
+        X_test = test[feature_columns]
+
+        model = RandomForestClassifier(
+            n_estimators=200,
+            max_depth=5,
+            random_state=42,
+            class_weight="balanced",
+        )
+
+        model.fit(X_train, y_train)
+
+        technical_pred_direction = model.predict(X_test)
+
+        if hasattr(model, "predict_proba"):
+            technical_pred_return = model.predict_proba(X_test)[:, 1] - 0.5
+        else:
+            technical_pred_return = technical_pred_direction - 0.5
+
+        naive_pred_direction = (test["current_return"].values > 0).astype(int)
+        naive_pred_return = np.zeros(len(test))
+
+        for i in range(len(test)):
+            records.append(
+                {
+                    "date": test.index[i],
+                    "actual_return": float(test["future_return"].iloc[i]),
+                    "actual_direction": int(test["future_direction"].iloc[i]),
+                    "naive_pred_return": float(naive_pred_return[i]),
+                    "naive_pred_direction": int(naive_pred_direction[i]),
+                    "technical_pred_return": float(technical_pred_return[i]),
+                    "technical_pred_direction": int(technical_pred_direction[i]),
+                    "window": windows_used + 1,
+                }
+            )
+
+        windows_used += 1
+
+    return pd.DataFrame(records)
