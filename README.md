@@ -380,9 +380,14 @@ Archivo de workflow:
 
 ## 18. Ejecución local
 
-git clone https://github.com/sergiomendez2026/market-intelligence-dashboard.git
+git clone 
+
+https://github.com/sergiomendez2026/market-intelligence-dashboard.git
+
 cd market-intelligence-dashboard
+
 pip install -r requirements.txt
+
 streamlit run app.py
 
 ---
