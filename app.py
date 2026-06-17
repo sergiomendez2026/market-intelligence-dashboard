@@ -28,7 +28,13 @@ from src.portfolio import (
     equal_weight_vector
 )
 from src.baselines import compare_academic_baselines
-from src.walkforward_academic import compare_walkforward_academic_models
+from src.walkforward_academic import (
+    compare_walkforward_academic_models,
+    collect_walkforward_predictions_for_statistics
+)
+from src.statistical_tests import compare_model_predictions_statistically
+
+
 
 @st.cache_data(ttl=3600)
 def load_market_data_cached(ticker: str, periodo: str):
