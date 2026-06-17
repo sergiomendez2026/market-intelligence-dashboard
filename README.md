@@ -432,6 +432,14 @@ Planned improvements:
 - Multi-user authentication.
 - Multilingual version: Spanish and English.
 
+## Documentación técnica extendida
+
+La documentación técnica ampliada del proyecto se encuentra en la carpeta `docs/`:
+
+- [Metodología](docs/metodologia.md): metodología analítica, construcción del score, validación, backtesting y limitaciones.
+- [Arquitectura](docs/arquitectura.md): estructura modular, flujo de datos y responsabilidades por módulo.
+- [Roadmap](docs/roadmap.md): fases de evolución técnica, académica y potencial comercial.
+
 ## Development setup
 
 Install production dependencies:
