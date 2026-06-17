@@ -289,7 +289,6 @@ Pruebas incluidas:
 
 La comparación inicial se realiza entre el baseline Naive y el modelo técnico sin sentimiento. En una etapa posterior se extenderá a la comparación principal de la investigación:
 
-```text
 Modelo técnico sin sentimiento
 vs
 Modelo técnico + FinBERT
