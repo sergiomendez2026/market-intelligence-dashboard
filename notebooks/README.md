@@ -1,6 +1,11 @@
 # Notebooks
 
-This folder contains exploratory analysis notebooks for the Market Intelligence Dashboard.
+Esta carpeta está reservada para notebooks de exploración, experimentación y análisis.
 
-Planned notebooks:
-- `01_eda_market_data.ipynb`: exploratory data analysis of market prices, returns, volatility and technical indicators.
+Uso previsto:
+
+- Exploración inicial de datos financieros.
+- Pruebas de indicadores técnicos.
+- Comparación experimental de modelos.
+- Análisis de sensibilidad.
+- Prototipos antes de pasar código a `src/`.
