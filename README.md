@@ -84,8 +84,6 @@ Los datos son obtenidos desde fuentes financieras públicas compatibles con "yfi
 
 ## 4. Arquitectura del sistema
 
-## 4. Arquitectura del sistema
-
 ```text
 market-intelligence-dashboard/
 │
@@ -128,49 +126,6 @@ La arquitectura separa responsabilidades para mejorar mantenibilidad, escalabili
 | `backtesting.py` | Simulación de estrategia con comisiones y slippage. |
 | `validation.py` | Validación walk-forward para series temporales. |
 | `ui.py` | Componentes visuales, sidebar, disclaimers y UX ejecutiva. |
-
-
-market-intelligence-dashboard/
-│
-├── app.py
-├── requirements.txt
-├── README.md
-│
-├── src/
-│   ├── data_loader.py
-│   ├── indicators.py
-│   ├── features.py
-│   ├── model.py
-│   ├── model_comparison.py
-│   ├── signals.py
-│   ├── sentiment.py
-│   ├── financial_metrics.py
-│   ├── backtesting.py
-│   ├── validation.py
-│   └── ui.py
-│
-├── assets/
-├── notebooks/
-├── reports/
-└── tests/
-
-La arquitectura separa responsabilidades:
-
-Y donde tienes tablas, deben quedar así:
-
-| Módulo | Responsabilidad |
-|---|---|
-| data_loader.py | Carga de datos históricos. |
-| indicators.py | Cálculo de indicadores técnicos. |
-| features.py | Construcción del dataset de machine learning. |
-| model.py | Entrenamiento y evaluación de modelos. |
-| model_comparison.py | Comparación de modelos direccionales. |
-| signals.py | Cálculo del Market Signal Score. |
-| sentiment.py | Sentimiento financiero con fallback. |
-| financial_metrics.py | KPIs financieros. |
-| backtesting.py | Simulación de estrategia con costos. |
-| validation.py | Validación walk-forward. |
-| ui.py | Componentes visuales y UX. |
 
 ---
 
