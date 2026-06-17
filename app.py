@@ -159,6 +159,21 @@ if model_available:
     mape_modelo = metrics["mape_model"]
     mejora_vs_naive = metrics["improvement_vs_naive"]
     directional_accuracy = metrics["directional_accuracy"]
+    wf_regression = walk_forward_regression_validation(
+        X=X,
+        y=y,
+        min_train_size=120,
+        test_size=20,
+        step_size=20
+    )
+
+    wf_direction = walk_forward_direction_validation(
+        X=X,
+        y_direction=y_direction,
+        min_train_size=120,
+        test_size=20,
+        step_size=20
+    )
 
 
 tab1, tab2, tab3, tab4, tab5 = st.tabs([
