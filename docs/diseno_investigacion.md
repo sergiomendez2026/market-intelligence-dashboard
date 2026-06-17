@@ -274,6 +274,26 @@ Para clasificación se podrá usar:
 
 El objetivo será determinar si la mejora observada es estadísticamente significativa y no solo producto del azar.
 
+## Pruebas estadísticas implementadas
+
+El proyecto incorpora pruebas estadísticas para evaluar si las diferencias entre modelos son significativas y no solo variaciones aleatorias.
+
+Pruebas incluidas:
+
+| Prueba | Uso |
+|---|---|
+| Diebold-Mariano | Comparar errores de forecasting entre modelos. |
+| McNemar | Comparar clasificadores direccionales sobre las mismas observaciones. |
+| Bootstrap de F1 Score | Estimar intervalo de confianza de la diferencia de F1 entre modelos. |
+| Bootstrap de Accuracy | Estimar intervalo de confianza de la diferencia de accuracy entre modelos. |
+
+La comparación inicial se realiza entre el baseline Naive y el modelo técnico sin sentimiento. En una etapa posterior se extenderá a la comparación principal de la investigación:
+
+```text
+Modelo técnico sin sentimiento
+vs
+Modelo técnico + FinBERT
+
 ---
 
 ## 13. Alcance del estudio
