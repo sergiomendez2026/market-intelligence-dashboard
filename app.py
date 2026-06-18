@@ -306,7 +306,7 @@ else:
     wf_regression = None
     wf_direction = None
 
-tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10, tab11 = st.tabs([
+tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10, tab11, tab12 = st.tabs([
     "Precio",
     "Indicadores",
     "Predicción ML",
@@ -318,6 +318,7 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10, tab11 = st.tabs([
     "Baselines Académicos",
     "FinBERT",
     "Explainable AI",
+    "Research Summary",
 ])
 
 
@@ -1675,3 +1676,225 @@ with tab11:
 
         except Exception as error:
             st.error(f"No se pudo calcular Explainable AI: {error}")
+
+with tab12:
+    st.subheader("Research Summary: resumen académico del proyecto")
+
+    st.caption(
+        "Esta sección resume el diseño metodológico, la hipótesis de investigación, "
+        "las métricas principales y las limitaciones del sistema. "
+        "Su objetivo es convertir el dashboard en una herramienta académica y profesional."
+    )
+
+    st.markdown("### Pregunta de investigación")
+
+    st.info(
+        "¿La incorporación de sentimiento financiero extraído mediante FinBERT mejora "
+        "significativamente la predicción direccional de retornos de corto plazo frente "
+        "a modelos basados únicamente en indicadores técnicos?"
+    )
+
+    st.markdown("### Hipótesis")
+
+    col_h1, col_h2 = st.columns(2)
+
+    with col_h1:
+        st.markdown("#### H0: Hipótesis nula")
+        st.write(
+            "El sentimiento financiero extraído mediante FinBERT no mejora significativamente "
+            "la capacidad predictiva frente al modelo técnico sin sentimiento."
+        )
+
+    with col_h2:
+        st.markdown("#### H1: Hipótesis alternativa")
+        st.write(
+            "El sentimiento financiero extraído mediante FinBERT mejora significativamente "
+            "la capacidad predictiva frente al modelo técnico sin sentimiento."
+        )
+
+    st.markdown("---")
+    st.markdown("### Pipeline metodológico")
+
+    methodology_steps = pd.DataFrame(
+        {
+            "Etapa": [
+                "1. Datos de mercado",
+                "2. Indicadores técnicos",
+                "3. Modelos predictivos",
+                "4. Backtesting",
+                "5. Validación walk-forward",
+                "6. FinBERT",
+                "7. Pruebas estadísticas",
+                "8. Explainable AI",
+            ],
+            "Descripción": [
+                "Carga de precios históricos de activos financieros mediante yfinance.",
+                "Cálculo de medias móviles, RSI, volatilidad, retornos y momentum.",
+                "Entrenamiento de modelos supervisados para precio y dirección.",
+                "Evaluación de estrategia contra Buy & Hold incluyendo costos.",
+                "Evaluación temporal usando ventanas sucesivas de entrenamiento y prueba.",
+                "Clasificación de noticias financieras en sentimiento positivo, negativo o neutral.",
+                "Aplicación de Diebold-Mariano, McNemar y bootstrap para evaluar diferencias.",
+                "Interpretación de importancia de variables mediante Random Forest.",
+            ],
+        }
+    )
+
+    st.dataframe(methodology_steps, use_container_width=True)
+
+    st.markdown("---")
+    st.markdown("### Estado actual del experimento")
+
+    col1, col2, col3 = st.columns(3)
+
+    col1.metric("Activo analizado", seleccion)
+    col2.metric("Ticker", ticker)
+    col3.metric("Horizonte", periodo)
+
+    col4, col5, col6 = st.columns(3)
+
+    col4.metric("Observaciones de precio", len(precio.dropna()))
+    col5.metric("Modelo disponible", "Sí" if model_available else "No")
+    col6.metric("Validación walk-forward", "Activa" if run_walk_forward else "Opcional")
+
+    st.markdown("---")
+    st.markdown("### Métricas principales disponibles")
+
+    available_metrics = []
+
+    available_metrics.append(
+        {
+            "Componente": "KPIs financieros",
+            "Estado": "Disponible",
+            "Métricas": "Retorno acumulado, volatilidad anualizada, drawdown máximo",
+        }
+    )
+
+    available_metrics.append(
+        {
+            "Componente": "Modelo ML",
+            "Estado": "Disponible" if model_available else "No disponible",
+            "Métricas": "MAE, RMSE, MAPE, accuracy direccional",
+        }
+    )
+
+    available_metrics.append(
+        {
+            "Componente": "Backtesting",
+            "Estado": "Disponible",
+            "Métricas": "Retorno estrategia, Buy & Hold, Sharpe, drawdown, costos",
+        }
+    )
+
+    available_metrics.append(
+        {
+            "Componente": "FinBERT",
+            "Estado": "Disponible mediante carga CSV",
+            "Métricas": "Sentimiento promedio, conteo de noticias, proporciones positivas/negativas/neutrales",
+        }
+    )
+
+    available_metrics.append(
+        {
+            "Componente": "Pruebas estadísticas",
+            "Estado": "Disponible bajo ejecución manual",
+            "Métricas": "Diebold-Mariano, McNemar, Bootstrap F1, Bootstrap Accuracy",
+        }
+    )
+
+    available_metrics.append(
+        {
+            "Componente": "Explainable AI",
+            "Estado": "Disponible",
+            "Métricas": "Importancia de variables y grupos metodológicos",
+        }
+    )
+
+    metrics_df = pd.DataFrame(available_metrics)
+
+    st.dataframe(metrics_df, use_container_width=True)
+
+    st.markdown("---")
+    st.markdown("### Limitaciones metodológicas")
+
+    limitations = pd.DataFrame(
+        {
+            "Limitación": [
+                "Tamaño del dataset de noticias",
+                "Alineación temporal",
+                "Look-ahead bias",
+                "Costos de transacción",
+                "Sobreajuste",
+                "Generalización",
+                "Interpretabilidad",
+            ],
+            "Riesgo": [
+                "Un número bajo de noticias puede producir resultados no concluyentes.",
+                "Las noticias deben coincidir con el período de precios analizado.",
+                "Debe evitarse usar información futura para predecir retornos pasados.",
+                "El backtesting puede cambiar significativamente al incluir costos reales.",
+                "Modelos complejos pueden aprender ruido del mercado.",
+                "Resultados en un activo no garantizan rendimiento en otros activos.",
+                "Importancia de variables no implica causalidad económica.",
+            ],
+            "Control aplicado": [
+                "Carga externa de CSV y advertencias metodológicas.",
+                "Validación del rango de fechas de noticias y precios.",
+                "Rezago configurable del sentimiento.",
+                "Comisión y slippage configurables.",
+                "Comparación contra baselines simples.",
+                "Selección de múltiples activos.",
+                "Explainable AI mediante importancia de variables.",
+            ],
+        }
+    )
+
+    st.dataframe(limitations, use_container_width=True)
+
+    st.markdown("---")
+    st.markdown("### Conclusión académica preliminar")
+
+    st.warning(
+        "El sistema ya implementa un pipeline completo para evaluar si el sentimiento financiero "
+        "extraído con FinBERT aporta valor incremental frente a modelos técnicos. Sin embargo, "
+        "la conclusión final depende de usar un dataset de noticias suficientemente grande, "
+        "temporalmente alineado y validado bajo walk-forward."
+    )
+
+    st.success(
+        "Desde el punto de vista de ingeniería de datos y machine learning aplicado, "
+        "el proyecto ya cuenta con una arquitectura sólida: datos de mercado, indicadores, "
+        "modelos predictivos, backtesting, validación temporal, FinBERT, pruebas estadísticas "
+        "e interpretabilidad."
+    )
+
+    st.markdown("### Nivel actual del proyecto")
+
+    evaluation_df = pd.DataFrame(
+        {
+            "Dimensión": [
+                "Portfolio profesional",
+                "Proyecto académico",
+                "Preparación para tesis",
+                "Preparación para paper",
+                "Producto comercial",
+            ],
+            "Nivel estimado": [
+                "Alto",
+                "Alto",
+                "Medio-Alto",
+                "Medio",
+                "Medio",
+            ],
+            "Qué falta para nivel máximo": [
+                "Pulir diseño visual, README final y demo en LinkedIn.",
+                "Dataset real más amplio y análisis de resultados.",
+                "Marco teórico, revisión bibliográfica y redacción formal.",
+                "Experimentos reproducibles con varios activos y períodos.",
+                "Automatización de datos, usuarios, seguridad y monetización.",
+            ],
+        }
+    )
+
+    st.dataframe(evaluation_df, use_container_width=True)
+
