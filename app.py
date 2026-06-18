@@ -1441,11 +1441,83 @@ date,text
 
                         st.plotly_chart(fig_finbert_wf, use_container_width=True)
 
-                    st.info(
-                        "La conclusión académica no debe basarse solo en esta tabla. "
-                        "En el siguiente paso se extenderán las pruebas estadísticas para comparar "
-                        "modelo técnico sin sentimiento vs modelo técnico + FinBERT."
-                    )
+                    st.markdown("---")
+st.subheader("Pruebas estadísticas: técnico vs técnico + FinBERT")
+
+st.caption(
+    "Esta sección evalúa directamente la hipótesis principal del proyecto: "
+    "si el modelo técnico + FinBERT mejora significativamente al modelo técnico sin sentimiento."
+)
+
+run_finbert_statistics = st.checkbox(
+    "Ejecutar pruebas estadísticas FinBERT",
+    value=False,
+    help="Ejecuta Diebold-Mariano, McNemar y bootstrap entre modelo técnico y modelo técnico + FinBERT.",
+)
+
+if run_finbert_statistics:
+    with st.spinner("Ejecutando pruebas estadísticas técnico vs FinBERT..."):
+        finbert_prediction_df = collect_walkforward_predictions_technical_vs_sentiment(
+            prices=precio.dropna(),
+            sentiment_features=sentiment_features,
+            initial_train_size=252,
+            test_window=20,
+            step_size=20,
+            max_windows=8,
+        )
+
+        if finbert_prediction_df.empty:
+            st.warning(
+                "No se generaron suficientes predicciones para ejecutar pruebas estadísticas."
+            )
+        else:
+            finbert_statistical_results = compare_technical_vs_sentiment_statistically(
+                finbert_prediction_df
+            )
+
+            st.dataframe(
+                finbert_statistical_results,
+                use_container_width=True,
+            )
+
+            st.markdown("### Predicciones usadas en las pruebas")
+
+            st.dataframe(
+                finbert_prediction_df.tail(50),
+                use_container_width=True,
+            )
+
+            st.markdown("### Interpretación de hipótesis")
+
+            significant_rows = finbert_statistical_results[
+                finbert_statistical_results["Significancia"]
+                .astype(str)
+                .str.contains("Significativo|superior", case=False, na=False)
+            ]
+
+            if not significant_rows.empty:
+                st.success(
+                    "Existe evidencia estadística inicial de diferencia entre el modelo técnico "
+                    "y el modelo técnico + FinBERT. Debes revisar si la dirección favorece realmente "
+                    "al modelo con sentimiento."
+                )
+            else:
+                st.warning(
+                    "No se observa evidencia estadística suficiente para afirmar que FinBERT mejora "
+                    "al modelo técnico bajo esta configuración. Esto no es un fracaso: es un resultado "
+                    "académicamente válido."
+                )
+
+            st.info(
+                "Para una tesis o paper, esta tabla debe analizarse junto con la validación walk-forward, "
+                "el tamaño del dataset de noticias, el período de análisis, el activo evaluado y las limitaciones "
+                "de alineación temporal entre noticias y precios."
+            )
+else:
+    st.info(
+        "Ejecuta las pruebas estadísticas cuando ya hayas generado las variables FinBERT "
+        "y la comparación walk-forward con sentimiento."
+    )
 
         except Exception as error:
             st.error(f"No se pudo procesar FinBERT: {error}")
