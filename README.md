@@ -173,6 +173,34 @@ La arquitectura separa responsabilidades para mejorar mantenibilidad, escalabili
 | `validation.py` | Validación walk-forward para series temporales. |
 | `ui.py` | Componentes visuales, sidebar, disclaimers y UX ejecutiva. |
 
+## Project Architecture
+
+market-intelligence-dashboard/
+│
+├── app.py                         # Main Streamlit application
+├── requirements.txt               # Production dependencies
+├── requirements-dev.txt           # Development/testing dependencies
+│
+├── src/
+│   ├── data_loader.py             # Market data loading
+│   ├── indicators.py              # Technical indicators
+│   ├── features.py                # ML feature engineering
+│   ├── model.py                   # Regression and directional models
+│   ├── signals.py                 # Market Signal Score
+│   ├── backtesting.py             # Strategy backtesting
+│   ├── baselines.py               # Academic baselines
+│   ├── walkforward_academic.py    # Walk-forward validation
+│   ├── finbert_sentiment.py       # FinBERT sentiment pipeline
+│   ├── statistical_tests.py       # Statistical hypothesis tests
+│   ├── explainability.py          # Feature importance / Explainable AI
+│   ├── portfolio.py               # Portfolio analytics
+│   └── ui.py                      # UI components
+│
+├── tests/                         # Unit tests
+├── docs/                          # Methodology and research design
+├── reports/                       # Model card and methodology reports
+└── research/                      # Academic experiment materials
+
 ---
 
 ## 5. Indicadores financieros y técnicos
@@ -276,6 +304,25 @@ El score debe interpretarse como una métrica analítica, no como una recomendac
 
 El componente de sentimiento se mantiene neutral cuando no existe suficiente información textual confiable. Esto evita introducir ruido artificial en la señal final.
 
+
+---
+
+## Methodology
+
+The dashboard follows a research-oriented financial machine learning workflow:
+
+| Stage | Description |
+|---|---|
+| Market Data | Historical asset prices are loaded using `yfinance`. |
+| Technical Indicators | Moving averages, RSI, volatility, returns and momentum variables are generated. |
+| Machine Learning | Regression and directional classification models are trained. |
+| Baselines | Naive, Linear Regression and ARIMA baselines are included for academic comparison. |
+| Walk-Forward Validation | Models are evaluated through rolling temporal windows to reduce overfitting. |
+| FinBERT Sentiment | Financial news are classified as positive, negative or neutral using FinBERT. |
+| Statistical Tests | Diebold-Mariano, McNemar and bootstrap tests are applied to compare models. |
+| Explainable AI | Feature importance is used to interpret model behavior. |
+| Backtesting | Strategy performance is compared against Buy & Hold including transaction costs. |
+
 ---
 
 ## 9. Backtesting
@@ -349,6 +396,23 @@ Estado actual:
 - GitHub Pages
 - Streamlit Cloud
 
+## Tech Stack
+
+| Area | Tools |
+|---|---|
+| Language | Python |
+| Dashboard | Streamlit |
+| Data Processing | Pandas, NumPy |
+| Visualization | Plotly |
+| Market Data | yfinance |
+| Machine Learning | Scikit-learn, XGBoost |
+| Time Series | Statsmodels / ARIMA |
+| NLP / Sentiment | Transformers, FinBERT, PyTorch |
+| Statistical Testing | SciPy |
+| Testing | Pytest |
+| Deployment | Streamlit Cloud, GitHub |
+| Documentation | Markdown, GitHub Pages |
+
 ---
 
 ## 13. Limitaciones metodológicas
@@ -380,6 +444,19 @@ Próximas extensiones:
 - Frontend profesional con React o Next.js.
 - Sistema multiusuario con autenticación.
 - Versión multilingüe español/inglés.
+
+## Current Results
+
+The project currently demonstrates a complete working pipeline:
+
+- Technical indicators are generated from historical price data.
+- Machine learning models are compared against academic baselines.
+- Walk-forward validation is implemented to simulate realistic temporal evaluation.
+- FinBERT classifies financial news and converts sentiment into model features.
+- Statistical tests compare the technical-only model against the sentiment-enhanced model.
+- Explainable AI provides feature importance to support model interpretation.
+
+Initial tests show that the technical + sentiment model can be evaluated against the technical-only model. However, final academic conclusions require a larger and temporally aligned financial news dataset.
 
 ---
 
