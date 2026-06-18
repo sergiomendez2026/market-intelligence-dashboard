@@ -33,7 +33,7 @@ Core Hypothesis
 
 ---
 
-Resumen ejecutivo
+## Resumen ejecutivo
 
 Market Intelligence Dashboard es un proyecto de aprendizaje automático financiero aplicado, diseñado para evaluar si el sentimiento financiero extraído con FinBERT puede mejorar la predicción direccional a corto plazo de los activos financieros en comparación con modelos basados únicamente en indicadores técnicos.
 
