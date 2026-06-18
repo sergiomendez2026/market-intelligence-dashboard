@@ -306,3 +306,92 @@ def compare_model_predictions_statistically(
 
     return pd.DataFrame(results)
   
+def compare_technical_vs_sentiment_statistically(
+    prediction_df: pd.DataFrame,
+) -> pd.DataFrame:
+    """
+    Ejecuta pruebas estadísticas entre:
+
+    - Modelo técnico sin sentimiento
+    - Modelo técnico + FinBERT
+
+    Columnas requeridas:
+    - actual_return
+    - actual_direction
+    - technical_pred_return
+    - technical_pred_direction
+    - sentiment_pred_return
+    - sentiment_pred_direction
+    """
+
+    required_columns = [
+        "actual_return",
+        "actual_direction",
+        "technical_pred_return",
+        "technical_pred_direction",
+        "sentiment_pred_return",
+        "sentiment_pred_direction",
+    ]
+
+    missing = [col for col in required_columns if col not in prediction_df.columns]
+
+    if missing:
+        raise ValueError(f"Faltan columnas requeridas: {missing}")
+
+    actual_return = prediction_df["actual_return"].values
+    actual_direction = prediction_df["actual_direction"].values
+
+    technical_return = prediction_df["technical_pred_return"].values
+    sentiment_return = prediction_df["sentiment_pred_return"].values
+
+    technical_direction = prediction_df["technical_pred_direction"].values
+    sentiment_direction = prediction_df["sentiment_pred_direction"].values
+
+    errors_technical = actual_return - technical_return
+    errors_sentiment = actual_return - sentiment_return
+
+    dm_result = diebold_mariano_test(
+        errors_model_a=errors_technical,
+        errors_model_b=errors_sentiment,
+    )
+
+    mcnemar_result = mcnemar_test(
+        y_true=actual_direction,
+        predictions_model_a=technical_direction,
+        predictions_model_b=sentiment_direction,
+    )
+
+    bootstrap_f1 = bootstrap_metric_difference(
+        y_true=actual_direction,
+        predictions_model_a=technical_direction,
+        predictions_model_b=sentiment_direction,
+        metric="f1",
+    )
+
+    bootstrap_accuracy = bootstrap_metric_difference(
+        y_true=actual_direction,
+        predictions_model_a=technical_direction,
+        predictions_model_b=sentiment_direction,
+        metric="accuracy",
+    )
+
+    results = [
+        {
+            "Comparación": "Modelo Técnico vs Modelo Técnico + FinBERT",
+            **dm_result,
+        },
+        {
+            "Comparación": "Modelo Técnico vs Modelo Técnico + FinBERT",
+            **mcnemar_result,
+        },
+        {
+            "Comparación": "Modelo Técnico vs Modelo Técnico + FinBERT",
+            **bootstrap_f1,
+        },
+        {
+            "Comparación": "Modelo Técnico vs Modelo Técnico + FinBERT",
+            **bootstrap_accuracy,
+        },
+    ]
+
+    return pd.DataFrame(results)
