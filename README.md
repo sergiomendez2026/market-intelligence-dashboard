@@ -234,33 +234,42 @@ La arquitectura separa responsabilidades para mejorar mantenibilidad, escalabili
 | `validation.py` | Validación walk-forward para series temporales. |
 | `ui.py` | Componentes visuales, sidebar, disclaimers y UX ejecutiva. |
 
-## Project Architecture
+## Arquitectura del proyecto
 
+```text
 market-intelligence-dashboard/
 │
-├── app.py                         # Main Streamlit application
-├── requirements.txt               # Production dependencies
-├── requirements-dev.txt           # Development/testing dependencies
+├── app.py                         # Aplicación principal en Streamlit
+├── requirements.txt               # Dependencias de producción
+├── requirements-dev.txt           # Dependencias de desarrollo y testing
+├── README.md                      # Documentación principal del proyecto
+├── index.html                     # Landing page bilingüe en GitHub Pages
 │
 ├── src/
-│   ├── data_loader.py             # Market data loading
-│   ├── indicators.py              # Technical indicators
-│   ├── features.py                # ML feature engineering
-│   ├── model.py                   # Regression and directional models
+│   ├── data_loader.py             # Carga de datos financieros
+│   ├── indicators.py              # Indicadores técnicos
+│   ├── features.py                # Ingeniería de variables
+│   ├── model.py                   # Modelos de regresión y clasificación
 │   ├── signals.py                 # Market Signal Score
-│   ├── backtesting.py             # Strategy backtesting
-│   ├── baselines.py               # Academic baselines
-│   ├── walkforward_academic.py    # Walk-forward validation
-│   ├── finbert_sentiment.py       # FinBERT sentiment pipeline
-│   ├── statistical_tests.py       # Statistical hypothesis tests
-│   ├── explainability.py          # Feature importance / Explainable AI
-│   ├── portfolio.py               # Portfolio analytics
-│   └── ui.py                      # UI components
+│   ├── backtesting.py             # Backtesting de estrategias
+│   ├── baselines.py               # Baselines académicos
+│   ├── walkforward_academic.py    # Validación walk-forward
+│   ├── finbert_sentiment.py       # Pipeline de sentimiento financiero
+│   ├── statistical_tests.py       # Pruebas estadísticas
+│   ├── explainability.py          # Interpretabilidad de modelos
+│   ├── portfolio.py               # Analítica de portafolio
+│   └── ui.py                      # Componentes visuales
 │
-├── tests/                         # Unit tests
-├── docs/                          # Methodology and research design
-├── reports/                       # Model card and methodology reports
-└── research/                      # Academic experiment materials
+├── tests/                         # Pruebas unitarias
+├── docs/                          # Documentación metodológica
+├── reports/                       # Reportes y model cards
+├── research/                      # Material académico del experimento
+│
+└── assets/
+    ├── screenshots/               # Capturas del dashboard
+    ├── diagrams/                  # Diagramas del pipeline
+    └── social/                    # Imágenes para LinkedIn y GitHub
+```
 
 ---
 
