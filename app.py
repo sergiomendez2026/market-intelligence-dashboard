@@ -1293,6 +1293,10 @@ date,text
     else:
         try:
             news_df = pd.read_csv(uploaded_news)
+            
+            date_column = st.selectbox(...)
+
+            text_column = st.selectbox(...)
 
             news_dates_check = pd.to_datetime(
                 news_df[date_column],
