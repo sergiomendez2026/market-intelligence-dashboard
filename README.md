@@ -14,7 +14,7 @@ No constituye asesoría financiera, recomendación de inversión ni promesa de r
 
 ---
 
-Executive Summary
+## Executive Summary (English)
 
 Market Intelligence Dashboard is an applied financial machine learning project designed to evaluate whether financial sentiment extracted with FinBERT can improve short-term directional forecasting of financial assets compared with models based only on technical indicators.
 
@@ -30,6 +30,26 @@ Core Hypothesis
 
 - H0: FinBERT sentiment does not significantly improve predictive performance compared with the technical-only model.
 - H1: FinBERT sentiment significantly improves predictive performance compared with the technical-only model.
+
+---
+
+Resumen ejecutivo
+
+Market Intelligence Dashboard es un proyecto de aprendizaje automático financiero aplicado, diseñado para evaluar si el sentimiento financiero extraído con FinBERT puede mejorar la predicción direccional a corto plazo de los activos financieros en comparación con modelos basados únicamente en indicadores técnicos.
+
+El sistema integra datos históricos de mercado, indicadores técnicos, modelos de aprendizaje automático supervisado, backtesting, validación cruzada, pruebas de hipótesis estadísticas, análisis de sentimiento basado en FinBERT e IA explicable.
+
+El proyecto no pretende ofrecer asesoramiento financiero. Su propósito es educativo, analítico y académico: demostrar un flujo de trabajo completo de principio a fin para la ciencia de datos financieros, la validación de modelos y la experimentación orientada a la investigación.
+
+Pregunta de investigación
+
+¿Mejora significativamente la incorporación del sentimiento financiero extraído mediante FinBERT la predicción direccional de la rentabilidad a corto plazo en comparación con modelos basados únicamente en indicadores técnicos?
+
+Hipótesis principal
+
+- H0: El sentimiento de FinBERT no mejora significativamente el rendimiento predictivo en comparación con el modelo basado únicamente en indicadores técnicos.
+
+- H1: El sentimiento de FinBERT mejora significativamente el rendimiento predictivo en comparación con el modelo basado únicamente en indicadores técnicos.
 
 ---
 
