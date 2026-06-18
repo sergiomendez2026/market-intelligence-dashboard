@@ -95,6 +95,22 @@ Its main value lies in methodological transparency and experiment reproducibilit
 
 The objective is not to sell trading signals, but to demonstrate how financial machine learning experiments can be structured, validated and documented transparently.
 
+--+
+
+## Estado de madurez
+
+| Componente | Estado actual | Próxima mejora |
+|---|---|---|
+| Dashboard Streamlit | Funcional | Mejorar UI y experiencia de usuario |
+| Datos de mercado | Funcional con yfinance | Documentar cobertura y limitaciones |
+| Indicadores técnicos | Funcional | Agregar pruebas econométricas |
+| Modelos ML | Funcional | Reportar métricas finales por activo |
+| Backtesting | Funcional | Validar costos y supuestos |
+| FinBERT | Funcional vía CSV cargado por usuario | Construir dataset histórico alineado |
+| Pruebas estadísticas | Funcional | Ejecutar experimento completo con datos reales |
+| Explainable AI | Funcional con feature importance | Agregar SHAP posteriormente |
+| Research Summary | Funcional | Conectar con paper LaTeX |
+
 ---
 
 ## 1. Objetivo del proyecto
