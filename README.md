@@ -78,7 +78,7 @@ Este proyecto está estructurado como un ecosistema profesional de tres capas:
 | Capa | Enlace | Propósito |
 |---|---|---|
 | Repositorio GitHub | [Código fuente](https://github.com/sergiomendez2026/market-intelligence-dashboard) | Contiene la arquitectura modular, código Python, modelos, validación, backtesting y documentación técnica. |
-| Página web del proyecto | [Project Website](https://sergiomendez2026.github.io/market-intelligence-dashboard/#stack) | Presenta el proyecto de forma ejecutiva: objetivo, stack, funcionalidades, capturas y propuesta de valor. |
+| Página web del proyecto | [Project Website](https://sergiomendez2026.github.io/market-intelligence-dashboard/) | Presenta el proyecto de forma ejecutiva: objetivo, stack, funcionalidades, capturas y propuesta de valor. |
 | Dashboard interactivo | [Live Dashboard](https://market-intelligence-dashboard-fjy5vx69qtam5vpxxqcdno.streamlit.app/) | Permite probar la solución en tiempo real con activos financieros, indicadores, modelos, señales y backtesting. |
 
 La lógica del ecosistema es:
@@ -105,10 +105,11 @@ Demo funcional: análisis financiero, modelos, señales integradas y backtesting
   https://github.com/sergiomendez2026/market-intelligence-dashboard
 
 - Página web del proyecto:
-  https://sergiomendez2026.github.io/market-intelligence-dashboard/#stack
+  https://sergiomendez2026.github.io/market-intelligence-dashboard/
 
 - Dashboard interactivo:
-  https://market-intelligence-dashboard-fjy5vx69qtam5vpxxqcdno.streamlit.app/
+
+https://market-intelligence-dashboard-fjy5vx69qtam5vpxxqcdno.streamlit.app/
 
 ---
 
