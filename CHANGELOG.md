@@ -79,6 +79,10 @@ El formato sigue una estructura simple basada en versiones semánticas.
 - Alineación temporal con precios usando rezago para reducir look-ahead bias.
 - Comparación walk-forward entre modelo técnico y modelo técnico + FinBERT.
 
+- Pruebas estadísticas para comparar modelo técnico sin sentimiento vs modelo técnico + FinBERT.
+- Generación de predicciones walk-forward emparejadas para evaluación estadística.
+- Evaluación de hipótesis principal mediante Diebold-Mariano, McNemar y bootstrap.
+
 ### Limitaciones
 
 - El proyecto no constituye asesoría financiera.
