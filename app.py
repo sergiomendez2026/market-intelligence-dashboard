@@ -1294,6 +1294,29 @@ date,text
         try:
             news_df = pd.read_csv(uploaded_news)
 
+            news_dates_check = pd.to_datetime(
+                news_df[date_column],
+                errors="coerce"
+            )
+            
+            price_start = precio.index.min()
+            price_end = precio.index.max()
+            
+            news_start = news_dates_check.min()
+            news_end = news_dates_check.max()
+            
+            st.info(
+                f"Rango de precios analizado: {price_start.date()} a {price_end.date()} | "
+                f"Rango de noticias cargadas: {news_start.date()} a {news_end.date()}"
+            )
+            
+            if news_end < price_start or news_start > price_end:
+                st.warning(
+                    "Advertencia metodológica: las fechas de las noticias no se solapan con el período "
+                    "de precios seleccionado. FinBERT puede ejecutarse, pero la comparación académica "
+                    "no será concluyente porque el modelo no tendrá sentimiento real alineado con los precios."
+                )
+
             st.markdown("### Vista previa de noticias")
             st.dataframe(news_df.head(10), use_container_width=True)
 
