@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,7 +8,7 @@
 
   <meta
     name="description"
-    content="Applied Financial Machine Learning dashboard with technical indicators, walk-forward validation, FinBERT sentiment analysis, statistical testing and Explainable AI."
+    content="Dashboard académico-profesional de Financial Machine Learning con indicadores técnicos, FinBERT, validación walk-forward, pruebas estadísticas y Explainable AI."
   />
 
   <style>
@@ -16,7 +16,6 @@
       --bg: #050b14;
       --bg-soft: #0b1320;
       --card: #111827;
-      --card-soft: #172033;
       --text: #f8fafc;
       --muted: #94a3b8;
       --accent: #22d3ee;
@@ -73,11 +72,32 @@
       color: var(--accent);
     }
 
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
     .nav-links {
       display: flex;
       gap: 18px;
       font-size: 0.95rem;
       color: var(--muted);
+    }
+
+    .lang-toggle {
+      cursor: pointer;
+      padding: 9px 13px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .lang-toggle:hover {
+      border-color: var(--accent);
+      color: var(--accent);
     }
 
     .hero {
@@ -334,6 +354,11 @@
         flex-direction: column;
       }
 
+      .nav-right {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
       .nav-links {
         flex-wrap: wrap;
       }
@@ -345,65 +370,86 @@
   <header>
     <div class="container nav">
       <div class="logo">Market Intelligence <span>Dashboard</span></div>
-      <nav class="nav-links">
-        <a href="#methodology">Methodology</a>
-        <a href="#stack">Stack</a>
-        <a href="#research">Research</a>
-        <a href="#links">Links</a>
-      </nav>
+
+      <div class="nav-right">
+        <nav class="nav-links">
+          <a href="#methodology" data-i18n="nav_methodology">Metodología</a>
+          <a href="#stack" data-i18n="nav_stack">Stack</a>
+          <a href="#research" data-i18n="nav_research">Investigación</a>
+          <a href="#links" data-i18n="nav_links">Enlaces</a>
+        </nav>
+
+        <button class="lang-toggle" id="langToggle">English</button>
+      </div>
     </div>
   </header>
 
   <main>
     <section class="container hero">
       <div>
-        <div class="badge">Financial Machine Learning · FinBERT · Explainable AI</div>
+        <div class="badge" data-i18n="badge">
+          Financial Machine Learning · FinBERT · Explainable AI
+        </div>
 
-        <h1>Market Intelligence <span>Dashboard</span></h1>
+        <h1>
+          Market Intelligence <span>Dashboard</span>
+        </h1>
 
-        <p class="subtitle">
-          Applied financial analytics platform built with Python and Streamlit to evaluate financial assets using
-          technical indicators, machine learning, walk-forward validation, backtesting, FinBERT sentiment analysis,
-          statistical testing and Explainable AI.
+        <p class="subtitle" data-i18n="hero_subtitle">
+          Plataforma académica-profesional de analítica financiera desarrollada con Python y Streamlit para evaluar activos financieros mediante indicadores técnicos, machine learning, validación walk-forward, backtesting, sentimiento financiero con FinBERT, pruebas estadísticas e interpretabilidad con Explainable AI.
         </p>
 
         <div class="buttons">
-          <a class="btn btn-primary" href="https://market-intelligence-dashboard-fjy5vx69qtam5vpxxqcdno.streamlit.app/" target="_blank">
-            Open Live Dashboard
+          <a
+            class="btn btn-primary"
+            href="https://market-intelligence-dashboard-fjy5vx69qtam5vpxxqcdno.streamlit.app/"
+            target="_blank"
+            data-i18n="btn_dashboard"
+          >
+            Abrir dashboard interactivo
           </a>
-          <a class="btn btn-secondary" href="https://github.com/sergiomendez2026/market-intelligence-dashboard" target="_blank">
-            View GitHub Repository
+
+          <a
+            class="btn btn-secondary"
+            href="https://github.com/sergiomendez2026/market-intelligence-dashboard"
+            target="_blank"
+            data-i18n="btn_github"
+          >
+            Ver repositorio en GitHub
           </a>
         </div>
 
-        <p class="subtitle">
-          Educational, analytical and research-oriented project. Not financial advice.
+        <p class="subtitle" data-i18n="hero_disclaimer">
+          Proyecto educativo, analítico y orientado a investigación. No constituye asesoría financiera.
         </p>
       </div>
 
       <div class="hero-card">
         <div class="dashboard-preview">
           <div class="preview-top">
-            <span>Research Dashboard</span>
+            <span data-i18n="preview_title">Dashboard de investigación</span>
             <span>AAPL · 2Y · Walk-forward</span>
           </div>
 
           <div class="kpi-grid">
             <div class="kpi">
-              <small>Model Type</small>
+              <small data-i18n="kpi_model">Tipo de modelo</small>
               <strong>ML + NLP</strong>
             </div>
+
             <div class="kpi">
-              <small>Validation</small>
+              <small data-i18n="kpi_validation">Validación</small>
               <strong>Walk-forward</strong>
             </div>
+
             <div class="kpi">
-              <small>Sentiment</small>
+              <small data-i18n="kpi_sentiment">Sentimiento</small>
               <strong>FinBERT</strong>
             </div>
+
             <div class="kpi">
-              <small>Testing</small>
-              <strong>Statistical</strong>
+              <small data-i18n="kpi_testing">Pruebas</small>
+              <strong data-i18n="kpi_statistical">Estadísticas</strong>
             </div>
           </div>
 
@@ -413,65 +459,76 @@
     </section>
 
     <section id="methodology" class="container">
-      <h2 class="section-title">Methodology</h2>
-      <p class="section-subtitle">
-        The project follows a research-oriented financial machine learning workflow designed to compare technical-only
-        models against sentiment-enhanced models.
+      <h2 class="section-title" data-i18n="methodology_title">Metodología</h2>
+
+      <p class="section-subtitle" data-i18n="methodology_subtitle">
+        El proyecto sigue un flujo de trabajo de Financial Machine Learning orientado a investigación, diseñado para comparar modelos basados solo en indicadores técnicos contra modelos enriquecidos con sentimiento financiero.
       </p>
 
       <div class="grid grid-3">
         <div class="card">
-          <h3>Market Data & Indicators</h3>
-          <p>Historical prices, moving averages, RSI, Bollinger Bands, volatility, returns and momentum features.</p>
+          <h3 data-i18n="card1_title">Datos de mercado e indicadores</h3>
+          <p data-i18n="card1_text">
+            Precios históricos, medias móviles, RSI, Bandas de Bollinger, volatilidad, retornos y variables de momentum.
+          </p>
         </div>
 
         <div class="card">
-          <h3>Machine Learning</h3>
-          <p>Regression and directional classification models compared against academic baselines.</p>
+          <h3 data-i18n="card2_title">Machine Learning</h3>
+          <p data-i18n="card2_text">
+            Modelos de regresión y clasificación direccional comparados contra baselines académicos.
+          </p>
         </div>
 
         <div class="card">
-          <h3>FinBERT Sentiment</h3>
-          <p>Financial news are classified as positive, negative or neutral and transformed into quantitative features.</p>
+          <h3 data-i18n="card3_title">Sentimiento con FinBERT</h3>
+          <p data-i18n="card3_text">
+            Las noticias financieras se clasifican como positivas, negativas o neutrales y se transforman en variables cuantitativas.
+          </p>
         </div>
 
         <div class="card">
-          <h3>Walk-Forward Validation</h3>
-          <p>Temporal validation using rolling windows to reduce overfitting and simulate realistic evaluation.</p>
+          <h3 data-i18n="card4_title">Validación walk-forward</h3>
+          <p data-i18n="card4_text">
+            Validación temporal mediante ventanas móviles para reducir sobreajuste y simular una evaluación más realista.
+          </p>
         </div>
 
         <div class="card">
-          <h3>Statistical Testing</h3>
-          <p>Diebold-Mariano, McNemar and bootstrap tests are used to evaluate model differences.</p>
+          <h3 data-i18n="card5_title">Pruebas estadísticas</h3>
+          <p data-i18n="card5_text">
+            Diebold-Mariano, McNemar y bootstrap permiten evaluar diferencias entre modelos.
+          </p>
         </div>
 
         <div class="card">
-          <h3>Explainable AI</h3>
-          <p>Feature importance helps interpret which variables influence the directional model.</p>
+          <h3 data-i18n="card6_title">Explainable AI</h3>
+          <p data-i18n="card6_text">
+            La importancia de variables ayuda a interpretar qué factores influyen en el modelo direccional.
+          </p>
         </div>
       </div>
     </section>
 
     <section id="research" class="container">
-      <h2 class="section-title">Research Question</h2>
+      <h2 class="section-title" data-i18n="research_title">Pregunta de investigación</h2>
 
       <div class="research-box">
-        <h3>
-          Does financial sentiment extracted with FinBERT improve short-term directional forecasting compared with
-          technical-indicator-only models?
+        <h3 data-i18n="research_question">
+          ¿El sentimiento financiero extraído con FinBERT mejora la predicción direccional de retornos de corto plazo frente a modelos basados solo en indicadores técnicos?
         </h3>
 
-        <p>
-          The dashboard evaluates this hypothesis through a full pipeline that includes market data, technical features,
-          sentiment variables, academic baselines, walk-forward validation, statistical testing and model interpretability.
+        <p data-i18n="research_text">
+          El dashboard evalúa esta hipótesis mediante un pipeline completo que integra datos de mercado, variables técnicas, variables de sentimiento, baselines académicos, validación walk-forward, pruebas estadísticas e interpretabilidad del modelo.
         </p>
       </div>
     </section>
 
     <section id="stack" class="container">
-      <h2 class="section-title">Tech Stack</h2>
-      <p class="section-subtitle">
-        Built as a professional portfolio and academic research prototype.
+      <h2 class="section-title" data-i18n="stack_title">Stack tecnológico</h2>
+
+      <p class="section-subtitle" data-i18n="stack_subtitle">
+        Construido como proyecto profesional de portafolio y prototipo académico de investigación aplicada.
       </p>
 
       <div class="pill-list">
@@ -493,31 +550,191 @@
     </section>
 
     <section id="links" class="container">
-      <h2 class="section-title">Project Links</h2>
+      <h2 class="section-title" data-i18n="links_title">Enlaces del proyecto</h2>
 
       <div class="grid grid-2">
-        <a class="card" href="https://market-intelligence-dashboard-fjy5vx69qtam5vpxxqcdno.streamlit.app/" target="_blank">
-          <h3>Live Dashboard</h3>
-          <p>Interactive Streamlit application deployed in the cloud.</p>
+        <a
+          class="card"
+          href="https://market-intelligence-dashboard-fjy5vx69qtam5vpxxqcdno.streamlit.app/"
+          target="_blank"
+        >
+          <h3 data-i18n="live_dashboard_title">Dashboard interactivo</h3>
+          <p data-i18n="live_dashboard_text">
+            Aplicación interactiva desarrollada con Streamlit y desplegada en la nube.
+          </p>
         </a>
 
-        <a class="card" href="https://github.com/sergiomendez2026/market-intelligence-dashboard" target="_blank">
-          <h3>GitHub Repository</h3>
-          <p>Source code, modules, tests, documentation and research materials.</p>
+        <a
+          class="card"
+          href="https://github.com/sergiomendez2026/market-intelligence-dashboard"
+          target="_blank"
+        >
+          <h3 data-i18n="github_title">Repositorio GitHub</h3>
+          <p data-i18n="github_text">
+            Código fuente, módulos, pruebas, documentación y materiales de investigación.
+          </p>
         </a>
       </div>
 
-      <p class="disclaimer">
-        Disclaimer: This dashboard is for educational, academic and analytical purposes only. It does not constitute
-        financial advice, investment recommendation or a guarantee of profitability.
+      <p class="disclaimer" data-i18n="footer_disclaimer">
+        Aviso: este dashboard tiene fines educativos, académicos y analíticos. No constituye asesoría financiera, recomendación de inversión ni garantía de rentabilidad.
       </p>
     </section>
   </main>
 
   <footer>
-    <div class="container">
-      Built by Sergio Méndez · Data Science · Machine Learning · Financial Analytics
+    <div class="container" data-i18n="footer_text">
+      Desarrollado por Sergio Méndez · Data Science · Machine Learning · Financial Analytics
     </div>
   </footer>
+
+  <script>
+    const translations = {
+      es: {
+        nav_methodology: "Metodología",
+        nav_stack: "Stack",
+        nav_research: "Investigación",
+        nav_links: "Enlaces",
+        badge: "Financial Machine Learning · FinBERT · Explainable AI",
+        hero_subtitle:
+          "Plataforma académica-profesional de analítica financiera desarrollada con Python y Streamlit para evaluar activos financieros mediante indicadores técnicos, machine learning, validación walk-forward, backtesting, sentimiento financiero con FinBERT, pruebas estadísticas e interpretabilidad con Explainable AI.",
+        btn_dashboard: "Abrir dashboard interactivo",
+        btn_github: "Ver repositorio en GitHub",
+        hero_disclaimer:
+          "Proyecto educativo, analítico y orientado a investigación. No constituye asesoría financiera.",
+        preview_title: "Dashboard de investigación",
+        kpi_model: "Tipo de modelo",
+        kpi_validation: "Validación",
+        kpi_sentiment: "Sentimiento",
+        kpi_testing: "Pruebas",
+        kpi_statistical: "Estadísticas",
+        methodology_title: "Metodología",
+        methodology_subtitle:
+          "El proyecto sigue un flujo de trabajo de Financial Machine Learning orientado a investigación, diseñado para comparar modelos basados solo en indicadores técnicos contra modelos enriquecidos con sentimiento financiero.",
+        card1_title: "Datos de mercado e indicadores",
+        card1_text:
+          "Precios históricos, medias móviles, RSI, Bandas de Bollinger, volatilidad, retornos y variables de momentum.",
+        card2_title: "Machine Learning",
+        card2_text:
+          "Modelos de regresión y clasificación direccional comparados contra baselines académicos.",
+        card3_title: "Sentimiento con FinBERT",
+        card3_text:
+          "Las noticias financieras se clasifican como positivas, negativas o neutrales y se transforman en variables cuantitativas.",
+        card4_title: "Validación walk-forward",
+        card4_text:
+          "Validación temporal mediante ventanas móviles para reducir sobreajuste y simular una evaluación más realista.",
+        card5_title: "Pruebas estadísticas",
+        card5_text:
+          "Diebold-Mariano, McNemar y bootstrap permiten evaluar diferencias entre modelos.",
+        card6_title: "Explainable AI",
+        card6_text:
+          "La importancia de variables ayuda a interpretar qué factores influyen en el modelo direccional.",
+        research_title: "Pregunta de investigación",
+        research_question:
+          "¿El sentimiento financiero extraído con FinBERT mejora la predicción direccional de retornos de corto plazo frente a modelos basados solo en indicadores técnicos?",
+        research_text:
+          "El dashboard evalúa esta hipótesis mediante un pipeline completo que integra datos de mercado, variables técnicas, variables de sentimiento, baselines académicos, validación walk-forward, pruebas estadísticas e interpretabilidad del modelo.",
+        stack_title: "Stack tecnológico",
+        stack_subtitle:
+          "Construido como proyecto profesional de portafolio y prototipo académico de investigación aplicada.",
+        links_title: "Enlaces del proyecto",
+        live_dashboard_title: "Dashboard interactivo",
+        live_dashboard_text:
+          "Aplicación interactiva desarrollada con Streamlit y desplegada en la nube.",
+        github_title: "Repositorio GitHub",
+        github_text:
+          "Código fuente, módulos, pruebas, documentación y materiales de investigación.",
+        footer_disclaimer:
+          "Aviso: este dashboard tiene fines educativos, académicos y analíticos. No constituye asesoría financiera, recomendación de inversión ni garantía de rentabilidad.",
+        footer_text:
+          "Desarrollado por Sergio Méndez · Data Science · Machine Learning · Financial Analytics",
+        button: "English"
+      },
+
+      en: {
+        nav_methodology: "Methodology",
+        nav_stack: "Stack",
+        nav_research: "Research",
+        nav_links: "Links",
+        badge: "Financial Machine Learning · FinBERT · Explainable AI",
+        hero_subtitle:
+          "Academic-professional financial analytics platform built with Python and Streamlit to evaluate financial assets using technical indicators, machine learning, walk-forward validation, backtesting, FinBERT financial sentiment, statistical testing and Explainable AI.",
+        btn_dashboard: "Open live dashboard",
+        btn_github: "View GitHub repository",
+        hero_disclaimer:
+          "Educational, analytical and research-oriented project. Not financial advice.",
+        preview_title: "Research dashboard",
+        kpi_model: "Model type",
+        kpi_validation: "Validation",
+        kpi_sentiment: "Sentiment",
+        kpi_testing: "Testing",
+        kpi_statistical: "Statistical",
+        methodology_title: "Methodology",
+        methodology_subtitle:
+          "The project follows a research-oriented Financial Machine Learning workflow designed to compare technical-indicator-only models against sentiment-enhanced models.",
+        card1_title: "Market data and indicators",
+        card1_text:
+          "Historical prices, moving averages, RSI, Bollinger Bands, volatility, returns and momentum features.",
+        card2_title: "Machine Learning",
+        card2_text:
+          "Regression and directional classification models compared against academic baselines.",
+        card3_title: "FinBERT sentiment",
+        card3_text:
+          "Financial news are classified as positive, negative or neutral and transformed into quantitative features.",
+        card4_title: "Walk-forward validation",
+        card4_text:
+          "Temporal validation using rolling windows to reduce overfitting and simulate realistic evaluation.",
+        card5_title: "Statistical testing",
+        card5_text:
+          "Diebold-Mariano, McNemar and bootstrap tests are used to evaluate model differences.",
+        card6_title: "Explainable AI",
+        card6_text:
+          "Feature importance helps interpret which factors influence the directional model.",
+        research_title: "Research question",
+        research_question:
+          "Does financial sentiment extracted with FinBERT improve short-term directional return forecasting compared with technical-indicator-only models?",
+        research_text:
+          "The dashboard evaluates this hypothesis through a complete pipeline integrating market data, technical variables, sentiment variables, academic baselines, walk-forward validation, statistical testing and model interpretability.",
+        stack_title: "Tech stack",
+        stack_subtitle:
+          "Built as a professional portfolio project and academic applied research prototype.",
+        links_title: "Project links",
+        live_dashboard_title: "Live dashboard",
+        live_dashboard_text:
+          "Interactive application built with Streamlit and deployed in the cloud.",
+        github_title: "GitHub repository",
+        github_text:
+          "Source code, modules, tests, documentation and research materials.",
+        footer_disclaimer:
+          "Disclaimer: this dashboard is for educational, academic and analytical purposes only. It does not constitute financial advice, investment recommendation or a guarantee of profitability.",
+        footer_text:
+          "Built by Sergio Méndez · Data Science · Machine Learning · Financial Analytics",
+        button: "Español"
+      }
+    };
+
+    let currentLang = "es";
+
+    const applyLanguage = (lang) => {
+      document.documentElement.lang = lang;
+
+      document.querySelectorAll("[data-i18n]").forEach((element) => {
+        const key = element.getAttribute("data-i18n");
+        if (translations[lang][key]) {
+          element.textContent = translations[lang][key];
+        }
+      });
+
+      document.getElementById("langToggle").textContent = translations[lang].button;
+      currentLang = lang;
+    };
+
+    document.getElementById("langToggle").addEventListener("click", () => {
+      const newLang = currentLang === "es" ? "en" : "es";
+      applyLanguage(newLang);
+    });
+
+    applyLanguage("es");
+  </script>
 </body>
 </html>
