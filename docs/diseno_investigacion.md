@@ -328,6 +328,14 @@ Modelo técnico sin sentimiento
 vs
 Modelo técnico + FinBERT
 
+## Evaluación estadística de FinBERT
+
+El proyecto incorpora pruebas estadísticas para evaluar directamente la hipótesis principal:
+
+Modelo técnico sin sentimiento
+vs
+Modelo técnico + FinBERT
+
 ---
 
 ## 13. Alcance del estudio
