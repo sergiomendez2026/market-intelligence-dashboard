@@ -165,7 +165,7 @@ Demo funcional: análisis financiero, modelos, señales integradas y backtesting
 https://github.com/sergiomendez2026/market-intelligence-dashboard
 
 - Página web del proyecto:
-https://sergiomendez2026.github.io/market-intelligence-dashboard/
+  https://sergiomendez2026.github.io/market-intelligence-dashboard/
 
 - Dashboard interactivo:
 https://market-intelligence-dashboard-fjy5vx69qtam5vpxxqcdno.streamlit.app/
