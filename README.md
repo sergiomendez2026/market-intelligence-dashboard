@@ -71,6 +71,32 @@ The Market Signal Score included in the dashboard is a product-oriented heuristi
 
 ---
 
+## Posicionamiento del proyecto
+
+Este proyecto no busca reemplazar plataformas profesionales como Bloomberg Terminal, Refinitiv, FactSet o TradingView Premium.
+
+Su valor principal está en la transparencia metodológica y en la reproducibilidad del experimento. A diferencia de plataformas comerciales orientadas al monitoreo de mercado, visualización o ejecución, este proyecto se enfoca en:
+
+- Validación temporal mediante walk-forward.
+- Comparación contra baselines académicos.
+- Evaluación estadística de modelos predictivos.
+- Integración experimental de sentimiento financiero con FinBERT.
+- Documentación explícita de limitaciones.
+- Interpretabilidad mediante Explainable AI.
+- Implementación abierta en Python.
+
+El objetivo no es vender señales de trading, sino demostrar cómo estructurar, validar y documentar un experimento de machine learning financiero de forma transparente.
+
+English summary
+
+This project is not intended to replace professional platforms such as Bloomberg Terminal, Refinitiv, FactSet or TradingView Premium.
+
+Its main value lies in methodological transparency and experiment reproducibility. Unlike commercial platforms focused on market monitoring, charting or execution, this project emphasizes temporal validation, academic baselines, statistical testing, FinBERT-based sentiment experimentation, explicit limitations and Explainable AI.
+
+The objective is not to sell trading signals, but to demonstrate how financial machine learning experiments can be structured, validated and documented transparently.
+
+---
+
 ## 1. Objetivo del proyecto
 
 El objetivo de este proyecto es construir un sistema modular de inteligencia de mercado capaz de:
