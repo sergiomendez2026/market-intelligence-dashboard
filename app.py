@@ -30,9 +30,13 @@ from src.portfolio import (
 from src.baselines import compare_academic_baselines
 from src.walkforward_academic import (
     compare_walkforward_academic_models,
-    collect_walkforward_predictions_for_statistics
+    collect_walkforward_predictions_for_statistics,
+    collect_walkforward_predictions_technical_vs_sentiment,
 )
-from src.statistical_tests import compare_model_predictions_statistically
+from src.statistical_tests import (
+    compare_model_predictions_statistically,
+    compare_technical_vs_sentiment_statistically,
+)
 from src.finbert_sentiment import build_finbert_sentiment_features_from_news
 
 
