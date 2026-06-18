@@ -38,6 +38,11 @@ from src.statistical_tests import (
     compare_model_predictions_statistically,
     compare_technical_vs_sentiment_statistically,
 )
+from src.explainability import (
+    calculate_random_forest_feature_importance,
+    summarize_feature_importance_by_group,
+    get_top_features,
+)
 
 @st.cache_data(ttl=3600)
 def load_market_data_cached(ticker: str, periodo: str):
@@ -301,7 +306,7 @@ else:
     wf_regression = None
     wf_direction = None
 
-tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10 = st.tabs([
+tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10, tab11 = st.tabs([
     "Precio",
     "Indicadores",
     "Predicción ML",
@@ -312,6 +317,7 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10 = st.tabs([
     "Portafolio",
     "Baselines Académicos",
     "FinBERT",
+    "Explainable AI",
 ])
 
 
@@ -1563,3 +1569,109 @@ date,text
 
         except Exception as error:
             st.error(f"No se pudo procesar FinBERT: {error}")
+
+with tab11:
+    st.subheader("Explainable AI: importancia de variables")
+
+    st.caption(
+        "Esta sección explica qué variables tienen mayor influencia en el modelo direccional. "
+        "La interpretación se basa en importancia de variables de Random Forest. "
+        "No implica causalidad financiera."
+    )
+
+    if not model_available:
+        st.warning("No hay suficientes datos para calcular importancia de variables.")
+
+    else:
+        try:
+            X_explain = X.copy()
+            y_explain = y_direction.copy()
+
+            importance_df = calculate_random_forest_feature_importance(
+                X=X_explain,
+                y=y_explain,
+            )
+
+            top_features = get_top_features(
+                importance_df=importance_df,
+                top_n=10,
+            )
+
+            st.markdown("### Top 10 variables más importantes")
+
+            st.dataframe(
+                top_features,
+                use_container_width=True,
+            )
+
+            fig_importance = go.Figure()
+
+            fig_importance.add_trace(
+                go.Bar(
+                    x=top_features["Importancia (%)"],
+                    y=top_features["Variable"],
+                    orientation="h",
+                    name="Importancia",
+                )
+            )
+
+            fig_importance.update_layout(
+                template="plotly_dark",
+                title="Importancia de variables del modelo direccional",
+                xaxis_title="Importancia (%)",
+                yaxis_title="Variable",
+                yaxis=dict(autorange="reversed"),
+            )
+
+            st.plotly_chart(fig_importance, use_container_width=True)
+
+            st.markdown("### Importancia agrupada por familia de variables")
+
+            grouped_importance = summarize_feature_importance_by_group(
+                importance_df
+            )
+
+            st.dataframe(
+                grouped_importance,
+                use_container_width=True,
+            )
+
+            fig_grouped = go.Figure()
+
+            fig_grouped.add_trace(
+                go.Bar(
+                    x=grouped_importance["Grupo"],
+                    y=grouped_importance["Importancia (%)"],
+                    name="Importancia agrupada",
+                )
+            )
+
+            fig_grouped.update_layout(
+                template="plotly_dark",
+                title="Importancia agrupada por tipo de variable",
+                xaxis_title="Grupo de variables",
+                yaxis_title="Importancia (%)",
+            )
+
+            st.plotly_chart(fig_grouped, use_container_width=True)
+
+            st.markdown("### Interpretación académica")
+
+            top_variable = top_features.iloc[0]["Variable"]
+            top_importance = top_features.iloc[0]["Importancia (%)"]
+
+            st.info(
+                f"La variable con mayor importancia relativa es `{top_variable}`, "
+                f"con una contribución aproximada de {top_importance:.2f}% dentro del modelo. "
+                "Esta medida ayuda a interpretar el comportamiento del modelo, pero no debe "
+                "interpretarse como causalidad económica."
+            )
+
+            st.warning(
+                "Limitación metodológica: la importancia de variables en Random Forest puede verse afectada "
+                "por correlación entre variables, tamaño del dataset y configuración del modelo. "
+                "Una versión posterior puede incorporar SHAP para explicación local y global más robusta."
+            )
+
+        except Exception as error:
+            st.error(f"No se pudo calcular Explainable AI: {error}")
