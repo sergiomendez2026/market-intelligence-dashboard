@@ -1,157 +1,523 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Market Intelligence Dashboard</title>
-<style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background: #0a0a0a; color: #ffffff; font-family: 'Segoe UI', sans-serif; }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  nav { padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; position: sticky; top: 0; background: #0a0a0a; z-index: 100; }
-  nav .logo { font-weight: 700; font-size: 1.1rem; color: #4f9eff; }
-  nav .links { display: flex; gap: 24px; }
-  nav .links a { color: #aaa; text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
-  nav .links a:hover { color: #fff; }
+  <title>Market Intelligence Dashboard | Financial ML + FinBERT</title>
 
-  .hero { text-align: center; padding: 100px 20px 60px; max-width: 800px; margin: 0 auto; }
-  .hero .badge { display: inline-block; background: #1a2a3a; color: #4f9eff; padding: 6px 16px; border-radius: 20px; font-size: 0.8rem; margin-bottom: 24px; border: 1px solid #4f9eff33; }
-  .hero h1 { font-size: clamp(2rem, 6vw, 3.5rem); font-weight: 800; line-height: 1.1; margin-bottom: 20px; background: linear-gradient(135deg, #ffffff, #4f9eff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-  .hero p { font-size: 1.1rem; color: #888; line-height: 1.7; margin-bottom: 40px; }
-  .buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
-  .btn { padding: 14px 28px; border-radius: 8px; font-weight: 600; text-decoration: none; font-size: 0.95rem; transition: all 0.2s; }
-  .btn-primary { background: #4f9eff; color: #000; }
-  .btn-primary:hover { background: #3a8aee; transform: translateY(-2px); }
-  .btn-secondary { border: 1px solid #333; color: #fff; }
-  .btn-secondary:hover { border-color: #555; transform: translateY(-2px); }
+  <meta
+    name="description"
+    content="Applied Financial Machine Learning dashboard with technical indicators, walk-forward validation, FinBERT sentiment analysis, statistical testing and Explainable AI."
+  />
 
-  .stats { display: flex; justify-content: center; gap: 60px; padding: 60px 20px; border-top: 1px solid #111; border-bottom: 1px solid #111; flex-wrap: wrap; }
-  .stat { text-align: center; }
-  .stat .number { font-size: 2.2rem; font-weight: 800; color: #4f9eff; }
-  .stat .label { font-size: 0.85rem; color: #666; margin-top: 4px; }
+  <style>
+    :root {
+      --bg: #050b14;
+      --bg-soft: #0b1320;
+      --card: #111827;
+      --card-soft: #172033;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --accent: #22d3ee;
+      --accent-2: #38bdf8;
+      --green: #22c55e;
+      --border: rgba(148, 163, 184, 0.22);
+    }
 
-  .section { max-width: 900px; margin: 0 auto; padding: 80px 20px; }
-  .section-label { font-size: 0.75rem; color: #4f9eff; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; }
-  .section h2 { font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 700; margin-bottom: 16px; }
-  .section p { color: #888; line-height: 1.8; font-size: 1rem; }
+    * {
+      box-sizing: border-box;
+    }
 
-  .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-top: 40px; }
-  .feature { background: #111; border: 1px solid #1e1e1e; border-radius: 12px; padding: 28px; transition: border-color 0.2s; }
-  .feature:hover { border-color: #4f9eff44; }
-  .feature .icon { font-size: 1.8rem; margin-bottom: 14px; }
-  .feature h3 { font-size: 1rem; font-weight: 600; margin-bottom: 8px; }
-  .feature p { font-size: 0.875rem; color: #666; line-height: 1.6; }
+    body {
+      margin: 0;
+      font-family: Inter, Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(34, 211, 238, 0.18), transparent 30%),
+        radial-gradient(circle at top right, rgba(56, 189, 248, 0.14), transparent 35%),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
 
-  .tech { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 32px; }
-  .tag { background: #111; border: 1px solid #222; color: #aaa; padding: 8px 16px; border-radius: 6px; font-size: 0.85rem; }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
 
-  .cta { text-align: center; padding: 100px 20px; }
-  .cta h2 { font-size: clamp(1.5rem, 4vw, 2.5rem); font-weight: 700; margin-bottom: 16px; }
-  .cta p { color: #888; margin-bottom: 40px; }
+    .container {
+      width: min(1120px, 92%);
+      margin: 0 auto;
+    }
 
-  footer { text-align: center; padding: 40px 20px; border-top: 1px solid #111; color: #444; font-size: 0.85rem; }
-  footer a { color: #4f9eff; text-decoration: none; }
-</style>
+    header {
+      padding: 28px 0;
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(8px);
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .logo {
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      font-size: 1.1rem;
+    }
+
+    .logo span {
+      color: var(--accent);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 18px;
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+
+    .hero {
+      padding: 84px 0 56px;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      color: var(--accent);
+      background: rgba(34, 211, 238, 0.07);
+      font-size: 0.9rem;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      font-size: clamp(2.5rem, 6vw, 4.8rem);
+      line-height: 0.95;
+      letter-spacing: -0.07em;
+      margin: 0 0 22px;
+    }
+
+    h1 span {
+      color: var(--accent);
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 1.12rem;
+      max-width: 680px;
+      margin-bottom: 30px;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+
+    .btn {
+      padding: 13px 18px;
+      border-radius: 12px;
+      font-weight: 700;
+      border: 1px solid var(--border);
+      transition: 0.2s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #001018;
+      border: none;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      opacity: 0.92;
+    }
+
+    .hero-card {
+      background: linear-gradient(180deg, rgba(17, 24, 39, 0.92), rgba(11, 19, 32, 0.92));
+      border: 1px solid var(--border);
+      border-radius: 26px;
+      padding: 20px;
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.42);
+    }
+
+    .dashboard-preview {
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background:
+        linear-gradient(135deg, rgba(34, 211, 238, 0.10), transparent),
+        #07111f;
+      padding: 18px;
+    }
+
+    .preview-top {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .kpi {
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    .kpi small {
+      color: var(--muted);
+      display: block;
+    }
+
+    .kpi strong {
+      font-size: 1.25rem;
+      color: var(--accent);
+    }
+
+    .chart {
+      height: 160px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background:
+        linear-gradient(180deg, transparent 0%, rgba(34, 211, 238, 0.08) 100%),
+        repeating-linear-gradient(
+          to right,
+          rgba(148, 163, 184, 0.08) 0,
+          rgba(148, 163, 184, 0.08) 1px,
+          transparent 1px,
+          transparent 42px
+        ),
+        repeating-linear-gradient(
+          to bottom,
+          rgba(148, 163, 184, 0.08) 0,
+          rgba(148, 163, 184, 0.08) 1px,
+          transparent 1px,
+          transparent 32px
+        );
+      position: relative;
+      overflow: hidden;
+    }
+
+    .chart::after {
+      content: "";
+      position: absolute;
+      inset: 22px 12px;
+      background:
+        linear-gradient(135deg, transparent 8%, var(--accent) 9%, transparent 10%),
+        linear-gradient(155deg, transparent 28%, var(--green) 29%, transparent 30%),
+        linear-gradient(25deg, transparent 55%, var(--accent-2) 56%, transparent 57%);
+      filter: drop-shadow(0 0 8px rgba(34, 211, 238, 0.6));
+      opacity: 0.9;
+    }
+
+    section {
+      padding: 58px 0;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      letter-spacing: -0.04em;
+      margin-bottom: 14px;
+    }
+
+    .section-subtitle {
+      color: var(--muted);
+      max-width: 760px;
+      margin-bottom: 28px;
+    }
+
+    .grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .grid-3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .grid-2 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .card {
+      padding: 24px;
+      background: rgba(17, 24, 39, 0.82);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+    }
+
+    .card h3 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      color: var(--text);
+    }
+
+    .card p {
+      color: var(--muted);
+      margin-bottom: 0;
+    }
+
+    .pill-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .pill {
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: rgba(34, 211, 238, 0.08);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+
+    .research-box {
+      background: linear-gradient(135deg, rgba(34, 211, 238, 0.12), rgba(17, 24, 39, 0.82));
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 28px;
+    }
+
+    .disclaimer {
+      color: var(--muted);
+      font-size: 0.95rem;
+      border-top: 1px solid var(--border);
+      padding-top: 22px;
+    }
+
+    footer {
+      padding: 32px 0;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+
+    @media (max-width: 880px) {
+      .hero {
+        grid-template-columns: 1fr;
+        padding-top: 54px;
+      }
+
+      .grid-3,
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+
+      .nav {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .nav-links {
+        flex-wrap: wrap;
+      }
+    }
+  </style>
 </head>
+
 <body>
-
-<nav>
-  <span class="logo">Sergio Mendez</span>
-  <div class="links">
-    <a href="#features">Features</a>
-    <a href="#stack">Stack</a>
-    <a href="https://github.com/sergiomendez2026/market-intelligence-dashboard">GitHub</a>
-  </div>
-</nav>
-
-<div class="hero">
-  <div class="badge">Data Science · Machine Learning · FinTech</div>
-  <h1>Market Intelligence Dashboard</h1>
-  <p>Análisis financiero profesional con datos actualizados de mercado, indicadores técnicos y modelos de Machine Learning aplicados a acciones, criptomonedas, índices y forex.</p>
-  <div class="buttons">
-    <a href="https://market-intelligence-dashboard-fjy5vx69qtam5vpxxqcdno.streamlit.app/" 
-       class="btn btn-primary">Ver Demo en Vivo</a>
-    <a href="https://github.com/sergiomendez2026/market-intelligence-dashboard" class="btn btn-secondary">Ver Código</a>
-  </div>
-</div>
-
-<div class="stats">
-  <div class="stat"><div class="number">7</div><div class="label">Activos financieros</div></div>
-  <div class="stat"><div class="number">3</div><div class="label">Indicadores técnicos</div></div>
-  <div class="stat"><div class="number">ML</div><div class="label">Modelo XGBoost validado</div></div>
-  <div class="stat"><div class="number">2+</div><div class="label">Años de datos históricos</div></div>
-</div>
-
-<div class="section" id="features">
-  <div class="section-label">Funcionalidades</div>
-  <h2>Todo lo que necesitas para analizar el mercado</h2>
-  <p>Combinando datos financieros reales con algoritmos de Machine Learning para generar insights accionables.</p>
-
-  <div class="features">
-    <div class="feature">
-      <div class="icon">📈</div>
-      <h3>Precio Histórico</h3>
-      <p>Visualización interactiva con Medias Móviles MA20 y MA50 para identificar tendencias de largo plazo.</p>
+  <header>
+    <div class="container nav">
+      <div class="logo">Market Intelligence <span>Dashboard</span></div>
+      <nav class="nav-links">
+        <a href="#methodology">Methodology</a>
+        <a href="#stack">Stack</a>
+        <a href="#research">Research</a>
+        <a href="#links">Links</a>
+      </nav>
     </div>
-    <div class="feature">
-      <div class="icon">📉</div>
-      <h3>Bandas de Bollinger</h3>
-      <p>Análisis de volatilidad para detectar momentos óptimos de entrada y salida del mercado.</p>
-    </div>
-    <div class="feature">
-      <div class="icon">⚡</div>
-      <h3>RSI en tiempo real</h3>
-      <p>Indicador de momentum para identificar zonas de sobrecompra y sobreventa en cualquier activo.</p>
-    </div>
-    <div class="feature">
-      <div class="icon">🤖</div>
-      <h3>Predicción con XGBoost</h3>
-      <p>Modelo XGBoost evaluado contra un baseline naïve, con métricas MAE, MAPE y precisión direccional.</p>
-    </div>
-    <div class="feature">
-      <div class="icon">🌐</div>
-      <h3>Multi-activo</h3>
-      <p>Soporte para acciones, criptomonedas, índices bursátiles y pares de divisas Forex.</p>
-    </div>
-    <div class="feature">
-      <div class="icon">☁️</div>
-      <h3>Desplegado en la nube</h3>
-      <p>App web accesible desde cualquier dispositivo, sin instalaciones, con datos actualizados.</p>
-    </div>
-  </div>
-</div>
+  </header>
 
-<div class="section" id="stack">
-  <div class="section-label">Tecnologías</div>
-  <h2>Stack profesional de Data Science</h2>
-  <p>Herramientas usadas por equipos de datos en empresas líderes de la industria.</p>
-  <div class="tech">
-    <span class="tag">Python</span>
-    <span class="tag">Pandas</span>
-    <span class="tag">NumPy</span>
-    <span class="tag">XGBoost</span>
-    <span class="tag">Scikit-learn</span>
-    <span class="tag">Plotly</span>
-    <span class="tag">Streamlit</span>
-    <span class="tag">yFinance</span>
-    <span class="tag">GitHub</span>
-    <span class="tag">Streamlit Cloud</span>
-  </div>
-</div>
+  <main>
+    <section class="container hero">
+      <div>
+        <div class="badge">Financial Machine Learning · FinBERT · Explainable AI</div>
 
-<div class="cta">
-  <h2>Explora el dashboard en vivo</h2>
-  <p>Datos reales del mercado actualizados diariamente.</p>
-  <div class="buttons">
-    <a href="https://market-intelligence-dashboard-fjy5vx69qtam5vpxxqcdno.streamlit.app/" 
-       class="btn btn-primary">Abrir Dashboard</a>">Abrir Dashboard</a>
-    <a href="https://github.com/sergiomendez2026/market-intelligence-dashboard" class="btn btn-secondary">Ver en GitHub</a>
-  </div>
-</div>
+        <h1>Market Intelligence <span>Dashboard</span></h1>
 
-<footer>
-  Desarrollado por <a href="https://github.com/sergiomendez2026">Sergio Mendez</a> · 2026
-</footer>
+        <p class="subtitle">
+          Applied financial analytics platform built with Python and Streamlit to evaluate financial assets using
+          technical indicators, machine learning, walk-forward validation, backtesting, FinBERT sentiment analysis,
+          statistical testing and Explainable AI.
+        </p>
 
+        <div class="buttons">
+          <a class="btn btn-primary" href="https://market-intelligence-dashboard-fjy5vx69qtam5vpxxqcdno.streamlit.app/" target="_blank">
+            Open Live Dashboard
+          </a>
+          <a class="btn btn-secondary" href="https://github.com/sergiomendez2026/market-intelligence-dashboard" target="_blank">
+            View GitHub Repository
+          </a>
+        </div>
+
+        <p class="subtitle">
+          Educational, analytical and research-oriented project. Not financial advice.
+        </p>
+      </div>
+
+      <div class="hero-card">
+        <div class="dashboard-preview">
+          <div class="preview-top">
+            <span>Research Dashboard</span>
+            <span>AAPL · 2Y · Walk-forward</span>
+          </div>
+
+          <div class="kpi-grid">
+            <div class="kpi">
+              <small>Model Type</small>
+              <strong>ML + NLP</strong>
+            </div>
+            <div class="kpi">
+              <small>Validation</small>
+              <strong>Walk-forward</strong>
+            </div>
+            <div class="kpi">
+              <small>Sentiment</small>
+              <strong>FinBERT</strong>
+            </div>
+            <div class="kpi">
+              <small>Testing</small>
+              <strong>Statistical</strong>
+            </div>
+          </div>
+
+          <div class="chart"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="methodology" class="container">
+      <h2 class="section-title">Methodology</h2>
+      <p class="section-subtitle">
+        The project follows a research-oriented financial machine learning workflow designed to compare technical-only
+        models against sentiment-enhanced models.
+      </p>
+
+      <div class="grid grid-3">
+        <div class="card">
+          <h3>Market Data & Indicators</h3>
+          <p>Historical prices, moving averages, RSI, Bollinger Bands, volatility, returns and momentum features.</p>
+        </div>
+
+        <div class="card">
+          <h3>Machine Learning</h3>
+          <p>Regression and directional classification models compared against academic baselines.</p>
+        </div>
+
+        <div class="card">
+          <h3>FinBERT Sentiment</h3>
+          <p>Financial news are classified as positive, negative or neutral and transformed into quantitative features.</p>
+        </div>
+
+        <div class="card">
+          <h3>Walk-Forward Validation</h3>
+          <p>Temporal validation using rolling windows to reduce overfitting and simulate realistic evaluation.</p>
+        </div>
+
+        <div class="card">
+          <h3>Statistical Testing</h3>
+          <p>Diebold-Mariano, McNemar and bootstrap tests are used to evaluate model differences.</p>
+        </div>
+
+        <div class="card">
+          <h3>Explainable AI</h3>
+          <p>Feature importance helps interpret which variables influence the directional model.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="research" class="container">
+      <h2 class="section-title">Research Question</h2>
+
+      <div class="research-box">
+        <h3>
+          Does financial sentiment extracted with FinBERT improve short-term directional forecasting compared with
+          technical-indicator-only models?
+        </h3>
+
+        <p>
+          The dashboard evaluates this hypothesis through a full pipeline that includes market data, technical features,
+          sentiment variables, academic baselines, walk-forward validation, statistical testing and model interpretability.
+        </p>
+      </div>
+    </section>
+
+    <section id="stack" class="container">
+      <h2 class="section-title">Tech Stack</h2>
+      <p class="section-subtitle">
+        Built as a professional portfolio and academic research prototype.
+      </p>
+
+      <div class="pill-list">
+        <span class="pill">Python</span>
+        <span class="pill">Pandas</span>
+        <span class="pill">NumPy</span>
+        <span class="pill">Plotly</span>
+        <span class="pill">Streamlit</span>
+        <span class="pill">yFinance</span>
+        <span class="pill">Scikit-learn</span>
+        <span class="pill">XGBoost</span>
+        <span class="pill">Statsmodels</span>
+        <span class="pill">SciPy</span>
+        <span class="pill">Transformers</span>
+        <span class="pill">PyTorch</span>
+        <span class="pill">FinBERT</span>
+        <span class="pill">GitHub Pages</span>
+      </div>
+    </section>
+
+    <section id="links" class="container">
+      <h2 class="section-title">Project Links</h2>
+
+      <div class="grid grid-2">
+        <a class="card" href="https://market-intelligence-dashboard-fjy5vx69qtam5vpxxqcdno.streamlit.app/" target="_blank">
+          <h3>Live Dashboard</h3>
+          <p>Interactive Streamlit application deployed in the cloud.</p>
+        </a>
+
+        <a class="card" href="https://github.com/sergiomendez2026/market-intelligence-dashboard" target="_blank">
+          <h3>GitHub Repository</h3>
+          <p>Source code, modules, tests, documentation and research materials.</p>
+        </a>
+      </div>
+
+      <p class="disclaimer">
+        Disclaimer: This dashboard is for educational, academic and analytical purposes only. It does not constitute
+        financial advice, investment recommendation or a guarantee of profitability.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      Built by Sergio Méndez · Data Science · Machine Learning · Financial Analytics
+    </div>
+  </footer>
 </body>
 </html>
