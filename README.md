@@ -14,6 +14,25 @@ No constituye asesoría financiera, recomendación de inversión ni promesa de r
 
 ---
 
+Executive Summary
+
+Market Intelligence Dashboard is an applied financial machine learning project designed to evaluate whether financial sentiment extracted with FinBERT can improve short-term directional forecasting of financial assets compared with models based only on technical indicators.
+
+The system integrates historical market data, technical indicators, supervised machine learning models, backtesting, walk-forward validation, statistical hypothesis testing, FinBERT-based sentiment analysis and Explainable AI.
+
+The project is not intended to provide financial advice. Its purpose is educational, analytical and academic: to demonstrate a complete end-to-end workflow for financial data science, model validation and research-oriented experimentation.
+
+Research Question
+
+Does the incorporation of financial sentiment extracted through FinBERT significantly improve short-term directional return forecasting compared with models based only on technical indicators?
+
+Core Hypothesis
+
+- H0: FinBERT sentiment does not significantly improve predictive performance compared with the technical-only model.
+- H1: FinBERT sentiment significantly improves predictive performance compared with the technical-only model.
+
+---
+
 ## 1. Objetivo del proyecto
 
 El objetivo de este proyecto es construir un sistema modular de inteligencia de mercado capaz de:
