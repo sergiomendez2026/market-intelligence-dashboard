@@ -53,6 +53,24 @@ Hipótesis principal
 
 ---
 
+## Estado actual de la investigación
+
+Este proyecto implementa un pipeline aplicado de Financial Machine Learning para evaluar si el sentimiento financiero extraído con FinBERT mejora la predicción direccional de retornos de corto plazo frente a modelos basados únicamente en indicadores técnicos.
+
+En la etapa actual, el sistema permite ejecutar inferencia real con FinBERT mediante la carga de un archivo CSV de noticias financieras. Sin embargo, las conclusiones académicas finales requieren un dataset histórico de noticias más amplio, documentado y temporalmente alineado con el activo financiero y el período de precios analizado.
+
+El Market Signal Score incluido en el dashboard debe interpretarse como un indicador heurístico de producto. No se utiliza como evidencia científica para validar la hipótesis central, y sus pesos deben considerarse supuestos configurables pendientes de calibración empírica.
+
+## English summary
+
+This project implements an applied Financial Machine Learning pipeline to evaluate whether financial sentiment extracted with FinBERT improves short-term directional return forecasting compared with technical-indicator-only models.
+
+At the current stage, the system supports real FinBERT inference through uploaded financial news CSV files. However, final academic conclusions require a larger, documented and temporally aligned historical news dataset.
+
+The Market Signal Score included in the dashboard is a product-oriented heuristic indicator. It is not used as scientific evidence for the central research hypothesis, and its weights should be interpreted as configurable assumptions pending empirical calibration.
+
+---
+
 ## 1. Objetivo del proyecto
 
 El objetivo de este proyecto es construir un sistema modular de inteligencia de mercado capaz de:
